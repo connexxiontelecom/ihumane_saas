@@ -54,6 +54,7 @@ $route['404_override'] = 'home/error_404';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'home/auth_login';
+$route['register'] = 'home/register';
 $route['logout'] = 'home/logout';
 $route['access_denied'] = 'home/access_denied';
 $route['error_404'] = 'home/error_404';
