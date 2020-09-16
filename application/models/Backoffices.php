@@ -124,6 +124,19 @@ class Backoffices extends CI_Model
 	}
 
 
+	//plan setup
+	public function add_plan($plan_data){
+
+		$this->db->insert('plan', $plan_data);
+		return true;
+
+	}
+
+	public function get_plans(){
+		$this->db->select('*');
+		$this->db->from('plan');
+		return $this->db->get()->result();
+	}
 
 
 

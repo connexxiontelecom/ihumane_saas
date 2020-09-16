@@ -12,6 +12,12 @@
 		<script src="<?php echo base_url(); ?>assets/js/stisla.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/garlic.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/push_notification.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/page/forms-advanced-forms.js"></script>
+
+
+
+
+
 
 
 		<!-- JS Libraies -->

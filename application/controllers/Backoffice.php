@@ -82,7 +82,7 @@ class Backoffice extends CI_Controller
 					'backoffice_user_token' => null,
 				);
 				$user_token_data = $this->security->xss_clean($user_token_data);
-				$query = $this->backoffices->update_token($username, $user_token_data);
+				$this->backoffices->update_token($username, $user_token_data);
 				$this->session->unset_userdata('username');
 				$this->session->unset_userdata('login_time');
 				$this->session->sess_destroy();
@@ -218,6 +218,141 @@ class Backoffice extends CI_Controller
 				endif;
 			endif;
 		endif;
+
+	}
+
+
+	public function error_404(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+			$this->load->view('backoffice/error_404');
+
+
+		else:
+			redirect('/login');
+
+		endif;
+
+
+	}
+
+	public function plans(){
+
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+
+			$data['notifications'] = $this->employees->get_notifications(0);
+
+			$data['user_data'] = $this->backoffices->get_user($username);
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			$date = date('Y-m-d', time());
+
+			$this->load->view('backoffice/new_plan', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+	}
+
+	public function new_plan(){
+
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+
+			$data['notifications'] = $this->employees->get_notifications(0);
+
+			$data['user_data'] = $this->backoffices->get_user($username);
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			$date = date('Y-m-d', time());
+
+			$this->load->view('backoffice/new_plan', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+	}
+
+	public function add_plan(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				extract($_POST);
+				$plan_price = str_replace( ',', '', $plan_price);
+				$plan_array = array(
+					'plan_name' => $plan_name,
+					'plan_price' => $plan_price,
+					'plan_description' => $plan_description,
+					'plan_duration' => $plan_duration
+				);
+
+				$plan_array = $this->security->xss_clean($plan_array);
+
+				$query = $this->backoffices->add_plan($plan_array);
+
+				if($query == true):
+
+					$msg = array(
+						'msg'=> 'Plan Added Successfully',
+						'location' => site_url('plans'),
+						'type' => 'success'
+
+					);
+					$this->load->view('swal', $msg);
+
+				else:
+						$msg = array(
+							'msg'=> 'An Error Occurred',
+							'location' => site_url('plans'),
+							'type' => 'error'
+
+						);
+						$this->load->view('swal', $msg);
+
+				endif;
+
+			else:
+
+				redirect('backoffice_404');
+
+
+			endif;
+
+
+
+		//$this->load->view('backoffice/new_plan', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
 
 	}
 }

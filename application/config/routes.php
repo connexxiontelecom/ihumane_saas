@@ -297,11 +297,17 @@ $route['change_password_'] = 'employee_main/change_password_';
 $route['get_notifications'] = 'employee_main/get_notifications';
 
 
+
+
 // back office routes
 
 $route['backoffice'] = 'backoffice/index';
 $route['backoffice_login'] = 'backoffice/auth_login';
 $route['backoffice_logout'] = 'backoffice/logout';
+$route['plans'] = 'backoffice/plans';
+$route['new_plan'] = 'backoffice/new_plan';
+$route['add_plan'] = 'backoffice/add_plan';
+$route['backoffice_404'] = 'backoffice/error_404';
 
 
 

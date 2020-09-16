@@ -190,7 +190,7 @@
 				</a>
 				<?php endif; ?>
 				<div class="dropdown-divider"></div>
-				<a href="<?php echo site_url('logout'); ?>" class="dropdown-item has-icon text-danger">
+				<a href="<?php echo site_url('backoffice_logout'); ?>" class="dropdown-item has-icon text-danger">
 					<i class="fas fa-sign-out-alt"></i> Logout
 				</a>
 			</div>
