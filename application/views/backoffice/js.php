@@ -12,7 +12,12 @@
 		<script src="<?php echo base_url(); ?>assets/js/stisla.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/garlic.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/push_notification.js"></script>
-		<script src="<?php echo base_url(); ?>assets/modules/parsleyjs/parsley.min.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/page/forms-advanced-forms.js"></script>
+
+
+
+
+
 
 
 		<!-- JS Libraies -->
@@ -190,28 +195,3 @@
 			<!-- <script src="<?php echo base_url(); ?>assets/js/page/features-setting-detail.js"></script> -->
 			<!-- <script src="<?php echo base_url(); ?>assets/js/page/utilities-contact.js"></script> -->
 
-	<script>	$('.format_number').keyup(function(event) {
-
-		// skip for arrow keys
-		if(event.which >= 37 && event.which <= 40){
-		event.preventDefault();
-		}
-
-		$(this).val(function(index, value) {
-		value = value.replace(/,/g,'');
-		return numberWithCommas(value);
-		});
-		});
-
-		function numberWithCommas(x) {
-		var parts = x.toString().split(".");
-		parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-		return parts.join(".");
-		}
-
-		</script>
-		<script>
-			$(document).ready(function() {
-				$('form').parsley();
-			});
-		</script>
