@@ -247,12 +247,14 @@ class Backoffice extends CI_Controller
 
 			$data['notifications'] = $this->employees->get_notifications(0);
 
+			$data['plans'] = $this->backoffices->get_plans();
+
 			$data['user_data'] = $this->backoffices->get_user($username);
 			$data['csrf_name'] = $this->security->get_csrf_token_name();
 			$data['csrf_hash'] = $this->security->get_csrf_hash();
 			$date = date('Y-m-d', time());
 
-			$this->load->view('backoffice/new_plan', $data);
+			$this->load->view('backoffice/plans', $data);
 
 		//echo $username;
 
@@ -330,6 +332,70 @@ class Backoffice extends CI_Controller
 
 						);
 						$this->load->view('swal', $msg);
+
+				endif;
+
+			else:
+
+				redirect('backoffice_404');
+
+
+			endif;
+
+
+
+		//$this->load->view('backoffice/new_plan', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+
+	}
+
+	public function update_plan(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				extract($_POST);
+				$plan_price = str_replace( ',', '', $plan_price);
+				$plan_array = array(
+					'plan_name' => $plan_name,
+					'plan_price' => $plan_price,
+					'plan_description' => $plan_description,
+					'plan_duration' => $plan_duration
+				);
+
+				$plan_array = $this->security->xss_clean($plan_array);
+
+				$query = $this->backoffices->update_plan($plan_id, $plan_array);
+
+				if($query == true):
+
+					$msg = array(
+						'msg'=> 'Plan Updated Successfully',
+						'location' => site_url('plans'),
+						'type' => 'success'
+
+					);
+					$this->load->view('swal', $msg);
+
+				else:
+					$msg = array(
+						'msg'=> 'An Error Occurred',
+						'location' => site_url('plans'),
+						'type' => 'error'
+
+					);
+					$this->load->view('swal', $msg);
 
 				endif;
 

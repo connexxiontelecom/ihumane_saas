@@ -138,7 +138,14 @@ class Backoffices extends CI_Model
 		return $this->db->get()->result();
 	}
 
+	public function update_plan($plan_id, $plan_data){
 
+		$this->db->where('plan.plan_id', $plan_id);
+		$this->db->update('plan', $plan_data);
+		return true;
+
+
+	}
 
 
 

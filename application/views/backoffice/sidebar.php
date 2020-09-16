@@ -60,8 +60,8 @@
 				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>Plans</span></a>
 				<ul class="dropdown-menu">
 
-					<li class="<?php echo $this->uri->segment(1) == 'employee' || $this->uri->segment(1) == 'view_employee' || $this->uri->segment(1) == 'update_employee' || $this->uri->segment(1) == 'query_employee' || $this->uri->segment(1) == 'view_query' || $this->uri->segment(1) == 'terminate_employee' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee') ?>"> New Plan</a></li>
-					<li class="<?php echo $this->uri->segment(1) == 'employee_transfer' || $this->uri->segment(1) == 'new_employee_transfer' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_transfer') ?>"> Manage Plans </a></li>
+					<li class="<?php echo $this->uri->segment(1) == 'new_plan' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('new_plan') ?>"> New Plan</a></li>
+					<li class="<?php echo $this->uri->segment(1) == 'plans'  ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('plans') ?>"> Manage Plans </a></li>
 							</ul>
 
 			</li>

@@ -307,6 +307,7 @@ $route['backoffice_logout'] = 'backoffice/logout';
 $route['plans'] = 'backoffice/plans';
 $route['new_plan'] = 'backoffice/new_plan';
 $route['add_plan'] = 'backoffice/add_plan';
+$route['update_plan'] = 'backoffice/update_plan';
 $route['backoffice_404'] = 'backoffice/error_404';
 
 

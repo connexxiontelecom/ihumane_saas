@@ -12,6 +12,7 @@
 		<script src="<?php echo base_url(); ?>assets/js/stisla.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/garlic.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/push_notification.js"></script>
+		<script src="<?php echo base_url(); ?>assets/modules/parsleyjs/parsley.min.js"></script>
 
 
 		<!-- JS Libraies -->
@@ -208,4 +209,9 @@
 		return parts.join(".");
 		}
 
+		</script>
+		<script>
+			$(document).ready(function() {
+				$('form').parsley();
+			});
 		</script>
