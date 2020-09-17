@@ -374,7 +374,7 @@ class Backoffice extends CI_Controller
 					'plan_duration' => $plan_duration
 				);
 
-				$plan_array = $this->security->xss_clean($plan_arrays);
+				$plan_array = $this->security->xss_clean($plan_array);
 
 				$query = $this->backoffices->update_plan($plan_id, $plan_array);
 
