@@ -421,4 +421,10 @@ class Backoffice extends CI_Controller
 
 
 	}
+
+	public function get_plan(){
+		$plan_id = $this->input->post('plan_id');
+		echo json_encode($this->backoffices->get_plan($plan_id));
+
+	}
 }
