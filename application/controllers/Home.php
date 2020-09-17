@@ -430,7 +430,79 @@ class Home extends CI_Controller
 
 	}
 
-		public function access_denied(){
+	public function register_a(){
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				extract($_POST);
+
+				$tenant_array = array(
+
+					'tenant_username' => $tenant_username,
+					'tenant_password' => $tenant_password,
+					'tenant_contact_name' => $tenant_contact_name,
+					'tenant_contact_email' => $tenant_contact_email,
+					'tenant_contact_phone' => $tenant_contact_phone,
+					'tenant_business_name' => $tenant_business_name,
+					'tenant_business_website' => $tenant_business_website,
+					'tenant_country' => $tenant_country,
+					'tenant_city' => $tenant_city,
+					'tenant_business_type' => $tenant_business_type,
+					'tenant_usage' => $tenant_usage,
+					'reference_code' => $reference_code
+
+				);
+
+				$tenant_array = $this->security->xss_clean($tenant_array);
+
+				print_r($tenant_array);
+
+//				$query = $this->backoffices->add_plan($plan_array);
+//
+//				if($query == true):
+//
+//					$msg = array(
+//						'msg'=> 'Plan Added Successfully',
+//						'location' => site_url('plans'),
+//						'type' => 'success'
+//
+//					);
+//					$this->load->view('swal', $msg);
+//
+//				else:
+//					$msg = array(
+//						'msg'=> 'An Error Occurred',
+//						'location' => site_url('plans'),
+//						'type' => 'error'
+//
+//					);
+//					$this->load->view('swal', $msg);
+//
+//				endif;
+
+			else:
+
+				redirect('error_404');
+
+
+			endif;
+
+
+
+		//$this->load->view('backoffice/new_plan', $data);
+
+		//echo $username;
+
+
+
+
+
+
+
+	}
+
+	public function access_denied(){
 			$user_username = $this->session->userdata('user_username');
 
 			if(isset($user_username)):

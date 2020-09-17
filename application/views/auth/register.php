@@ -18,7 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<div class="card-header"><h4>Register</h4></div>
 
 						<div class="card-body">
-							<form method="post" action="<?php echo site_url('register') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
 								<div class="form-divider">
 									Your Business Details
 								</div>
@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="form-group">
 									<label>Business Website</label>
 									<div>
-										<input parsley-type="url" type="url" value="https://" class="form-control"
+										<input parsley-type="url" type="url" value="https://" name="tenant_business_website" class="form-control"
 											   required placeholder="URL"/>
 									</div>
 								</div>
@@ -110,12 +110,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</div>
 								</div>
 
+								<input type="hidden" name="<?php echo $csrf_name; ?>" value="<?php echo $csrf_hash; ?>" />
 
 
 								<div class="row">
 									<div class="form-group col-6">
 										<label for="password" class="d-block">Password</label>
-										<input id="password" type="password" class="form-control pwstrength" onkeyup="check_password()" data-indicator="pwindicator" name="password">
+										<input id="password" type="password" class="form-control pwstrength" onkeyup="check_password()" data-indicator="pwindicator" name="tenant_password">
 										<div id="pwindicator" class="pwindicator">
 											<div class="bar"></div>
 											<div class="label"></div>
@@ -163,7 +164,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 								<div class="form-group" <?php if (empty($plan_id) || $plan_id == 1): ?>style="display: none" <?php endif; ?> id="paid" >
-									<button onclick="payWithPaystack()" id="paybutton" class="btn btn-primary btn-lg btn-block">
+									<button type="button" onclick="payWithPaystack()" id="paybutton" class="btn btn-primary btn-lg btn-block">
 										Pay the Sum of   <span> &#8358; </span> <?php echo number_format($pla->plan_price)." ".$pla->plan_name." - ".$pla->plan_duration."Day(s)"; ?> To Register
 									</button>
 								</div>
