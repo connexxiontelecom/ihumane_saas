@@ -19,6 +19,7 @@ class Home extends CI_Controller
 		$this->load->model('configurations');
 		$this->load->model('logs');
 		$this->load->model('biometric');
+		$this->load->model('backoffices');
 
 	}
 
@@ -334,6 +335,7 @@ class Home extends CI_Controller
 		else:
 			$data['csrf_name'] = $this->security->get_csrf_token_name();
 			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			$data['plans'] = $this->backoffices->get_plans();
 
 			$data['countries'] =   array(
 				"Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla",

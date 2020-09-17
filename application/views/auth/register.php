@@ -18,7 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<div class="card-header"><h4>Register</h4></div>
 
 						<div class="card-body">
-							<form method="POST">
+							<form method="POST" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
 								<div class="form-divider">
 									Your Business Details
 								</div>
@@ -115,49 +115,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="row">
 									<div class="form-group col-6">
 										<label for="password" class="d-block">Password</label>
-										<input id="password" type="password" class="form-control pwstrength" data-indicator="pwindicator" name="password">
+										<input id="password" type="password" class="form-control pwstrength" onkeyup="check_password()" data-indicator="pwindicator" name="password">
 										<div id="pwindicator" class="pwindicator">
 											<div class="bar"></div>
 											<div class="label"></div>
 										</div>
 									</div>
 									<div class="form-group col-6">
-										<label for="password2" class="d-block">Password Confirmation</label>
-										<input id="password2" type="password" class="form-control" name="password-confirm">
+										<label for="password_confirm" class="d-block">Password Confirmation</label>
+										<input id="password_confirm" type="password" onkeyup="check_password()" class="form-control" name="password-confirm">
 									</div>
 								</div>
-
+								<div id="password_alert">
+									<div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Password Do Not Match.
+									</div>
+								</div>
 								<div class="form-divider">
 									Plan Details
 								</div>
 								<div class="row">
-									<div class="form-group col-6">
-										<label>Country</label>
-										<select class="select2 form-control">
-											<?php foreach ($countries as $country): ?>
-											<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+									<div class="form-group col-12">
+										<label>Plan</label>
+										<select class="select2 form-control" id="plan" onchange="check()">
+											<option value="0" selected></option>
+											<?php foreach ($plans as $plan): ?>
+											<option value="<?php echo $plan->plan_id; ?>"> <span> &#8358; </span> <?php echo number_format($plan->plan_price)." ".$plan->plan_name." - ".$plan->plan_duration."Day(s)"; ?></option>
 											<?php endforeach; ?>
 
 										</select>
 									</div>
-									<div class="form-group col-6">
-										<label>Province</label>
-										<select class="form-control selectric">
-											<option>West Java</option>
-											<option>East Java</option>
-										</select>
-									</div>
+
 								</div>
-								<div class="row">
-									<div class="form-group col-6">
-										<label>City</label>
-										<input type="text" class="form-control">
-									</div>
-									<div class="form-group col-6">
-										<label>Postal Code</label>
-										<input type="text" class="form-control">
-									</div>
-								</div>
+
+								<input type="hidden" id="price" value="">
+
 
 								<div class="form-group">
 									<div class="custom-control custom-checkbox">
@@ -166,16 +161,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</div>
 								</div>
 
-								<div class="form-group">
-									<button type="submit" class="btn btn-primary btn-lg btn-block">
+
+								<div class="form-group" style="display: none" id="paid" >
+									<button onclick="payWithPaystack()" id="paybutton" class="btn btn-primary btn-lg btn-block">
 										Register
+									</button>
+								</div>
+
+								<div class="form-group" id="free" style="display: none" >
+									<button  class="btn btn-primary btn-lg btn-block">
+										Register For Free Trial
 									</button>
 								</div>
 							</form>
 						</div>
 					</div>
 					<div class="simple-footer">
-						Copyright &copy; Stisla 2018
+						Copyright &copy; Connexxion Telecom
 					</div>
 				</div>
 			</div>
@@ -189,3 +191,74 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 </html>
 <?php include(APPPATH.'/views/js.php'); ?>
+
+<script>
+
+	document.getElementById('password_alert').style.display = 'none';
+
+	function check_password() {
+		var password = document.getElementById('password').value;
+		var password_confirm = document.getElementById('password_confirm').value;
+
+
+
+		if(password == password_confirm){
+			document.getElementById('password_alert').style.display = 'none';
+
+			document.getElementById('password_success').style.display = 'block';
+
+
+		}else{
+			document.getElementById('password_alert').style.display = 'block';
+
+			document.getElementById('password_success').style.display = 'none';
+
+
+		}
+	}
+
+
+
+
+
+	function check(){
+		var sel = document.getElementById('plan');
+		var toggle = document.getElementById('plan').value;
+		toggle = parseInt(toggle);
+		if(toggle === 0){
+			document.getElementById("free").style.display = 'none';
+			document.getElementById("paid").style.display = 'none';
+		}
+		if(toggle === 1){
+			document.getElementById("free").style.display = 'block';
+			document.getElementById("paid").style.display = 'none';
+		}
+
+		if(toggle > 1 ){
+
+			document.getElementById("free").style.display = 'none';
+			document.getElementById("paid").style.display = 'block';
+			document.getElementById("paybutton").textContent = 'Pay the Sum of ' + sel.options[sel.selectedIndex].text + 'To Register';
+
+			$.ajax({
+				type: "POST",
+				url: '<?php echo site_url('get_plan'); ?>',
+				data: {plan_id: toggle},
+				success: function (data) {
+					data = JSON.parse(data);
+
+					document.getElementById('price').value = data.plan_price * 100;
+
+					console.log(document.getElementById('price').value);
+
+				},
+				error: function () {
+					console.log(this.error);
+				}
+			});
+
+
+
+		}
+	}
+</script>

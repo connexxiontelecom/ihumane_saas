@@ -13,8 +13,10 @@
 		<script src="<?php echo base_url(); ?>assets/js/garlic.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/push_notification.js"></script>
 		<script src="<?php echo base_url(); ?>assets/modules/parsleyjs/parsley.min.js"></script>
+		<script src="<?php echo base_url(); ?>assets/modules/offline/js/offline.min.js"></script>
 
-
+		<script src="<?php echo base_url(); ?>assets/js/stis.js"></script>
+		<script src="https://js.paystack.co/v1/inline.js"></script>
 		<!-- JS Libraies -->
 		<script src="<?php echo base_url(); ?>assets/modules/owlcarousel2/dist/owl.carousel.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/modules/summernote/summernote-bs4.js"></script>
