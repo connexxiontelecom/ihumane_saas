@@ -22,8 +22,8 @@ function payWithPaystack(){
 },
 	onClose: function(){
 		//e.preventDefault();
-	// alert('window closed');
-		console.log('window closed');
+	 alert('window closed');
+		//console.log('window closed');
 }
 });
 	handler.openIframe();
