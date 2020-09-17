@@ -48,7 +48,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/datatables/dataTables.bootstrap4.min.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/datatables/buttons.bootstrap4.min.css" type="text/css" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/datatables/responsive.bootstrap4.min.css" type="text/css" />
-	
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/offline/css/offline-language-english.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/offline/css/offline-theme-slide.css">
+
 	<!-- Template CSS -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/components.css">

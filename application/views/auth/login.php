@@ -17,6 +17,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	<!-- General CSS Files -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/offline/css/offline-language-english.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/modules/offline/css/offline-theme-slide.css">
 
 	<!-- Template CSS -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
@@ -117,6 +119,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	<script src="<?php echo base_url(); ?>assets/modules/nicescroll/jquery.nicescroll.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/modules/moment.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/stisla.js"></script>
+	<script src="<?php echo base_url(); ?>assets/modules/offline/js/offline.min.js"></script>
 
 	<!-- Template JS File -->
 	<script src="<?php echo base_url(); ?>assets/js/scripts.js"></script>
@@ -130,7 +133,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			let curHr = today.getHours();
 			if (curHr < 12) {
 				$('.greeting').html('Good Morning')
-			} else if (curHr < 18) {
+			} else if (curHr < 16) {
 				$('.greeting').html('Good Afternoon')
 			} else {
 				$('.greeting').html('Good Evening')
