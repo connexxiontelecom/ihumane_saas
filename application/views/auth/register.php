@@ -18,7 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<div class="card-header"><h4>Register</h4></div>
 
 						<div class="card-body">
-							<form method="POST" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+							<form method="post" action="<?php echo site_url('register') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
 								<div class="form-divider">
 									Your Business Details
 								</div>
@@ -143,7 +143,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 										<select class="select2 form-control" id="plan" onchange="check()">
 											<option value="0" selected></option>
 											<?php foreach ($plans as $plan): ?>
-											<option value="<?php echo $plan->plan_id; ?>"> <span> &#8358; </span> <?php echo number_format($plan->plan_price)." ".$plan->plan_name." - ".$plan->plan_duration."Day(s)"; ?></option>
+											<option value="<?php echo $plan->plan_id; ?>" <?php if(!empty($plan_id)): if($plan_id == $plan->plan_id ): echo 'selected'; endif; endif; ?>> <span> &#8358; </span> <?php echo number_format($plan->plan_price)." ".$plan->plan_name." - ".$plan->plan_duration."Day(s)"; ?></option>
 											<?php endforeach; ?>
 
 										</select>
@@ -151,7 +151,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 								</div>
 
-								<input type="hidden" id="price" value="">
+								<input type="hidden" id="price" value="<?php if(!empty($pla)): echo $pla->plan_price * 100; endif; ?>">
 
 
 								<div class="form-group">
@@ -162,17 +162,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 
 
-								<div class="form-group" style="display: none" id="paid" >
+								<div class="form-group" <?php if (empty($plan_id) || $plan_id == 1): ?>style="display: none" <?php endif; ?> id="paid" >
 									<button onclick="payWithPaystack()" id="paybutton" class="btn btn-primary btn-lg btn-block">
-										Register
+										Pay the Sum of   <span> &#8358; </span> <?php echo number_format($pla->plan_price)." ".$pla->plan_name." - ".$pla->plan_duration."Day(s)"; ?> To Register
 									</button>
 								</div>
 
-								<div class="form-group" id="free" style="display: none" >
+								<div class="form-group"   <?php if (@empty($plan_id) || @$plan_id > 1): ?>style="display: none" <?php endif; ?>  <?php if (!@empty($plan_id) || @$plan_id == 1): ?>style="display: block" <?php endif; ?>
 									<button  class="btn btn-primary btn-lg btn-block">
 										Register For Free Trial
 									</button>
 								</div>
+
+						<div class="form-group" id="free" style="display: none" >
+						<button  class="btn btn-primary btn-lg btn-block">
+							Register For Free Trial
+						</button>
+					</div>
 							</form>
 						</div>
 					</div>

@@ -324,7 +324,8 @@ class Home extends CI_Controller
 
 
 	public function register(){
-		$this->employees->check_leave_end_date(date('yy-m-d'));
+
+		$plan_id = $this->uri->segment(2);
 
 		$user_username = $this->session->userdata('user_username');
 
@@ -335,6 +336,23 @@ class Home extends CI_Controller
 		else:
 			$data['csrf_name'] = $this->security->get_csrf_token_name();
 			$data['csrf_hash'] = $this->security->get_csrf_hash();
+
+			if(!empty($plan_id)):
+
+				$data['plan_id'] = $plan_id;
+				$pla = $this->backoffices->get_plan($plan_id);
+
+				if(empty($pla)):
+
+					redirect('error_404');
+
+					else:
+
+				$data['pla'] = $pla;
+
+					endif;
+
+			endif;
 			$data['plans'] = $this->backoffices->get_plans();
 
 			$data['countries'] =   array(
