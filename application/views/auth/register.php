@@ -19,6 +19,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 						<div class="card-body">
 							<form method="POST">
+								<div class="form-divider">
+									Your Business Details
+								</div>
 								<div class="row">
 									<div class="form-group col-12">
 										<label for="business_name">Business Name</label>
@@ -28,30 +31,86 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 
 								<div class="form-group">
-									<label>Business URL</label>
+									<label>Business Website</label>
 									<div>
-										<input parsley-type="url" type="url" class="form-control"
+										<input parsley-type="url" type="url" value="https://" class="form-control"
 											   required placeholder="URL"/>
 									</div>
 								</div>
 
+
 								<div class="row">
 									<div class="form-group col-6">
-										<label for="business_website">Business Website</label>
-										<input id="frist_name" type="text" class="form-control" name="tenant_business_name" autofocus>
+										<label for="business_type">Business Type </label>
+										<input id="business_type" type="text" class="form-control" name="tenant_business_type" autofocus>
+									</div>
+
+									<div class="form-group col-6">
+										<label>Use Case</label>
+										<select class="select2 form-control" name="tenant_usage">
+											<option value="0" selected></option>
+
+											<option value="academic">Academic</option>
+											<option value="business">Business</option>
+
+
+										</select>	</div>
+
+								</div>
+								<div class="row">
+									<div class="form-group col-6">
+										<label>Country</label>
+										<select class="select2 form-control" name="tenant_country">
+											<option value="0" selected></option>
+											<?php foreach ($countries as $country): ?>
+												<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
+											<?php endforeach; ?>
+
+										</select>
 									</div>
 									<div class="form-group col-6">
-										<label for="last_name">Last Name</label>
-										<input id="last_name" type="text" class="form-control" name="last_name">
+										<label for="city">City</label>
+										<input id="city" name="tenant_city" type="text" class="form-control">
 									</div>
 								</div>
 
-								<div class="form-group">
-									<label for="email">Email</label>
-									<input id="email" type="email" class="form-control" name="email">
-									<div class="invalid-feedback">
+
+								<div class="form-divider">
+									Your Business Contact Person
+								</div>
+
+								<div class="row">
+
+									<div class="form-group col-12">
+										<label for="contact_name">Contact Name</label>
+										<input id="contact_name" type="text" class="form-control" name="tenant_contact_name">
 									</div>
 								</div>
+
+								<div class="row">
+
+									<div class="form-group col-12">
+										<label for="contact_email">Contact E-Mail</label>
+										<input id="contact_email" type="email" class="form-control" name="tenant_contact_email">
+									</div>
+
+
+								</div>
+
+								<div class="row">
+
+									<div class="form-group col-6">
+										<label for="contact_phone">Contact Phone Number</label>
+										<input id="contact_phone" type="tel" class="form-control" name="tenant_contact_phone">
+									</div>
+
+									<div class="form-group col-6">
+										<label for="contact_username">Contact Username</label>
+										<input id="contact_username" type="text" class="form-control" name="tenant_username">
+									</div>
+								</div>
+
+
 
 								<div class="row">
 									<div class="form-group col-6">
@@ -69,7 +128,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 
 								<div class="form-divider">
-									Your Home
+									Plan Details
 								</div>
 								<div class="row">
 									<div class="form-group col-6">
@@ -129,3 +188,4 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 </html>
+<?php include(APPPATH.'/views/js.php'); ?>
