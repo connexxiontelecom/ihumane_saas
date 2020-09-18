@@ -163,7 +163,7 @@ p, ul:not(.list-unstyled), ol {
 .custom-select:focus,
 .custom-file-label:focus {
 	background-color: #fefeff;
-	border-color: #95a0f4; }
+	border-color: #5bb356; }
 
 .input-group-text,
 select.form-control:not([size]):not([multiple]),
@@ -738,7 +738,7 @@ select.form-control:not([size]):not([multiple]) {
 	border-top: 2px solid #191d21; }
 .card.card-hero .card-header {
 	padding: 40px;
-	background-image: linear-gradient(to bottom, #51aa4c, #95a0f4);
+	background-image: linear-gradient(to bottom, #51aa4c, #9dd29a);
 	color: #fff;
 	overflow: hidden;
 	height: auto;
@@ -753,7 +753,7 @@ select.form-control:not([size]):not([multiple]) {
 	font-size: 16px; }
 .card.card-hero .card-header .card-icon {
 	float: right;
-	color: #8c98f3;
+	color: #51aa4c;
 	margin: -60px; }
 .card.card-hero .card-header .card-icon .ion, .card.card-hero .card-header .card-icon .fas, .card.card-hero .card-header .card-icon .far, .card.card-hero .card-header .card-icon .fab, .card.card-hero .card-header .card-icon .fal {
 	font-size: 140px; }
