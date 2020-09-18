@@ -13,73 +13,75 @@
           </div>
           <div class="section-body">
             <div class="row">
-              <div class="col-12 mb-4">
-                <div class="hero bg-primary text-white">
-                  <div class="hero-inner">
-                    <h2>Welcome, <?php echo $user_data->user_name; ?> </h2>
-                    <p class="lead" id="timestamp"></p>
+              <div class="col-lg-4 col-md-4 col-md-6 col-12">
+                <div class="card pt-3" style="height: 195px; border-radius: 12px">
+<!--                  <img class="card-img-top" src="--><?php //echo base_url()?><!--assets/img/4565.jpg" alt="Welcome Image">-->
+                  <div class="card-body">
+                    <h5 class="card-title">Hello, <?php echo $user_data->user_name; ?>!</h5>
+                    <p class="card-text">Welcome back. You have <?php echo count($notifications)?> notifications.</p>
+                    <a href="<?php echo site_url('employee') ?>" class="btn btn-primary">Manage Employees</a>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                  <div class="card-icon bg-primary">
-                    <i class="far fa-user"></i>
-                  </div>
-                  <div class="card-wrap">
-                    <div class="card-header">
-                      <h4>Total Employees</h4>
+              <div class="col-lg-4 col-md-4 col-md-6 col-12">
+                <div class="row">
+                  <div class="card card-statistic-2" style="border-radius: 12px;">
+                    <div class="card-stats" >
+                      <div class="card-stats-title" style="border-radius: 12px; !important;">Company Statistics -
+                        <div class="dropdown d-inline">
+                          <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">August</a>
+                          <ul class="dropdown-menu dropdown-menu-sm">
+                            <li class="dropdown-title">Select Month</li>
+                            <li><a href="#" class="dropdown-item">January</a></li>
+                            <li><a href="#" class="dropdown-item">February</a></li>
+                            <li><a href="#" class="dropdown-item">March</a></li>
+                            <li><a href="#" class="dropdown-item">April</a></li>
+                            <li><a href="#" class="dropdown-item">May</a></li>
+                            <li><a href="#" class="dropdown-item">June</a></li>
+                            <li><a href="#" class="dropdown-item">July</a></li>
+                            <li><a href="#" class="dropdown-item active">August</a></li>
+                            <li><a href="#" class="dropdown-item">September</a></li>
+                            <li><a href="#" class="dropdown-item">October</a></li>
+                            <li><a href="#" class="dropdown-item">November</a></li>
+                            <li><a href="#" class="dropdown-item">December</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="card-stats-items" style="border-radius: 12px;">
+                        <div class="card-stats-item">
+                          <div class="card-stats-item-count"><?php echo count($departments);?></div>
+                          <div class="card-stats-item-label">Departments</div>
+                        </div>
+                        <div class="card-stats-item">
+                          <div class="card-stats-item-count"><?php echo count($users); ?></div>
+                          <div class="card-stats-item-label">Users</div>
+                        </div>
+                        <div class="card-stats-item">
+                          <div class="card-stats-item-count"><?php echo count($online_users); ?></div>
+                          <div class="card-stats-item-label">Online</div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="card-body">
-                      <?php echo count($employees); ?>
+                    <div class="card-icon shadow-primary bg-primary">
+                      <i class="fas fa-users"></i>
+                    </div>
+                    <div class="card-wrap">
+                      <div class="card-header">
+                        <h4>Total Employees</h4>
+                      </div>
+                      <div class="card-body">
+                        <?php echo count($employees); ?>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                  <div class="card-icon bg-danger">
-                    <i class="far fa-newspaper"></i>
-                  </div>
-                  <div class="card-wrap">
-                    <div class="card-header">
-                      <h4>Total Department</h4>
-                    </div>
-                    <div class="card-body">
-                      <?php echo count($departments); ?>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                  <div class="card-icon bg-warning">
-                    <i class="far fa-file"></i>
-                  </div>
-                  <div class="card-wrap">
-                    <div class="card-header">
-                      <h4>Total Users</h4>
-                    </div>
-                    <div class="card-body">
-                      <?php echo count($users); ?>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                <div class="card card-statistic-1">
-                  <div class="card-icon bg-success">
-                    <i class="fas fa-circle"></i>
-                  </div>
-                  <div class="card-wrap">
-                    <div class="card-header">
-                      <h4>Online Users</h4>
-                    </div>
-                    <div class="card-body">
-                      <?php echo count($online_users); ?>
-                    </div>
+              <div class="col-lg-4 col-md-4 col-md-6 col-12">
+                <div class="card card-hero" style="height: 195px; border-radius: 12px;">
+                  <div class="card-header" style="height: 195px; border-radius: 12px; !important;">
+                    <h1><?php echo date('j')?></h1>
+                    <h4><?php echo date('F')?></h4>
+                    <h6 class="mt-2"><?php echo date('Y')?></h6>
                   </div>
                 </div>
               </div>
