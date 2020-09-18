@@ -21,6 +21,7 @@ class Home extends CI_Controller
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
 		$this->load->model('salaries');
+		$this->load->model('loans');
 
 	}
 
@@ -66,6 +67,9 @@ class Home extends CI_Controller
         $data['total_deduction_month'] = $this->get_total_deduction_month();
         $data['total_income_year'] = $this->get_total_income_year();
         $data['total_deduction_year'] = $this->get_total_deduction_year();
+        $data['pending_loans'] = $this->loans->count_pending_loans();
+        $data['running_loans'] = $this->loans->count_running_loans();
+
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):
 

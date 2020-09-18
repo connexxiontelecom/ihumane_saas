@@ -178,8 +178,41 @@
 <!--                </div>-->
               </div>
               <div class="col-lg-4 col-md-12 col-12 col-sm-12">
-                
-<!--                <div class="card">-->
+                <div class="list-group-item flex-column align-items-start p-4 mb-4" style="border-radius: 12px; border: none">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-4">Loan Management</h5>
+                    <div class="dropleft">
+                      <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item has-icon" href="<?php echo site_url('new_loan') ?>"><i class="fas fa-plus"></i>New Loan</a>
+                        <a class="dropdown-item has-icon" href="<?php echo site_url('loans') ?>"><i class="fas fa-edit"></i>Manage Loans</a>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mb-1 font-weight-600"><?php echo $pending_loans?> Pending Loan Requests</p>
+                  <small><?php echo $running_loans?> Running Loans </small>
+                </div>
+
+<!--                <div class="list-group-item flex-column align-items-start p-4" style="border-radius: 12px; border: none">-->
+<!--                  <div class="d-flex w-100 justify-content-between">-->
+<!--                    <h5 class="mb-4">Loan Management</h5>-->
+<!--                    <div class="dropleft">-->
+<!--                      <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>-->
+<!--                      <div class="dropdown-menu">-->
+<!--                        <a class="dropdown-item has-icon" href="#"><i class="fas fa-eye"></i>View Employee</a>-->
+<!--                        <a class="dropdown-item has-icon" href="#"><i class="fas fa-edit"></i>Update Employee</a>-->
+<!--                        <a class="dropdown-item has-icon" href="#"><i class="fas fa-question"></i>Employee Queries</a>-->
+<!--                        <div class="dropdown-divider"></div>-->
+<!--                        <a class="dropdown-item has-icon text-danger" href="#"><i class="fas fa-times"></i>Terminate Employee</a>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <p class="mb-1 font-weight-600">0 Loans Are Running</p>-->
+<!--                  <small>0 Pending Loan Requests</small>-->
+<!--                </div>-->
+
+
+                <!--                <div class="card">-->
 <!--                  <div class="card-header">-->
 <!--                    <h4>Present Employees</h4>-->
 <!--                  </div>-->
