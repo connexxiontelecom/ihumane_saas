@@ -74,6 +74,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</div>
 								</div>
 
+								<div class="row">
+									<div class="form-group col-6">
+										<label for="payroll_start_year">Payroll Start Year</label>
+										<input id="payroll_start_year" name="payroll_start_year" type="number" onkeypress="return isNumber(event)" value="<?php echo date("Y"); ?>" class="form-control">
+									</div>
+
+								</div>
+
+
 
 								<div class="form-divider">
 									Your Business Contact Person
@@ -207,25 +216,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		var password = document.getElementById('password').value;
 		var password_confirm = document.getElementById('password_confirm').value;
 
-
-
-		if(password == password_confirm){
+		if(password === password_confirm){
 			document.getElementById('password_alert').style.display = 'none';
-
 			document.getElementById('password_success').style.display = 'block';
-
-
 		}else{
 			document.getElementById('password_alert').style.display = 'block';
-
 			document.getElementById('password_success').style.display = 'none';
-
 
 		}
 	}
 
-
-
+	function isNumber(evt) {
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.which) ? evt.which : evt.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;
+		}
+		else{
+				var year = document.getElementById('payroll_start_year').value;
+				var length = year.length;
+				if(length < 4){
+					return  true
+				}
+			return false;
+		}
+	}
 
 
 	function check(){
@@ -240,22 +255,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			document.getElementById("free").style.display = 'block';
 			document.getElementById("paid").style.display = 'none';
 		}
-
 		if(toggle > 1 ){
-
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'block';
 			document.getElementById("paybutton").textContent = 'Pay the Sum of ' + sel.options[sel.selectedIndex].text + 'To Register';
-
 			$.ajax({
 				type: "POST",
 				url: '<?php echo site_url('get_plan'); ?>',
 				data: {plan_id: toggle},
 				success: function (data) {
 					data = JSON.parse(data);
-
 					document.getElementById('price').value = data.plan_price * 100;
-
 					console.log(document.getElementById('price').value);
 
 				},
@@ -263,9 +273,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					console.log(this.error);
 				}
 			});
-
-
-
 		}
 	}
 </script>

@@ -534,6 +534,11 @@ class Home extends CI_Controller
 
 	}
 
+	public function test_table(){
+
+		$this->configurations->create_salary_table(1);
+	}
+
 	public function timestamp(){
     date_default_timezone_set('Africa/Lagos');
     echo $timestamp = date('F j, Y g:i:s a');
