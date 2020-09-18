@@ -13,9 +13,9 @@ class Salaries extends CI_Model
 		$this->load->dbutil();
 
 	}
-	public function add_salary($salary_data){
+	public function add_salary($salary_data, $salary_table){
 
-		$this->db->insert('salary', $salary_data);
+		$this->db->insert($salary_table, $salary_data);
 		return true;
 	}
 

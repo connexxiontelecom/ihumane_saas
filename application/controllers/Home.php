@@ -20,6 +20,7 @@ class Home extends CI_Controller
 		$this->load->model('logs');
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
+		$this->load->model('salaries');
 
 	}
 
@@ -437,6 +438,11 @@ class Home extends CI_Controller
 
 				extract($_POST);
 
+			$check_email = $this->users->get_tenant_email($tenant_contact_email);
+			$check_username = $this->users->get_tenant_username($tenant_username);
+
+			if(empty($check_email) && empty($check_username)):
+
 				$tenant_array = array(
 
 					'tenant_username' => $tenant_username,
@@ -450,10 +456,6 @@ class Home extends CI_Controller
 					'tenant_city' => $tenant_city,
 					'tenant_business_type' => $tenant_business_type,
 					'tenant_usage' => $tenant_usage,
-					'reference_code' => $reference_code,
-					'plan_id' => $tenant_plan,
-					'payroll_start_year' => $payroll_start_year
-
 				);
 
 				$tenant_array = $this->security->xss_clean($tenant_array);
@@ -465,6 +467,7 @@ class Home extends CI_Controller
 				$this->configurations->create_loans_table($tenant_id);
 				$this->configurations->create_loan_repayment_table($tenant_id);
 				$this->configurations->create_variational_payment_table($tenant_id);
+				$this->configurations->create_loan_reschedule_log_table($tenant_id);
 
 				$user_array = array(
 					'user_username'=> $tenant_username,
@@ -505,32 +508,56 @@ class Home extends CI_Controller
 					'subscription_plan_id' => $tenant_plan,
 					'subscription_start_date' => date('Y-m-d'),
 					'subscription_end_date' => $end_date,
-					'subscription_reference_code' => $reference_code,
+					'subscription_reference_code' => @$reference_code,
 					'subscription_status' => 1
 				);
 
-//				$query = $this->backoffices->add_plan($plan_array);
-//
-//				if($query == true):
-//
-//					$msg = array(
-//						'msg'=> 'Plan Added Successfully',
-//						'location' => site_url('plans'),
-//						'type' => 'success'
-//
-//					);
-//					$this->load->view('swal', $msg);
-//
-//				else:
-//					$msg = array(
-//						'msg'=> 'An Error Occurred',
-//						'location' => site_url('plans'),
-//						'type' => 'error'
-//
-//					);
-//					$this->load->view('swal', $msg);
-//
-//				endif;
+				$subscription_array = $this->security->xss_clean($subscription_array);
+
+				$salary_array = array(
+					'salary_employee_id' => 0,
+					'salary_payment_definition_id' =>0,
+					'salary_pay_month' => 0,
+					'salary_pay_year' => $payroll_start_year,
+					'salary_amount' => 0,
+					'salary_confirmed' => 0
+				);
+				$salary_table = 'salary_'.$tenant_id;
+
+				$query = $this->salaries->add_salary($salary_array, $salary_table);
+
+
+				if($query == true):
+
+					$msg = array(
+						'msg'=> 'Welcome to iHumane Click ok to Login',
+						'location' => site_url('login'),
+						'type' => 'success'
+
+					);
+					$this->load->view('swal', $msg);
+
+				else:
+					$msg = array(
+						'msg'=> 'An Error Occurred',
+						'location' => site_url('register'),
+						'type' => 'error'
+
+					);
+					$this->load->view('swal', $msg);
+
+				endif;
+
+		else:
+			$msg = array(
+				'msg'=> 'Username or Email Already Exists',
+				'location' => site_url('register'),
+				'type' => 'error'
+
+			);
+			$this->load->view('swal', $msg);
+
+		endif;
 
 			else:
 
@@ -541,15 +568,17 @@ class Home extends CI_Controller
 
 
 
-		//$this->load->view('backoffice/new_plan', $data);
+	}
 
-		//echo $username;
+	public function check_username(){
 
+		$username = $this->input->post('username');
+		echo json_encode($this->users->get_tenant_username($username));
+	}
 
-
-
-
-
+	public function check_email(){
+		$email = $this->input->post('email');
+		echo json_encode($this->users->get_tenant_email($email));
 
 	}
 

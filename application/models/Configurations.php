@@ -267,6 +267,57 @@ class Configurations extends CI_Model
 		$this->dbforge->create_table('variational_payment_'.$i, TRUE);
 	}
 
+	public function create_loan_reschedule_log_table($i){
+
+		$this->dbutil->optimize_table('loan_reschedule_log_'.$i);
+
+		$fields = array(
+			'loan_log_id' => array(
+				'type' => 'INT',
+				'auto_increment' => TRUE
+			),
+			'loan_log_loan_id' => array(
+				'type' => 'INT',
+
+			),
+
+			'loan_log_reschedule_type' => array(
+				'type' => 'INT',
+
+			),
+
+			'loan_log_reschedule_amount' => array(
+				'type' => 'DOUBLE',
+				'default' => null,
+			),
+
+			'loan_log_loan_balance' => array(
+				'type' => 'DOUBLE',
+
+			),
+
+			'loan_log_skip_month' => array(
+				'type' => 'INT',
+				'default' => null
+
+			),
+
+			'loan_log_skip_year' => array(
+				'type' => 'INT',
+				'default' => null
+
+			),
+
+
+		);
+
+		$this->dbforge->add_field($fields);
+
+		$this->dbforge->add_key('loan_log_id', TRUE);
+
+		$this->dbforge->create_table('loan_reschedule_log_'.$i, TRUE);
+	}
+
 
 	public function new_subscription($subscription_data){
 		$this->db->insert('subscription', $subscription_data);

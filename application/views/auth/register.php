@@ -105,7 +105,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 								</div>
-
+								<div id="email_alert">
+									<div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Looks like you already registered.
+									</div>
+								</div>
 								<div class="row">
 
 									<div class="form-group col-6">
@@ -119,6 +126,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</div>
 								</div>
 
+								<div id="username_alert">
+									<div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Username Already Taken.
+									</div>
+								</div>
 								<input type="hidden" name="<?php echo $csrf_name; ?>" value="<?php echo $csrf_hash; ?>" />
 
 
@@ -211,6 +226,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script>
 
 	document.getElementById('password_alert').style.display = 'none';
+	document.getElementById('email_alert').style.display = 'none';
+	document.getElementById('username_alert').style.display = 'none';
 
 	function check_password() {
 		var password = document.getElementById('password').value;
@@ -275,4 +292,48 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			});
 		}
 	}
+
+	$("#contact_username").keyup(function () {
+		var username = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo site_url('check_username'); ?>',
+			data: {username: username},
+			cache: false,
+			success : function(data){
+				data = JSON.parse(data);
+				console.log(data);
+				if(jQuery.isEmptyObject(data)){
+					document.getElementById("username_alert").style.display = 'none';
+				} else{
+					document.getElementById("username_alert").style.display = 'block';
+				}
+
+
+			}
+		});
+	});
+
+	$("#contact_email").keyup(function () {
+		var email = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo site_url('check_email'); ?>',
+			data: {email: email},
+			cache: false,
+			success : function(data){
+				data = JSON.parse(data);
+
+				console.log(data);
+				if(jQuery.isEmptyObject(data)){
+					document.getElementById("email_alert").style.display = 'none';
+
+				} else{
+					document.getElementById("email_alert").style.display = 'block';
+				}
+
+
+			}
+		});
+	});
 </script>
