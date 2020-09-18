@@ -440,7 +440,7 @@ class Home extends CI_Controller
 				$tenant_array = array(
 
 					'tenant_username' => $tenant_username,
-					'tenant_password' => $tenant_password,
+					'tenant_password' => password_hash($tenant_password, PASSWORD_BCRYPT),
 					'tenant_contact_name' => $tenant_contact_name,
 					'tenant_contact_email' => $tenant_contact_email,
 					'tenant_contact_phone' => $tenant_contact_phone,
@@ -450,13 +450,64 @@ class Home extends CI_Controller
 					'tenant_city' => $tenant_city,
 					'tenant_business_type' => $tenant_business_type,
 					'tenant_usage' => $tenant_usage,
-					'reference_code' => $reference_code
+					'reference_code' => $reference_code,
+					'plan_id' => $tenant_plan,
+					'payroll_start_year' => $payroll_start_year
 
 				);
 
 				$tenant_array = $this->security->xss_clean($tenant_array);
 
-				print_r($tenant_array);
+				$tenant_id = $this->users->add_new_tenant($tenant_array);
+
+				$this->configurations->create_salary_table($tenant_id);
+				$this->configurations->create_tax_rate_table($tenant_id);
+				$this->configurations->create_loans_table($tenant_id);
+				$this->configurations->create_loan_repayment_table($tenant_id);
+				$this->configurations->create_variational_payment_table($tenant_id);
+
+				$user_array = array(
+					'user_username'=> $tenant_username,
+					'user_email'=> $tenant_contact_email,
+					'user_password'=> password_hash($tenant_password, PASSWORD_BCRYPT),
+					'user_name'=> $tenant_contact_name,
+					'user_status'=>1,
+					'tenant_id' => $tenant_id
+				);
+
+				$permission_array = array(
+					'username'=> $tenant_username,
+					'employee_management'=> 1,
+					'payroll_management'=> 1,
+					'biometrics' => 1,
+					'user_management'=> 1,
+					'configuration' => 1,
+					'hr_configuration' => 1,
+					'payroll_configuration' => 1,
+					'tenant_id' => $tenant_id
+				);
+				$user_array = $this->security->xss_clean($user_array);
+				$permission_array = $this->security->xss_clean($permission_array);
+
+				$this->users->add($user_array, $permission_array);
+
+				$plan = $this->backoffices->get_plan($tenant_plan);
+
+				$duration = $plan->plan_duration;
+				$Date = date('Y-m-d');
+				$end_date =  date('Y-m-d', strtotime($Date. ' + '.$duration. 'days'));
+
+
+
+				$subscription_array = array(
+
+					'subscription_tenant_id'=> $tenant_id,
+					'subscription_plan_id' => $tenant_plan,
+					'subscription_start_date' => date('Y-m-d'),
+					'subscription_end_date' => $end_date,
+					'subscription_reference_code' => $reference_code,
+					'subscription_status' => 1
+				);
 
 //				$query = $this->backoffices->add_plan($plan_array);
 //
@@ -536,7 +587,14 @@ class Home extends CI_Controller
 
 	public function test_table(){
 
-		$this->configurations->create_salary_table(1);
+//		$this->configurations->create_salary_table(1);
+//		$this->configurations->create_tax_rate_table(1);
+//		$this->configurations->create_loans_table(1);
+//		$this->configurations->create_loan_repayment_table(1);
+//		$this->configurations->create_variational_payment_table(1);
+
+
+
 	}
 
 	public function timestamp(){

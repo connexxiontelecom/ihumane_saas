@@ -150,7 +150,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="row">
 									<div class="form-group col-12">
 										<label>Plan</label>
-										<select class="select2 form-control" id="plan" onchange="check()">
+										<select class="select2 form-control" id="plan" name="tenant_plan" onchange="check()">
 											<option value="0" selected></option>
 											<?php foreach ($plans as $plan): ?>
 											<option value="<?php echo $plan->plan_id; ?>" <?php if(!empty($plan_id)): if($plan_id == $plan->plan_id ): echo 'selected'; endif; endif; ?>> <span> &#8358; </span> <?php echo number_format($plan->plan_price)." ".$plan->plan_name." - ".$plan->plan_duration."Day(s)"; ?></option>

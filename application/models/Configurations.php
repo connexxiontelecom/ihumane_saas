@@ -208,12 +208,7 @@ class Configurations extends CI_Model
 				'type' => 'INT',
 
 			),
-
-			'loan_repayment_date' => array(
-				'type' => 'DATE',
-
-			),
-
+			'loan_repayment_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
 
 		);
 
@@ -258,7 +253,7 @@ class Configurations extends CI_Model
 			),
 
 			'variational_payroll_year' => array(
-				'type' => 'DATE',
+				'type' => 'INT',
 
 			),
 
@@ -271,4 +266,12 @@ class Configurations extends CI_Model
 
 		$this->dbforge->create_table('variational_payment_'.$i, TRUE);
 	}
+
+
+	public function new_subscription($subscription_data){
+		$this->db->insert('subscription', $subscription_data);
+		return true;
+	}
+
+
 }

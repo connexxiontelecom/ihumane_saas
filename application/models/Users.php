@@ -20,6 +20,11 @@ class Users extends CI_Model
 
 	}
 
+	public function add_new_tenant($tenant_data){
+		$this->db->insert('tenant', $tenant_data);
+		return $this->db->insert_id();
+	}
+
 	public function view_users(){
 		$this->db->select('*');
 		$this->db->from('user');
