@@ -62,6 +62,10 @@ class Home extends CI_Controller
           }
         }
         $data['online_users'] = $online_users;
+        $data['total_income_month'] = $this->get_total_income_month();
+        $data['total_deduction_month'] = $this->get_total_deduction_month();
+        $data['total_income_year'] = $this->get_total_income_year();
+        $data['total_deduction_year'] = $this->get_total_deduction_year();
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):
 
@@ -546,7 +550,72 @@ class Home extends CI_Controller
     foreach ($income_payments as $income_payment) {
       $income_payments_id[] = $income_payment->payment_definition_id;
     }
-    echo $income_salaries = json_encode($this->salaries->get_income_salaries($income_payments_id));
+    echo $income_salaries = json_encode($this->salaries->get_salaries_by_payment_id($income_payments_id));
+  }
+
+  public function get_deduction_statistics() {
+	  $deduction_payments = $this->payroll_configurations->get_deduction_payments();
+	  $deduction_payments_id = array();
+	  foreach ($deduction_payments as $deduction_payment) {
+      $deduction_payments_id[] = $deduction_payment->payment_definition_id;
+    }
+	  echo $deduction_salaries = json_encode($this->salaries->get_salaries_by_payment_id($deduction_payments_id));
+  }
+
+  public function get_total_income_month(){
+    $income_payments = $this->payroll_configurations->get_income_payments();
+    $income_payments_id = array();
+    foreach ($income_payments as $income_payment) {
+      $income_payments_id[] = $income_payment->payment_definition_id;
+    }
+    $salaries_current_month = $this->salaries->get_salaries_current_month($income_payments_id);
+    $sum = 0;
+    foreach($salaries_current_month as $salary_current_month) {
+      $sum += $salary_current_month->salary_amount;
+    }
+    return $sum;
+  }
+
+  public function get_total_income_year(){
+    $income_payments = $this->payroll_configurations->get_income_payments();
+    $income_payments_id = array();
+    foreach ($income_payments as $income_payment) {
+      $income_payments_id[] = $income_payment->payment_definition_id;
+    }
+    $salaries_current_year = $this->salaries->get_salaries_current_year($income_payments_id);
+    $sum = 0;
+    foreach($salaries_current_year as $salary_current_year) {
+      $sum += $salary_current_year->salary_amount;
+    }
+    return $sum;
+  }
+
+  public function get_total_deduction_month(){
+    $deduction_payments = $this->payroll_configurations->get_deduction_payments();
+    $deduction_payments_id = array();
+    foreach ($deduction_payments as $deduction_payment) {
+      $deduction_payments_id[] = $deduction_payment->payment_definition_id;
+    }
+    $salaries_current_month = $this->salaries->get_salaries_current_month($deduction_payments_id);
+    $sum = 0;
+    foreach($salaries_current_month as $salary_current_month) {
+      $sum += $salary_current_month->salary_amount;
+    }
+    return $sum;
+  }
+
+  public function get_total_deduction_year(){
+    $deduction_payments = $this->payroll_configurations->get_deduction_payments();
+    $deduction_payments_id = array();
+    foreach ($deduction_payments as $deduction_payment) {
+      $deduction_payments_id[] = $deduction_payment->payment_definition_id;
+    }
+    $salaries_current_year = $this->salaries->get_salaries_current_year($deduction_payments_id);
+    $sum = 0;
+    foreach($salaries_current_year as $salary_current_year) {
+      $sum += $salary_current_year->salary_amount;
+    }
+    return $sum;
   }
 
 }

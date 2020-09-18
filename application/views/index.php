@@ -89,36 +89,29 @@
               <div class="col-lg-8 col-md-12 col-12 col-sm-12">
                 <div class="card" style="border-radius: 12px;">
                   <div class="card-header">
-                    <h4>Statistics</h4>
+                    <h4>Payroll Overview</h4>
                     <div class="card-header-action">
-                      <div class="btn-group">
-                        <a href="#" class="btn btn-primary">Week</a>
-                        <a href="#" class="btn">Month</a>
-                      </div>
+                      <a href="<?php echo site_url('payroll_report') ?>" class="btn btn-primary">Payroll Reports</a>
                     </div>
                   </div>
                   <div class="card-body">
-                    <canvas id="myChart" height="182"></canvas>
+                    <canvas id="myChart1" height="160"></canvas>
                     <div class="statistic-details mt-sm-4">
                       <div class="statistic-details-item">
-                        <span class="text-muted"><span class="text-primary"><i class="fas fa-caret-up"></i></span> 7%</span>
-                        <div class="detail-value">$243</div>
-                        <div class="detail-name">Today's Sales</div>
+                        <div class="detail-value"><span class="text-primary"><i class="fas fa-circle" style="font-size: 6px;"></i></span> &#8358;<?php echo number_format($total_income_month)?></div>
+                        <div class="detail-name">This Month's Payments</div>
                       </div>
                       <div class="statistic-details-item">
-                        <span class="text-muted"><span class="text-danger"><i class="fas fa-caret-down"></i></span> 23%</span>
-                        <div class="detail-value">$2,902</div>
-                        <div class="detail-name">This Week's Sales</div>
+                        <div class="detail-value"><span class="text-danger"><i class="fas fa-circle" style="font-size: 6px;"></i></span> &#8358;<?php echo number_format($total_deduction_month)?></div>
+                        <div class="detail-name">This Month's Deductions</div>
                       </div>
                       <div class="statistic-details-item">
-                        <span class="text-muted"><span class="text-primary"><i class="fas fa-caret-up"></i></span>9%</span>
-                        <div class="detail-value">$12,821</div>
-                        <div class="detail-name">This Month's Sales</div>
+                        <div class="detail-value"><span class="text-primary"><i class="fas fa-circle" style="font-size: 6px;"></i></span> &#8358;<?php echo number_format($total_income_year)?></div>
+                        <div class="detail-name">This Year's Payments</div>
                       </div>
                       <div class="statistic-details-item">
-                        <span class="text-muted"><span class="text-primary"><i class="fas fa-caret-up"></i></span> 19%</span>
-                        <div class="detail-value">$92,142</div>
-                        <div class="detail-name">This Year's Sales</div>
+                        <div class="detail-value"><span class="text-danger"><i class="fas fa-circle" style="font-size: 6px;"></i></span> &#8358;<?php echo number_format($total_deduction_year)?></div>
+                        <div class="detail-name">This Year's Deductions</div>
                       </div>
                     </div>
                   </div>
@@ -185,6 +178,7 @@
 <!--                </div>-->
               </div>
               <div class="col-lg-4 col-md-12 col-12 col-sm-12">
+                
 <!--                <div class="card">-->
 <!--                  <div class="card-header">-->
 <!--                    <h4>Present Employees</h4>-->
@@ -230,7 +224,7 @@
     $('title').html('Dashboard - IHUMANE');
     $(document).ready(function() {
       setInterval(timestamp, 1000);
-      income_statistics();
+      statistics();
 
       function timestamp() {
         $.ajax({
@@ -241,55 +235,74 @@
         })
       }
 
-      function income_statistics() {
+      function statistics() {
         $.ajax({
           url: '<?php echo site_url('income_stats')?>',
-          success: function(data){
-            let income_stats = JSON.parse(data);
-            console.log(income_stats)
+          success: function(income){
+            let income_stats = JSON.parse(income);
             let income_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            let i = 0;
+            let i;
             for (i = 0; i < income_stats.length; i++) {
               income_amounts[income_stats[i].salary_pay_month - 1] += parseInt(income_stats[i].salary_amount);
             }
-
-            let statistics_chart = $('#myChart')[0].getContext('2d');
-            let income_chart = new Chart(statistics_chart, {
-              type: 'line',
-              data: {
-                labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                datasets: [{
-                  label: 'Income Payments',
-                  data: income_amounts,
-                  borderWidth: 5,
-                  borderColor: '#51aa4c',
-                  backgroundColor: 'transparent',
-                  pointBackgroundColor: '#fff',
-                  pointBorderColor: '#51aa4c',
-                  pointRadius: 4
-                }]
-              },
-              options: {
-                legend: {
-                  display: false
-                },
-                scales: {
-                  yAxes: [{
-                    gridLines: {
-                      display: false,
-                      drawBorder: false,
+            $.ajax({
+              url: '<?php echo site_url('deduction_stats')?>',
+              success: function(deductions) {
+                let deduction_stats = JSON.parse(deductions);
+                let deduction_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                let i;
+                for (i = 0; i < deduction_stats.length; i++) {
+                  deduction_amounts[deduction_stats[i].salary_pay_month - 1] += parseInt(deduction_stats[i].salary_amount);
+                }
+                let statistics_chart = $('#myChart1')[0].getContext('2d');
+                let chart = new Chart(statistics_chart, {
+                  type: 'line',
+                  data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                      label: 'Income Payments',
+                      data: income_amounts,
+                      borderWidth: 2,
+                      borderColor: '#47c363',
+                      backgroundColor: 'transparent',
+                      pointBackgroundColor: '#fff',
+                      pointBorderColor: '#47c363',
+                      pointRadius: 1
                     },
-                    ticks: {
-                      stepSize: 1000000
-                    }
-                  }],
-                  xAxes: [{
-                    gridLines: {
-                      color: '#fbfbfb',
-                      lineWidth: 2
-                    }
-                  }]
-                },
+                    {
+                      label: 'Deductions',
+                      data: deduction_amounts,
+                      borderWidth: 2,
+                      borderColor: '#fc544b',
+                      backgroundColor: 'transparent',
+                      pointBackgroundColor: '#fff',
+                      pointBorderColor: '#fc544b',
+                      pointRadius: 1
+                    }]
+                  },
+                  options: {
+                    legend: {
+                      display: false
+                    },
+                    scales: {
+                      yAxes: [{
+                        gridLines: {
+                          display: false,
+                          drawBorder: false,
+                        },
+                        ticks: {
+                          stepSize: 1000000
+                        }
+                      }],
+                      xAxes: [{
+                        gridLines: {
+                          color: '#fbfbfb',
+                          lineWidth: 2
+                        }
+                      }]
+                    },
+                  }
+                })
               }
             })
           }

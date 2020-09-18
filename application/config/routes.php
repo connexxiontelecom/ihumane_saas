@@ -17,6 +17,7 @@ $route['access_denied'] = 'home/access_denied';
 $route['error_404'] = 'home/error_404';
 $route['timestamp'] = 'home/timestamp';
 $route['income_stats'] = 'home/get_income_statistics';
+$route['deduction_stats'] = 'home/get_deduction_statistics';
 
 $route['bank'] = 'hr_configuration/bank';
 $route['add_bank'] = 'hr_configuration/add_bank';
