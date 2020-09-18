@@ -370,6 +370,8 @@ class Payroll_configurations extends CI_Model
     return $this->db->get()->result();
   }
 
+//  public function
+
 
 
 
