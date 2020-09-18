@@ -22,7 +22,7 @@
         <div class="section-body">
           <div class="section-title">All About Approving Payroll Routines</div>
 					<?php if($check_salary > 0): ?>
-            <p class="section-lead">Approve payroll routine run  - <?php echo date("F", mktime(0, 0, 0, $payroll_month, 10))." ".$payroll_year; ?></p>
+            <p class="section-lead">Approve payroll routine that was run for <?php echo date("F", mktime(0, 0, 0, $payroll_month, 10))." ".$payroll_year; ?></p>
 					<?php else: ?>
             <p class="section-lead">No payroll routine is currently available to be approved</p>
 					<?php endif; ?>
