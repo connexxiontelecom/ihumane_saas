@@ -192,6 +192,27 @@
                   <p class="mb-1 font-weight-600"><?php echo $pending_loans?> Pending Loan Requests</p>
                   <small><?php echo $running_loans?> Running Loans </small>
                 </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="card" style="border-radius: 12px">
+                      <div class="card-body text-center">
+                        <h4 class="display-4 mt-2">3</h4>
+                        <h6>Personalized</h6>
+                        <small>Salary Structures</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="card" style="border-radius: 12px">
+                      <div class="card-body text-center">
+                        <h4 class="display-4 mt-2">5</h4>
+                        <h6>Categorized</h6>
+                        <small>Salary Structures</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
 
 <!--                <div class="list-group-item flex-column align-items-start p-4" style="border-radius: 12px; border: none">-->
 <!--                  <div class="d-flex w-100 justify-content-between">-->
