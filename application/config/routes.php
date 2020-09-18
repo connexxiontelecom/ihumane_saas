@@ -11,6 +11,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login'] = 'home/auth_login';
 $route['register'] = 'home/register';
 $route['register/:num'] = 'home/register/$1';
+$route['register_a'] = 'home/register_a';
 $route['logout'] = 'home/logout';
 $route['access_denied'] = 'home/access_denied';
 $route['error_404'] = 'home/error_404';
@@ -309,6 +310,7 @@ $route['plans'] = 'backoffice/plans';
 $route['new_plan'] = 'backoffice/new_plan';
 $route['add_plan'] = 'backoffice/add_plan';
 $route['update_plan'] = 'backoffice/update_plan';
+$route['get_plan'] = 'backoffice/get_plan';
 $route['backoffice_404'] = 'backoffice/error_404';
 
 
