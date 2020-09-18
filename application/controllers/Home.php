@@ -20,6 +20,7 @@ class Home extends CI_Controller
 		$this->load->model('logs');
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
+		$this->load->model('salaries');
 
 	}
 
@@ -539,6 +540,13 @@ class Home extends CI_Controller
     echo $timestamp = date('F j, Y g:i:s a');
   }
 
-
+  public function get_income_statistics() {
+    $income_payments = $this->payroll_configurations->get_income_payments();
+    $income_payments_id = array();
+    foreach ($income_payments as $income_payment) {
+      $income_payments_id[] = $income_payment->payment_definition_id;
+    }
+    echo $income_salaries = json_encode($this->salaries->get_income_salaries($income_payments_id));
+  }
 
 }

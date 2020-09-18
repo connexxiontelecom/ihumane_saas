@@ -86,7 +86,11 @@
 		<script src="<?php echo base_url(); ?>assets/modules/owlcarousel2/dist/owl.carousel.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/modules/sweetalert/sweetalert.min.js"></script>
 		<script src="<?php echo base_url(); ?>assets/modules/upload-preview/assets/js/jquery.uploadPreview.min.js"></script>
-
+    <?php if($this->uri->segment(1) == ''):?>
+      <!-- Dashboard charts-->
+      <script src="<?php echo base_url(); ?>assets/modules/chart.min.js"></script>
+<!--      <script src="--><?php //echo base_url(); ?><!--assets/js/page/index-0.js"></script>-->
+    <?php endif;?>
 		<!-- Template JS File -->
 		<script src="<?php echo base_url(); ?>assets/js/scripts.js"></script>
 		<script src="<?php echo base_url(); ?>assets/js/custom.js"></script>

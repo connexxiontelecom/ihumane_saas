@@ -22,7 +22,7 @@
 				</div>
         <div class="section-body">
           <div class="section-title">All About Summary Of Payroll Routine For <?php echo $payroll_year." ".date("F", mktime(0, 0, 0, $payroll_month, 10)); ?></div>
-          <p class="section-lead">View summary of the approved payroll routines here</p>
+          <p class="section-lead">View summary of the payroll routines here</p>
           <div class="row">
             <div class="col-12">
               <div class="card">

@@ -204,6 +204,12 @@ class Salaries extends CI_Model
 		return $this->db->get()->result();
 	}
 
+  public function get_income_salaries($income_payment_ids) {
+    $this->db->select('*');
+    $this->db->from('salary');
+    $this->db->where_in('salary.salary_payment_definition_id', $income_payment_ids);
+    return $this->db->get()->result();
+  }
 
 
 
