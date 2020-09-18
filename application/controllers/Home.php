@@ -21,7 +21,9 @@ class Home extends CI_Controller
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
 		$this->load->model('salaries');
+
 		$this->load->model('loans');
+
 
 	}
 
@@ -446,10 +448,15 @@ class Home extends CI_Controller
 
 				extract($_POST);
 
+			$check_email = $this->users->get_tenant_email($tenant_contact_email);
+			$check_username = $this->users->get_tenant_username($tenant_username);
+
+			if(empty($check_email) && empty($check_username)):
+
 				$tenant_array = array(
 
 					'tenant_username' => $tenant_username,
-					'tenant_password' => $tenant_password,
+					'tenant_password' => password_hash($tenant_password, PASSWORD_BCRYPT),
 					'tenant_contact_name' => $tenant_contact_name,
 					'tenant_contact_email' => $tenant_contact_email,
 					'tenant_contact_phone' => $tenant_contact_phone,
@@ -459,36 +466,108 @@ class Home extends CI_Controller
 					'tenant_city' => $tenant_city,
 					'tenant_business_type' => $tenant_business_type,
 					'tenant_usage' => $tenant_usage,
-					'reference_code' => $reference_code
-
 				);
 
 				$tenant_array = $this->security->xss_clean($tenant_array);
 
-				print_r($tenant_array);
+				$tenant_id = $this->users->add_new_tenant($tenant_array);
 
-//				$query = $this->backoffices->add_plan($plan_array);
-//
-//				if($query == true):
-//
-//					$msg = array(
-//						'msg'=> 'Plan Added Successfully',
-//						'location' => site_url('plans'),
-//						'type' => 'success'
-//
-//					);
-//					$this->load->view('swal', $msg);
-//
-//				else:
-//					$msg = array(
-//						'msg'=> 'An Error Occurred',
-//						'location' => site_url('plans'),
-//						'type' => 'error'
-//
-//					);
-//					$this->load->view('swal', $msg);
-//
-//				endif;
+				$this->configurations->create_salary_table($tenant_id);
+				$this->configurations->create_tax_rate_table($tenant_id);
+				$this->configurations->create_loans_table($tenant_id);
+				$this->configurations->create_loan_repayment_table($tenant_id);
+				$this->configurations->create_variational_payment_table($tenant_id);
+				$this->configurations->create_loan_reschedule_log_table($tenant_id);
+
+				$user_array = array(
+					'user_username'=> $tenant_username,
+					'user_email'=> $tenant_contact_email,
+					'user_password'=> password_hash($tenant_password, PASSWORD_BCRYPT),
+					'user_name'=> $tenant_contact_name,
+					'user_status'=>1,
+					'tenant_id' => $tenant_id
+				);
+
+				$permission_array = array(
+					'username'=> $tenant_username,
+					'employee_management'=> 1,
+					'payroll_management'=> 1,
+					'biometrics' => 1,
+					'user_management'=> 1,
+					'configuration' => 1,
+					'hr_configuration' => 1,
+					'payroll_configuration' => 1,
+					'tenant_id' => $tenant_id
+				);
+				$user_array = $this->security->xss_clean($user_array);
+				$permission_array = $this->security->xss_clean($permission_array);
+
+				$this->users->add($user_array, $permission_array);
+
+				$plan = $this->backoffices->get_plan($tenant_plan);
+
+				$duration = $plan->plan_duration;
+				$Date = date('Y-m-d');
+				$end_date =  date('Y-m-d', strtotime($Date. ' + '.$duration. 'days'));
+
+
+
+				$subscription_array = array(
+
+					'subscription_tenant_id'=> $tenant_id,
+					'subscription_plan_id' => $tenant_plan,
+					'subscription_start_date' => date('Y-m-d'),
+					'subscription_end_date' => $end_date,
+					'subscription_reference_code' => @$reference_code,
+					'subscription_status' => 1
+				);
+
+				$subscription_array = $this->security->xss_clean($subscription_array);
+
+				$salary_array = array(
+					'salary_employee_id' => 0,
+					'salary_payment_definition_id' =>0,
+					'salary_pay_month' => 0,
+					'salary_pay_year' => $payroll_start_year,
+					'salary_amount' => 0,
+					'salary_confirmed' => 0
+				);
+				$salary_table = 'salary_'.$tenant_id;
+
+				$query = $this->salaries->add_salary($salary_array, $salary_table);
+
+
+				if($query == true):
+
+					$msg = array(
+						'msg'=> 'Welcome to iHumane Click ok to Login',
+						'location' => site_url('login'),
+						'type' => 'success'
+
+					);
+					$this->load->view('swal', $msg);
+
+				else:
+					$msg = array(
+						'msg'=> 'An Error Occurred',
+						'location' => site_url('register'),
+						'type' => 'error'
+
+					);
+					$this->load->view('swal', $msg);
+
+				endif;
+
+		else:
+			$msg = array(
+				'msg'=> 'Username or Email Already Exists',
+				'location' => site_url('register'),
+				'type' => 'error'
+
+			);
+			$this->load->view('swal', $msg);
+
+		endif;
 
 			else:
 
@@ -499,15 +578,17 @@ class Home extends CI_Controller
 
 
 
-		//$this->load->view('backoffice/new_plan', $data);
+	}
 
-		//echo $username;
+	public function check_username(){
 
+		$username = $this->input->post('username');
+		echo json_encode($this->users->get_tenant_username($username));
+	}
 
-
-
-
-
+	public function check_email(){
+		$email = $this->input->post('email');
+		echo json_encode($this->users->get_tenant_email($email));
 
 	}
 
@@ -539,6 +620,18 @@ class Home extends CI_Controller
 			redirect('/login');
 
 		endif;
+
+
+	}
+
+	public function test_table(){
+
+//		$this->configurations->create_salary_table(1);
+//		$this->configurations->create_tax_rate_table(1);
+//		$this->configurations->create_loans_table(1);
+//		$this->configurations->create_loan_repayment_table(1);
+//		$this->configurations->create_variational_payment_table(1);
+
 
 
 	}

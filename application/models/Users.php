@@ -20,6 +20,27 @@ class Users extends CI_Model
 
 	}
 
+	public function add_new_tenant($tenant_data){
+		$this->db->insert('tenant', $tenant_data);
+		return $this->db->insert_id();
+	}
+
+	public function get_tenant_username($username){
+		$this->db->select('*');
+		$this->db->from('tenant');
+		$this->db->where('tenant_username', $username);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function get_tenant_email($email){
+		$this->db->select('*');
+		$this->db->from('tenant');
+		$this->db->where('tenant_contact_email', $email);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
 	public function view_users(){
 		$this->db->select('*');
 		$this->db->from('user');

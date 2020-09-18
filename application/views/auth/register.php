@@ -74,6 +74,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</div>
 								</div>
 
+								<div class="row">
+									<div class="form-group col-6">
+										<label for="payroll_start_year">Payroll Start Year</label>
+										<input id="payroll_start_year" name="payroll_start_year" type="number" onkeypress="return isNumber(event)" value="<?php echo date("Y"); ?>" class="form-control">
+									</div>
+
+								</div>
+
+
 
 								<div class="form-divider">
 									Your Business Contact Person
@@ -96,7 +105,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 								</div>
-
+								<div id="email_alert">
+									<div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Looks like you already registered.
+									</div>
+								</div>
 								<div class="row">
 
 									<div class="form-group col-6">
@@ -110,6 +126,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</div>
 								</div>
 
+								<div id="username_alert">
+									<div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+										<i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Username Already Taken.
+									</div>
+								</div>
 								<input type="hidden" name="<?php echo $csrf_name; ?>" value="<?php echo $csrf_hash; ?>" />
 
 
@@ -141,7 +165,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="row">
 									<div class="form-group col-12">
 										<label>Plan</label>
-										<select class="select2 form-control" id="plan" onchange="check()">
+										<select class="select2 form-control" id="plan" name="tenant_plan" onchange="check()">
 											<option value="0" selected></option>
 											<?php foreach ($plans as $plan): ?>
 											<option value="<?php echo $plan->plan_id; ?>" <?php if(!empty($plan_id)): if($plan_id == $plan->plan_id ): echo 'selected'; endif; endif; ?>> <span> &#8358; </span> <?php echo number_format($plan->plan_price)." ".$plan->plan_name." - ".$plan->plan_duration."Day(s)"; ?></option>
@@ -202,30 +226,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <script>
 
 	document.getElementById('password_alert').style.display = 'none';
+	document.getElementById('email_alert').style.display = 'none';
+	document.getElementById('username_alert').style.display = 'none';
 
 	function check_password() {
 		var password = document.getElementById('password').value;
 		var password_confirm = document.getElementById('password_confirm').value;
 
-
-
-		if(password == password_confirm){
+		if(password === password_confirm){
 			document.getElementById('password_alert').style.display = 'none';
-
 			document.getElementById('password_success').style.display = 'block';
-
-
 		}else{
 			document.getElementById('password_alert').style.display = 'block';
-
 			document.getElementById('password_success').style.display = 'none';
-
 
 		}
 	}
 
-
-
+	function isNumber(evt) {
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.which) ? evt.which : evt.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;
+		}
+		else{
+				var year = document.getElementById('payroll_start_year').value;
+				var length = year.length;
+				if(length < 4){
+					return  true
+				}
+			return false;
+		}
+	}
 
 
 	function check(){
@@ -240,22 +272,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			document.getElementById("free").style.display = 'block';
 			document.getElementById("paid").style.display = 'none';
 		}
-
 		if(toggle > 1 ){
-
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'block';
 			document.getElementById("paybutton").textContent = 'Pay the Sum of ' + sel.options[sel.selectedIndex].text + 'To Register';
-
 			$.ajax({
 				type: "POST",
 				url: '<?php echo site_url('get_plan'); ?>',
 				data: {plan_id: toggle},
 				success: function (data) {
 					data = JSON.parse(data);
-
 					document.getElementById('price').value = data.plan_price * 100;
-
 					console.log(document.getElementById('price').value);
 
 				},
@@ -263,9 +290,50 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					console.log(this.error);
 				}
 			});
-
-
-
 		}
 	}
+
+	$("#contact_username").keyup(function () {
+		var username = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo site_url('check_username'); ?>',
+			data: {username: username},
+			cache: false,
+			success : function(data){
+				data = JSON.parse(data);
+				console.log(data);
+				if(jQuery.isEmptyObject(data)){
+					document.getElementById("username_alert").style.display = 'none';
+				} else{
+					document.getElementById("username_alert").style.display = 'block';
+				}
+
+
+			}
+		});
+	});
+
+	$("#contact_email").keyup(function () {
+		var email = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo site_url('check_email'); ?>',
+			data: {email: email},
+			cache: false,
+			success : function(data){
+				data = JSON.parse(data);
+
+				console.log(data);
+				if(jQuery.isEmptyObject(data)){
+					document.getElementById("email_alert").style.display = 'none';
+
+				} else{
+					document.getElementById("email_alert").style.display = 'block';
+				}
+
+
+			}
+		});
+	});
 </script>
