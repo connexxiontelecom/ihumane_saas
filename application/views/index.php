@@ -440,7 +440,7 @@
                           <img alt="image" src="<?php echo $img; ?>" class="rounded" width="50" height="50">
                           <div class="user-details">
                             <div class="user-name"><?php echo $hr_document->hr_document_name?></div>
-                            <div class="text-job text-muted"><?php echo date('M j, Y g:i:s a', strtotime($hr_document->hr_document_date))?></div>
+                            <div class="text-job text-muted"><?php echo date('M j, Y g:i a', strtotime($hr_document->hr_document_date))?></div>
                             <div class="user-cta">
                               <a href="<?php echo site_url('view_hr_document').'/'.$hr_document->hr_document_id; ?>" class="btn btn-outline-primary btn-sm">View</a>
                             </div>
@@ -466,29 +466,30 @@
       setInterval(timestamp, 1000);
       statistics();
 
-      $.ajax({
-        url: '<?php echo site_url('count_hr_documents')?>',
-        success: function(numDocuments) {
-          $("#documents-carousel").owlCarousel({
-            // items: numDocuments,
-            // margin: 20,
-            autoplay: true,
-            autoplayTimeout: 5000,
-            // loop: true,
-            // responsive: {
-            //   0: {
-            //     items: 2
-            //   },
-            //   578: {
-            //     items: numDocuments*2
-            //   },
-            //   768: {
-            //     items: numDocuments*2
-            //   }
-            // }
-          });
-        }
-      })
+      //$.ajax({
+      //  url: '<?php //echo site_url('count_hr_documents')?>//',
+      //  success: function(numDocuments) {
+      //
+      //  }
+      //})
+      $("#documents-carousel").owlCarousel({
+        // items: numDocuments,
+        // margin: 20,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        loop: true,
+        // responsive: {
+        //   0: {
+        //     items: 2
+        //   },
+        //   578: {
+        //     items: numDocuments*2
+        //   },
+        //   768: {
+        //     items: numDocuments*2
+        //   }
+        // }
+      });
 
       function timestamp() {
         $.ajax({
