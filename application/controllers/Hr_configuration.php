@@ -26,7 +26,12 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				$sub_status = $this->users->get_sub_status($tenant_id);
+
+			if(!empty($sub_status)):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0);
@@ -41,7 +46,7 @@ class Hr_configuration extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['banks'] = $this->hr_configurations->view_banks();
+				$data['banks'] = $this->hr_configurations->view_banks($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -53,8 +58,9 @@ class Hr_configuration extends CI_Controller
 
 				endif;
 
-
-
+				else:
+					redirect('/subscription_status');
+				endif;
 
 			else:
 
@@ -71,6 +77,9 @@ class Hr_configuration extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -89,15 +98,17 @@ class Hr_configuration extends CI_Controller
 				$bank_code = $this->input->post('bank_code');
 				$bank_array = array(
 					'bank_name'=>$bank_name,
-					'bank_code' => $bank_code
+					'bank_code' => $bank_code,
+					'tenant_id' => $tenant_id
 				);
 				$bank_array = $this->security->xss_clean($bank_array);
 				$query = $this->hr_configurations->add_bank($bank_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Bank"
+						
 					);
 
 					$this->logs->add_log($log_array);
@@ -118,6 +129,10 @@ class Hr_configuration extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -128,9 +143,14 @@ class Hr_configuration extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -153,7 +173,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->hr_configurations->update_bank($bank_id, $bank_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Bank Details"
 					);
@@ -176,6 +196,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -189,7 +214,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				$sub_status = $this->users->get_sub_status($tenant_id);
+
+				if(!empty($sub_status)):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -204,7 +234,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['locations'] = $this->hr_configurations->view_locations();
+				$data['locations'] = $this->hr_configurations->view_locations($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -215,6 +245,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				else:
 					redirect('/access_denied');
 				 endif;
+
+				 else:
+					 redirect('subscription_status');
+
+					 endif;
 
 			else:
 
@@ -231,9 +266,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -246,13 +284,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$location_name = $this->input->post('location_name');
 				$location_array = array(
-					'location_name'=>$location_name
+					'location_name'=>$location_name,
+					'tenant_id' => $tenant_id
 				);
 				$location_array = $this->security->xss_clean($location_array);
 				$query = $this->hr_configurations->add_location($location_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Branch"
 					);
@@ -276,6 +315,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -286,9 +329,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -309,7 +355,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated A Branch"
 					);
@@ -333,6 +379,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -345,12 +396,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -363,7 +415,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
+				$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -388,9 +440,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -403,13 +459,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$subsidiary_name = $this->input->post('subsidiary_name');
 				$subsidiary_array = array(
-					'subsidiary_name'=>$subsidiary_name
+					'subsidiary_name'=>$subsidiary_name,
+					'tenant_id' => $tenant_id
 				);
 				$subsidiary_array = $this->security->xss_clean($subsidiary_array);
 				$query = $this->hr_configurations->add_subsidiary($subsidiary_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Subsidiary"
 					);
@@ -433,6 +490,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+			endif;
 		else:
 			redirect('/login');
 		endif;
@@ -442,9 +505,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -466,7 +533,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated A Subsidiary"
 					);
@@ -490,6 +557,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -504,11 +575,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -520,7 +591,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['leaves'] = $this->hr_configurations->view_leaves();
+				$data['leaves'] = $this->hr_configurations->view_leaves($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -549,9 +620,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -566,13 +640,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$leave_duration = $this->input->post('leave_duration');
 				$leave_array = array(
 					'leave_name'=>$leave_name,
-					'leave_duration' => $leave_duration
+					'leave_duration' => $leave_duration,
+					'tenant_id' => $tenant_id
 				);
 				$leave_array = $this->security->xss_clean($leave_array);
 				$query = $this->hr_configurations->add_leave($leave_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Leave Type"
 					);
@@ -596,6 +671,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -605,9 +685,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -631,7 +714,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated A Leave Type"
 					);
@@ -655,6 +738,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -668,11 +756,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -682,7 +770,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->hr_configuration == 1):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['grades'] = $this->hr_configurations->view_grades();
+				$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -709,9 +797,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -723,14 +814,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$grade_name = $this->input->post('grade_name');
 				$grade_array = array(
-					'grade_name'=>$grade_name
+					'grade_name'=>$grade_name,
+					'tenant_id' => $tenant_id,
 				);
 				$grade_array = $this->security->xss_clean($grade_array);
 				$query = $this->hr_configurations->add_grade($grade_array);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Grade"
 					);
@@ -754,6 +846,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -764,9 +862,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -786,7 +887,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->hr_configurations->update_grade($grade_id, $grade_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated A Grade"
 					);
@@ -810,6 +911,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -824,10 +930,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -838,7 +945,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->hr_configuration == 1):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['qualifications'] = $this->hr_configurations->view_qualifications();
+				$data['qualifications'] = $this->hr_configurations->view_qualifications($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -863,9 +970,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -877,13 +988,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$qualification_name = $this->input->post('qualification_name');
 				$qualification_array = array(
-					'qualification_name'=>$qualification_name
+					'qualification_name'=>$qualification_name,
+					'tenant_id' => $tenant_id
 				);
 				$qualification_array = $this->security->xss_clean($qualification_array);
 				$query = $this->hr_configurations->add_qualification($qualification_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Qualification"
 					);
@@ -906,6 +1018,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -916,9 +1032,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -938,7 +1058,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->hr_configurations->update_qualification($qualification_id, $qualification_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Qualification"
 					);
@@ -962,6 +1082,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -976,10 +1100,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -990,7 +1115,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->hr_configuration == 1):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['departments'] = $this->hr_configurations->view_departments();
+				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1015,9 +1140,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1030,20 +1159,21 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$department_name = $this->input->post('department_name');
 				$department_array = array(
-					'department_name'=>$department_name
+					'department_name'=>$department_name,
+					'tenant_id' => $tenant_id
 				);
 				$department_array = $this->security->xss_clean($department_array);
 				$query = $this->hr_configurations->add_department($department_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Department"
 					);
 
 					$this->logs->add_log($log_array);
 					$msg = array(
-						'msg'=> 'department Added Successfully',
+						'msg'=> 'Department Added Successfully',
 						'location' => site_url('department'),
 						'type' => 'success'
 
@@ -1059,6 +1189,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1069,9 +1204,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1091,7 +1229,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->hr_configurations->update_department($department_id, $department_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Department"
 					);
@@ -1115,6 +1253,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+			endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1128,11 +1271,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1143,8 +1286,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->hr_configuration == 1):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['departments'] = $this->hr_configurations->view_departments();
-				$data['job_roles'] = $this->hr_configurations->view_job_roles();
+				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+				$data['job_roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1170,9 +1313,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1189,13 +1336,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$job_role_array = array(
 					'job_name'=>$job_role_name,
 					'job_description' => $job_description,
-					'department_id' => $department_id
+					'department_id' => $department_id,
+					'tenant_id' => $tenant_id
 				);
 				$job_role_array = $this->security->xss_clean($job_role_array);
 				$query = $this->hr_configurations->add_job_role($job_role_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Job Role"
 					);
@@ -1219,9 +1367,16 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
+
+
 
 	}
 
@@ -1229,9 +1384,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1258,7 +1417,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Update A Job Role"
 					);
@@ -1283,6 +1442,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1296,10 +1460,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1310,8 +1475,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->hr_configuration == 1):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['departments'] = $this->hr_configurations->view_departments();
-				$data['pensions'] = $this->hr_configurations->view_pensions();
+				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+				$data['pensions'] = $this->hr_configurations->view_pensions($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1341,9 +1506,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1359,13 +1527,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$pension_array = array(
 					'pension_provider'=>$pension_provider,
+					'tenant_id' => $tenant_id
 				);
 				$pension_array = $this->security->xss_clean($pension_array);
 
 				$query = $this->hr_configurations->add_pension($pension_array);
 
 				if($query == true):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Pension"
 					);
@@ -1388,6 +1557,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1398,9 +1571,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1417,6 +1593,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$pension_array = array(
 					'pension_provider'=>$pension_provider,
+					'tenant_id' => $tenant_id
 				);
 				$pension_array = $this->security->xss_clean($pension_array);
 
@@ -1424,7 +1601,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Pension"
 					);
@@ -1449,6 +1626,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1463,10 +1645,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1478,7 +1661,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['health_insurances'] = $this->hr_configurations->view_health_insurances();
+				$data['health_insurances'] = $this->hr_configurations->view_health_insurances($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1507,9 +1690,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1525,6 +1711,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$health_insurance_array = array(
 					'health_insurance_hmo'=>$health_insurance_hmo,
+					'tenant_id'=> $tenant_id
 				);
 				$health_insurance_array = $this->security->xss_clean($health_insurance_array);
 
@@ -1532,7 +1719,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New HMO"
 					);
@@ -1556,6 +1743,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1566,9 +1758,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1592,7 +1788,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Update a HMO"
 					);
@@ -1617,6 +1813,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1629,11 +1830,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1671,11 +1872,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
-
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1690,7 +1891,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 
-				$data['questions'] = $this->hr_configurations->view_self_assessments();
+				$data['questions'] = $this->hr_configurations->view_self_assessments($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1715,9 +1916,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1733,6 +1937,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$question_array = array(
 					'self_appraisee_question'=>$question,
+					'tenant_id' => $tenant_id
 				);
 				$question_array = $this->security->xss_clean($question_array);
 
@@ -1740,7 +1945,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Self Assessment Question"
 					);
@@ -1764,6 +1969,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1774,9 +1985,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1800,7 +2014,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Update a Self Assessment Question"
 					);
@@ -1825,6 +2039,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1837,11 +2055,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1854,7 +2072,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 				//$data['employees'] = $this->employees->get_employee_by_salary_setup();
-				$data['job_roles'] = $this->hr_configurations->view_job_roles();
+				$data['job_roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1883,11 +2101,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1903,7 +2121,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					else:
 
-					$check_existing_job_role = $this->hr_configurations-> view_job_role($job_role_id);
+					$check_existing_job_role = $this->hr_configurations-> view_job_role($job_role_id, $tenant_id);
 
 					if(empty($check_existing_job_role)):
 
@@ -1914,7 +2132,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$data['user_data'] = $this->users->get_user($username);
 							//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 							$data['job_role'] = $check_existing_job_role;
-							$data['questions'] = $this->hr_configurations->view_quantitative_assessments($job_role_id);
+							$data['questions'] = $this->hr_configurations->view_quantitative_assessments($job_role_id , $tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							$this->load->view('hr_config/view_quantitative_assessment', $data);
@@ -1944,9 +2162,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1964,6 +2185,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$question_array = array(
 					'quantitative_question'=>$question,
 					'quantitative_job_role_id' => $job_role_id,
+					'tenant_id'=> $tenant_id
 				);
 				$question_array = $this->security->xss_clean($question_array);
 
@@ -1971,7 +2193,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Quantitative Assessment Question"
 					);
@@ -1995,6 +2217,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2005,9 +2231,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2032,7 +2261,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Update a Quantitative Assessment Question"
 					);
@@ -2057,6 +2286,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2069,10 +2303,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2085,7 +2321,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 
-				$data['questions'] = $this->hr_configurations->view_qualitative_assessments();
+				$data['questions'] = $this->hr_configurations->view_qualitative_assessments($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 				$this->load->view('hr_config/qualitative_assessment', $data);
@@ -2111,9 +2347,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2129,6 +2368,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$question_array = array(
 					'qualitative_question'=>$question,
+					'tenant_id' => $tenant_id
 				);
 				$question_array = $this->security->xss_clean($question_array);
 
@@ -2136,7 +2376,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Qualitative Assessment Question"
 					);
@@ -2160,6 +2400,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2170,9 +2414,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2196,7 +2443,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Update a Qualitative Assessment Question"
 					);
@@ -2221,6 +2468,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2234,11 +2485,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
-
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2250,7 +2501,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 				//$data['employees'] = $this->employees->get_employee_by_salary_setup();
-				$data['questions'] = $this->hr_configurations->view_supervisor_assessments();
+				$data['questions'] = $this->hr_configurations->view_supervisor_assessments($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -2277,9 +2528,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2302,7 +2556,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added A New Supervisor Assessment Question"
 					);
@@ -2326,6 +2580,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2336,9 +2595,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2362,7 +2624,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				if($query == true):
 
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated a Supervisor Assessment Question"
 					);
@@ -2387,6 +2649,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2400,10 +2668,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -2416,7 +2685,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$data['user_data'] = $this->users->get_user($username);
 					//$data['employees'] = $this->employees->get_employee_by_salary_setup();
-					$data['trainings'] = $this->hr_configurations->view_trainings();
+					$data['trainings'] = $this->hr_configurations->view_trainings($tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -2444,10 +2713,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -2509,9 +2778,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2527,6 +2799,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					'training_name' => $training_name,
 					'training_about' => $training_about,
 					'training_duration_exam' => $training_exam_duration,
+					'tenant_id' => $tenant_id
 				);
 
 
@@ -2541,7 +2814,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$material_array = array(
 						'training_material_training_id' => $training_id,
-						'training_material_link' => $training_material
+						'training_material_link' => $training_material,
+						'tenant_id' => $tenant_id
 					);
 
 					$this->hr_configurations->add_training_materials($material_array);
@@ -2551,7 +2825,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 				if (isset($training_id)):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Training"
 					);
@@ -2581,6 +2855,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2597,11 +2876,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -2617,7 +2896,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					else:
 
-						$check_existing_training = $this->hr_configurations-> view_training($training_id);
+						$check_existing_training = $this->hr_configurations-> view_training($training_id , $tenant_id);
 
 						if(empty($check_existing_training)):
 
@@ -2628,7 +2907,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$data['user_data'] = $this->users->get_user($username);
 							//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 							$data['training'] = $check_existing_training;
-							$data['training_materials'] = $this->hr_configurations->view_training_materials($training_id);
+							$data['training_materials'] = $this->hr_configurations->view_training_materials($training_id, $tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							$this->load->view('hr_config/edit_training', $data);
@@ -2660,9 +2939,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -2702,7 +2986,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 				if (isset($training_id)):
-					$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Training"
 					);
@@ -2732,6 +3016,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2755,8 +3045,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -2775,7 +3065,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					else:
 
-						$check_existing_training = $this->hr_configurations-> view_training($training_id);
+						$check_existing_training = $this->hr_configurations-> view_training($training_id, $tenant_id);
 
 						if(empty($check_existing_training)):
 
@@ -2786,7 +3076,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$data['user_data'] = $this->users->get_user($username);
 							//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 							$data['training'] = $check_existing_training;
-							$data['training_questions'] = $this->hr_configurations->view_training_questions($training_id);
+							$data['training_questions'] = $this->hr_configurations->view_training_questions($training_id, $tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							$this->load->view('hr_config/training_questions', $data);
@@ -2819,12 +3109,16 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
-			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+			$user_type = $this->users->get_user($username)->user_type;
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -2843,7 +3137,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					'training_question_option_b' => $option_b,
 					'training_question_option_c' => $option_c,
 					'training_question_option_d' => $option_d,
-					'training_question_correct' => strtoupper($correct)
+					'training_question_correct' => strtoupper($correct),
+					'tenant_id' => $tenant_id
 
 				);
 
@@ -2852,7 +3147,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$response = $this->hr_configurations->add_question($question_array);
 
 					if (isset($response)):
-						$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Added New Question to Training"
 						);
@@ -2889,6 +3184,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2902,12 +3202,16 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
-			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+			$user_type = $this->users->get_user($username)->user_type;
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -2935,7 +3239,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$response = $this->hr_configurations->update_question($question_id, $question_array);
 
 					if ($response == true):
-						$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Updated Training "
 						);
@@ -2972,6 +3276,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2989,10 +3297,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -3008,7 +3317,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					else:
 
-						$check_existing_training = $this->hr_configurations-> view_training($training_id);
+						$check_existing_training = $this->hr_configurations-> view_training($training_id, $tenant_id);
 
 						if(empty($check_existing_training)):
 
@@ -3019,9 +3328,9 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$data['user_data'] = $this->users->get_user($username);
 							//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 							$data['training'] = $check_existing_training;
-							$data['training_materials'] = $this->hr_configurations->view_training_materials($training_id);
+							$data['training_materials'] = $this->hr_configurations->view_training_materials($training_id, $tenant_id);
 
-							$data['training_questions'] = $this->hr_configurations->view_training_questions($training_id);
+							$data['training_questions'] = $this->hr_configurations->view_training_questions($training_id, $tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							$this->load->view('hr_config/view_training', $data);
@@ -3053,8 +3362,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -3068,7 +3377,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				if($permission->hr_configuration == 1):
 
 					$data['user_data'] = $this->users->get_user($username);
-					$data['documents'] = $this->hr_configurations->view_hr_documents();
+					$data['documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
 
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -3098,9 +3407,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$user_type = $this->users->get_user($username)->user_type;
-
-			if($user_type == 1 || $user_type == 3):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -3144,6 +3455,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							'hr_document_name' => $document_name,
 							'hr_document_description' => $document_description,
 							'hr_document_link' => $document_link,
+							'tenant_id' => $tenant_id
 
 
 						);
@@ -3153,7 +3465,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						$response = $this->hr_configurations->add_hr_document($document_array);
 
 						if (isset($response)):
-							$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Added New  Document"
 							);
@@ -3192,6 +3504,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -3208,7 +3524,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -3227,7 +3543,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					else:
 
-						$check_existing_document = $this->hr_configurations-> view_hr_document($document_id);
+						$check_existing_document = $this->hr_configurations-> view_hr_document($document_id, $tenant_id);
 
 						if(empty($check_existing_document)):
 
@@ -3273,7 +3589,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -3303,7 +3619,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$response = $this->hr_configurations->remove_hr_document($document_id);
 
 							if ($response == true):
-								$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 									'log_user_id' => $this->users->get_user($username)->user_id,
 									'log_description' => "Deleted A Document"
 								);

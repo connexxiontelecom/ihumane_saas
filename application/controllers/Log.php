@@ -26,10 +26,11 @@ class Log extends CI_Controller
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -40,7 +41,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_configuration == 1):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['logs'] = $this->logs->view_logs();
+				$data['logs'] = $this->logs->view_logs($tenant_id);
 
 
 				$this->load->view('log/view_logs', $data);
