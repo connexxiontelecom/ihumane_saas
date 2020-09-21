@@ -37,7 +37,7 @@ class Home extends CI_Controller
 
 
 
-			if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3):
+			if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
 
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
@@ -196,7 +196,7 @@ class Home extends CI_Controller
 								);
 
 								$this->logs->add_log($log_array);
-								if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3):
+								if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
 
 								redirect('home');
 								elseif($this->users->get_user($username)->user_type == 2):
@@ -262,7 +262,7 @@ class Home extends CI_Controller
 									);
 
 									$this->logs->add_log($log_array);
-									if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3):
+									if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
 
 										redirect('home');
 
@@ -485,6 +485,7 @@ class Home extends CI_Controller
 					'user_password'=> password_hash($tenant_password, PASSWORD_BCRYPT),
 					'user_name'=> $tenant_contact_name,
 					'user_status'=>1,
+					'user_type' => 4, //original admin
 					'tenant_id' => $tenant_id
 				);
 
@@ -523,6 +524,8 @@ class Home extends CI_Controller
 				);
 
 				$subscription_array = $this->security->xss_clean($subscription_array);
+
+				$query = $this->users->new_subscription($subscription_array);
 
 				$salary_array = array(
 					'salary_employee_id' => 0,
