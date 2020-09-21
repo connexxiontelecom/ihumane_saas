@@ -75,7 +75,18 @@ class Home extends CI_Controller
         $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
         $data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
         $data['is_payroll_routine_run'] = $this->is_payroll_routine_run();
-//        print_r(date('m') == 9);
+        $data['csrf_name'] = $this->security->get_csrf_token_name();
+        $data['csrf_hash'] = $this->security->get_csrf_hash();
+        $data['pending_leaves'] = $this->employees->count_pending_leaves();
+        $data['approved_leaves'] = $this->employees->count_approved_leaves();
+        $data['finished_leaves'] = $this->employees->count_finished_leaves();
+        $data['upcoming_leaves'] = $this->employees->get_upcoming_leaves();
+        $data['open_queries'] = $this->employees->count_open_queries();
+        $data['pending_trainings'] = $this->employees->count_pending_trainings();
+        $data['running_appraisals'] = $this->employees->count_running_appraisals();
+        $data['finished_appraisals'] = $this->employees->count_finished_appraisals();
+        $data['hr_documents'] = $this->hr_configurations->view_hr_documents();
+//        print_r($this->hr_configurations->view_hr_documents());
 
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):

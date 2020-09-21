@@ -3364,4 +3364,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$this->load->view('swal', $msg);
 
 	}
+
+	public function count_hr_documents() {
+	  echo $this->hr_configurations-> count_documents();
+  }
 }

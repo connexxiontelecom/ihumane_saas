@@ -1,5 +1,4 @@
 <?php include('stylesheet.php'); ?>
-
 <body>
   <div id="app">
     <div class="main-wrapper">
@@ -116,6 +115,7 @@
                     </div>
                   </div>
                 </div>
+
 <!--                <div class="card">-->
 <!--                  <div class="card-header">-->
 <!--                    <h4>Employees On Leave</h4>-->
@@ -227,7 +227,7 @@
                       <div class="alert alert-success alert-has-icon" style="border-radius: 12px;">
                         <div class="alert-icon"><i class="far fa-check-circle"></i></div>
                         <div class="alert-body">
-                          <div class="alert-title">Payroll</div>
+                          <div class="alert-title">Routine</div>
                           You have run this month's Payroll Routine
                         </div>
                       </div>
@@ -235,8 +235,8 @@
                       <div class="alert alert-warning alert-has-icon" style="border-radius: 12px;">
                         <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
                         <div class="alert-body">
-                          <div class="alert-title">Payroll</div>
-                          You have not run this month's Payroll Routine
+                          <div class="alert-title">Routine</div>
+                          You have not run this month's Payroll Routine. Run it <a class="font-weight-bold font-italic" href="<?php echo site_url('payroll_routine') ?>">here</a>.
                         </div>
                       </div>
                     <?php endif?>
@@ -299,6 +299,160 @@
 <!--                </div>-->
               </div>
             </div>
+            <div class="row">
+              <div class="col-lg-8 col-md-12 col-12 col-sm-12">
+                <div class="row">
+                  <div class="col-3">
+                    <div class="card" style="border-radius: 12px">
+                      <div class="card-body text-center">
+                        <h4 class="display-4 mt-2"><?php echo $open_queries ?></h4>
+                        <h6>Queries</h6>
+                        <small>Open</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="card" style="border-radius: 12px">
+                      <div class="card-body text-center">
+                        <h4 class="display-4 mt-2"><?php echo $pending_trainings ?></h4>
+                        <h6>Trainings</h6>
+                        <small>Pending</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="list-group-item flex-column align-items-start p-4 mb-4" style="border-radius: 12px; border: none">
+                      <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-4">Employee Appraisals</h5>
+                        <div class="dropleft">
+                          <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item has-icon" href='<?php echo site_url('new_employee_appraisal')?>'><i class="fas fa-plus"></i>New Appraisal</a>
+                            <a class="dropdown-item has-icon" href="<?php echo site_url('employee_appraisal') ?>"><i class="fas fa-edit"></i>Manage Appraisals</a>
+                          </div>
+                        </div>
+                      </div>
+                      <p class="mb-1 font-weight-600"><?php echo $running_appraisals?> Running Appraisals</p>
+                      <small><?php echo $finished_appraisals?> Finished Appraisals</small>
+                    </div>
+                  </div>
+                </div>
+                <form method="post" action="<?php echo site_url('add_memo') ?>" class="needs-validation" novalidate enctype="multipart/form-data">
+                  <div class="card" style="border-radius: 12px">
+                    <div class="card-header">
+                      <h4>New Announcement</h4>
+                      <div class="card-header-action">
+                        <a href="<?php echo site_url('memo') ?>" class="btn btn-primary">View Announcements</a>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label>Subject</label><span style="color: red"> *</span>
+                        <input type="text" class="form-control" name="memo_subject" required/>
+                        <div class="invalid-feedback">
+                          please fill in a subject
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Announcement Body</label><span style="color: red"> *</span>
+                        <textarea class="summernote form-control" required name="memo_body"></textarea>
+                        <div class="invalid-feedback">
+                          please fill in a body
+                        </div>
+                      </div>
+                      <input type="hidden" name="<?php echo $csrf_name;?>" value="<?php echo $csrf_hash;?>" />
+                      <div class=" text-right">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+              <div class="col-lg-4 col-md-12 col-12 col-sm-12">
+                <div class="card" style="border-radius: 12px">
+<!--                  <div class="card-header">-->
+<!--                    <h4>Employee Leaves</h4>-->
+<!--                  </div>-->
+                  <div class="card-body">
+                    <div class="summary">
+                      <div class="summary-info">
+                        <h4><?php echo $pending_leaves?> Pending Leaves</h4>
+                        <div class="text-muted"><?php echo $approved_leaves?> Approved and <?php echo $finished_leaves?> Finished.</div>
+                        <div class="d-block mt-2">
+                          <a href="<?php echo site_url('employee_leave') ?>">View All</a>
+                        </div>
+                      </div>
+                      <div class="summary-item">
+<!--                        --><?php //print_r($upcoming_leaves[0])?>
+                        <h6>Upcoming Leaves</h6>
+                        <ul class="list-unstyled list-unstyled-border">
+                          <?php if (!empty($upcoming_leaves)):?>
+                            <?php foreach($upcoming_leaves as $upcoming_leave):?>
+                            <li class="media">
+                              <a href="#">
+                                <img class="mr-3 rounded" width="50" src="<?php echo base_url().'uploads/employee_passports/'.$upcoming_leave->employee_passport?>" alt="passport">
+                              </a>
+                              <div class="media-body">
+                                <div class="media-right">
+                                  <div class="dropleft">
+                                    <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item has-icon" href="<?php echo site_url('extend_leave').'/'.$upcoming_leave->employee_leave_id; ?>"><i class="fas fa-plane-departure"></i>Extend Leave</a>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="media-title"><a href="<?php echo site_url('view_employee').'/'.$upcoming_leave->employee_id; ?>"><?php echo $upcoming_leave->employee_first_name.' '.$upcoming_leave->employee_last_name?></a></div>
+                                <div class="text-muted text-small"><a href="<?php echo site_url('leave') ?>"><?php echo $upcoming_leave->leave_name?></a> <div class="bullet"></div> Starts <?php echo date('j/m/Y', strtotime($upcoming_leave->leave_start_date));?></div>
+                              </div>
+                            </li>
+                            <?php endforeach;?>
+                          <?php endif?>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card" style="border-radius: 12px;">
+                  <div class="card-header">
+                    <h4>Documents</h4>
+                    <div class="card-header-action">
+                      <a href="<?php echo site_url('hr_documents') ?>" class="btn btn-primary">View All</a>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <?php if(!empty($hr_documents)):?>
+                    <div class="owl-carousel owl-theme" id="documents-carousel">
+                      <?php foreach($hr_documents as $hr_document):
+                        $img;
+                        $link = strtolower($hr_document->hr_document_link);
+                        if (strpos($link, '.docx') !== false || strpos($link, '.doc') !== false):
+                          $img = base_url().'assets/img/icons/doc.svg';
+                        elseif (strpos($link, '.pdf') !== false):
+                          $img =  base_url().'assets/img/icons/pdf.svg';
+                        elseif (strpos($link, '.png') !== false || strpos($link, '.jpg') !== false || strpos($link, '.jpeg') !== false):
+                          $img =  base_url().'assets/img/icons/img.svg';
+                        else:
+                          $img =  base_url().'assets/img/icons/other.svg';
+                        endif;
+                      ?>
+                        <div class="user-item">
+                          <img alt="image" src="<?php echo $img; ?>" class="rounded" width="50" height="50">
+                          <div class="user-details">
+                            <div class="user-name"><?php echo $hr_document->hr_document_name?></div>
+                            <div class="text-job text-muted"><?php echo date('M j, Y g:i:s a', strtotime($hr_document->hr_document_date))?></div>
+                            <div class="user-cta">
+                              <a href="<?php echo site_url('view_hr_document').'/'.$hr_document->hr_document_id; ?>" class="btn btn-outline-primary btn-sm">View</a>
+                            </div>
+                          </div>
+                        </div>
+                      <?php endforeach;?>
+                    </div>
+                    <?php endif;?>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -311,6 +465,30 @@
     $(document).ready(function() {
       setInterval(timestamp, 1000);
       statistics();
+
+      $.ajax({
+        url: '<?php echo site_url('count_hr_documents')?>',
+        success: function(numDocuments) {
+          $("#documents-carousel").owlCarousel({
+            // items: numDocuments,
+            // margin: 20,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            // loop: true,
+            // responsive: {
+            //   0: {
+            //     items: 2
+            //   },
+            //   578: {
+            //     items: numDocuments*2
+            //   },
+            //   768: {
+            //     items: numDocuments*2
+            //   }
+            // }
+          });
+        }
+      })
 
       function timestamp() {
         $.ajax({
