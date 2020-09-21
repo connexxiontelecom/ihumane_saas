@@ -96,7 +96,7 @@ $CI->load->model('hr_configurations');
                               <?php if($leave->leave_status == 0): ?>
                                 <div class="badge badge-warning">Pending</div>
                               <?php elseif ($leave->leave_status == 1):?>
-                                <div class="badge badge-success">Started</div>
+                                <div class="badge badge-success">Approved</div>
 							                <?php elseif ($leave->leave_status == 3):?>
                                 <div class="badge badge-danger">Discarded</div>
                               <?php else:?>
