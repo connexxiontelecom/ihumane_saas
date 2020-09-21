@@ -136,9 +136,9 @@
 <!---->
 <!--                        <div class="mb-4">-->
 <!--                          <div class="text-small float-right font-weight-bold text-muted">--><?php //echo timespan($today, $leave_end_date->getTimestamp(), 2) . ' left' ?><!-- (--><?php //echo number_format($percentage_leave) . "%" ?><!-- completed)</div>-->
-<!--                                             <div class="text-small float-right font-weight-bold text-muted">-->--><?php ////echo number_format($percentage_leave, 1)."%"
+<!--                                             <div class="text-small float-right font-weight-bold text-muted">--><?php ////echo number_format($percentage_leave, 1)."%"
 //                                                                                                                        ?>
-<!--                          </div>-->-->
+<!--                          </div>-->
 <!--                          <div class="font-weight-bold mb-1">--><?php //echo $leave->employee_first_name . " " . $leave->employee_last_name; ?><!--</div>-->
 <!--                          <div class="progress" data-height="3">-->
 <!--                            <div class="progress-bar" role="progressbar" data-width="--><?php //echo $percentage_leave . "%" ?><!--" aria-valuenow="--><?php //echo $percentage_leave; ?><!--" aria-valuemin="0" aria-valuemax="100"></div>-->
@@ -196,7 +196,7 @@
                   <div class="col-6">
                     <div class="card" style="border-radius: 12px">
                       <div class="card-body text-center">
-                        <h4 class="display-4 mt-2">3</h4>
+                        <h4 class="display-4 mt-2"><?php echo $personalized_employees ?></h4>
                         <h6>Personalized</h6>
                         <small>Salary Structures</small>
                       </div>
@@ -205,13 +205,45 @@
                   <div class="col-6">
                     <div class="card" style="border-radius: 12px">
                       <div class="card-body text-center">
-                        <h4 class="display-4 mt-2">5</h4>
+                        <h4 class="display-4 mt-2"><?php echo $categorized_employees ?></h4>
                         <h6>Categorized</h6>
                         <small>Salary Structures</small>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="card" style="border-radius: 12px">
+                      <div class="card-body text-center">
+                        <h4 class="display-4 mt-2"><?php echo $variational_payments ?></h4>
+                        <h6>Variational</h6>
+                        <small>Payments</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <?php if($is_payroll_routine_run): ?>
+                      <div class="alert alert-success alert-has-icon" style="border-radius: 12px;">
+                        <div class="alert-icon"><i class="far fa-check-circle"></i></div>
+                        <div class="alert-body">
+                          <div class="alert-title">Payroll</div>
+                          You have run this month's Payroll Routine
+                        </div>
+                      </div>
+                    <?php else:?>
+                      <div class="alert alert-warning alert-has-icon" style="border-radius: 12px;">
+                        <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+                        <div class="alert-body">
+                          <div class="alert-title">Payroll</div>
+                          You have not run this month's Payroll Routine
+                        </div>
+                      </div>
+                    <?php endif?>
+                  </div>
+                </div>
+
+
 
 
 <!--                <div class="list-group-item flex-column align-items-start p-4" style="border-radius: 12px; border: none">-->
@@ -246,9 +278,9 @@
 <!--                          <li class="media">-->
 <!--                            <img class="mr-3 rounded-circle" width="50" src="--><?php //echo base_url(); ?><!--uploads/employee_passports/--><?php //echo $present_employee->employee_passport; ?><!--" alt="avatar">-->
 <!--                            <div class="media-body">-->
-<!--                                                 <div class="float-right text-primary">-->--><?php ////echo $present_employee->employee_first_name." ".$present_employee->employee_last_name;
+<!--                                                 <div class="float-right text-primary">--><?php ////echo $present_employee->employee_first_name." ".$present_employee->employee_last_name;
 //                                                                                                      ?>
-<!--                              </div>-->-->
+<!--                              </div>-->
 <!--                              <div class="media-title">--><?php //echo $present_employee->employee_first_name . " " . $present_employee->employee_last_name; ?><!--</div>-->
 <!--                              <span class="text-small text-muted">--><?php //echo $present_employee->employee_biometrics_login_time; ?><!--</span>-->
 <!--                            </div>-->
