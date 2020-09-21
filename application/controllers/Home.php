@@ -69,6 +69,9 @@ class Home extends CI_Controller
         $data['total_deduction_year'] = $this->get_total_deduction_year();
         $data['pending_loans'] = $this->loans->count_pending_loans();
         $data['running_loans'] = $this->loans->count_running_loans();
+        $data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
+        $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
+//        print_r($this->payroll_configurations->count_categorized_employees());
 
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):

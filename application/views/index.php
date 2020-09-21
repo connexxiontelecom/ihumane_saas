@@ -196,7 +196,7 @@
                   <div class="col-6">
                     <div class="card" style="border-radius: 12px">
                       <div class="card-body text-center">
-                        <h4 class="display-4 mt-2">3</h4>
+                        <h4 class="display-4 mt-2"><?php echo $personalized_employees ?></h4>
                         <h6>Personalized</h6>
                         <small>Salary Structures</small>
                       </div>
@@ -205,7 +205,7 @@
                   <div class="col-6">
                     <div class="card" style="border-radius: 12px">
                       <div class="card-body text-center">
-                        <h4 class="display-4 mt-2">5</h4>
+                        <h4 class="display-4 mt-2"><?php echo $categorized_employees ?></h4>
                         <h6>Categorized</h6>
                         <small>Salary Structures</small>
                       </div>
