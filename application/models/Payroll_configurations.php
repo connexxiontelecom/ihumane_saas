@@ -384,6 +384,10 @@ class Payroll_configurations extends CI_Model
 	  return $this->db->count_all_results();
   }
 
+  public function count_variational_payments(){
+	  return $this->db->count_all('variational_payment');
+  }
+
 
 
 
