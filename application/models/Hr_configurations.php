@@ -28,18 +28,20 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_banks(){
+	public function view_banks($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('bank');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_bank($bank_id){
+	public function view_bank($bank_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('bank');
 		$this->db->where('bank_id', $bank_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -63,18 +65,20 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_grades(){
+	public function view_grades($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('grade');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_grade($grade_id){
+	public function view_grade($grade_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('grade');
 		$this->db->where('grade_id', $grade_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -98,10 +102,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_locations(){
+	public function view_locations($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('location');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -132,10 +137,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_subsidiarys(){
+	public function view_subsidiarys($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('subsidiary');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -169,10 +175,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_leaves(){
+	public function view_leaves($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('leave_type');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -204,10 +211,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_qualifications(){
+	public function view_qualifications($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('qualification');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -239,10 +247,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_departments(){
+	public function view_departments($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('department');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -274,20 +283,23 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_job_roles(){
+	public function view_job_roles($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('job_role');
+		$this->db->where('job_role.tenant_id', $tenant_id);
 		$this->db->join('department', 'department.department_id = job_role.department_id');
+
 		return $this->db->get()->result();
 
 	}
 
-	public function view_job_role($job_role_id){
+	public function view_job_role($job_role_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('job_role');
 		$this->db->where('job_role_id', $job_role_id);
 		$this->db->join('department', 'department.department_id = job_role.department_id');
+		$this->db->where('job_role.tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -311,11 +323,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_pensions(){
+	public function view_pensions($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('pension');
-
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -350,11 +362,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_health_insurances(){
+	public function view_health_insurances($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('health_insurance');
-
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -387,18 +399,20 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_self_assessments(){
+	public function view_self_assessments($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('self_appraisee');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_self_assessment($assessment_id){
+	public function view_self_assessment($assessment_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('self_appraisee');
 		$this->db->where('self_appraisee_id', $assessment_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -421,18 +435,20 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_qualitative_assessments(){
+	public function view_qualitative_assessments($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('qualitative');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_qualitative_assessment($assessment_id){
+	public function view_qualitative_assessment($assessment_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('qualitative');
 		$this->db->where('qualitative_id', $assessment_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -454,18 +470,20 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_supervisor_assessments(){
+	public function view_supervisor_assessments($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('supervisor_appraisee');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_supervisor_assessment($assessment_id){
+	public function view_supervisor_assessment($assessment_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('supervisor_appraisee');
 		$this->db->where('supervisor_appraisee_id', $assessment_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -487,37 +505,40 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_quantitative_assessments($job_role_id){
+	public function view_quantitative_assessments($job_role_id, $tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('quantitative');
 		$this->db->where('quantitative_job_role_id', $job_role_id);
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_quantitative_assessment($assessment_id){
+	public function view_quantitative_assessment($assessment_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('quantitative');
 		$this->db->where('quantitative_id', $assessment_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
 	}
 
-	public function view_trainings(){
+	public function view_trainings($tenant_id){
 		$this->db->select('*');
 		$this->db->from('training');
-
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 
 	}
 
-	public function view_training($training_id){
+	public function view_training($training_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('training');
 		$this->db->where('training_id', $training_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
@@ -538,10 +559,11 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_training_materials($training_id){
+	public function view_training_materials($training_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('training_material');
 		$this->db->where('training_material_training_id', $training_id);
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 	}
 
@@ -557,10 +579,11 @@ class Hr_configurations extends CI_Model
 		return true;
 	}
 
-	public function view_training_questions($training_id){
+	public function view_training_questions($training_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('training_question');
 		$this->db->where('training_question_training_id', $training_id);
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 	}
 
@@ -588,16 +611,18 @@ class Hr_configurations extends CI_Model
 
 	}
 
-	public function view_hr_documents(){
+	public function view_hr_documents($tenant_id){
 		$this->db->select('*');
 		$this->db->from('hr_document');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 	}
 
-	public function view_hr_document($document_id){
+	public function view_hr_document($document_id, $tenant_id){
 			$this->db->select('*');
 			$this->db->from('hr_document');
 			$this->db->where('hr_document_id', $document_id);
+			$this->db->where('tenant_id', $tenant_id);
 			return $this->db->get()->row();
 
 	}
