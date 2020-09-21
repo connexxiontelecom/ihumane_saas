@@ -629,4 +629,32 @@ class Employees extends CI_Model
     return $this->db->get()->result();
   }
 
+  public function count_open_queries() {
+	  $this->db->select('*');
+	  $this->db->from('query');
+	  $this->db->where('query.query_status', 1);
+    return $this->db->count_all_results();
+  }
+
+  public function count_pending_trainings() {
+	  $this->db->select('*');
+	  $this->db->from('employee_training');
+	  $this->db->where('employee_training.employee_training_status', 0);
+    return $this->db->count_all_results();
+  }
+
+  public function count_running_appraisals() {
+    $this->db->select('*');
+    $this->db->from('employee_appraisal');
+    $this->db->where('employee_appraisal.employee_appraisal_status', 0);
+    return $this->db->count_all_results();
+  }
+
+  public function count_finished_appraisals() {
+    $this->db->select('*');
+    $this->db->from('employee_appraisal');
+    $this->db->where('employee_appraisal.employee_appraisal_status', 1);
+    return $this->db->count_all_results();
+  }
+
 }

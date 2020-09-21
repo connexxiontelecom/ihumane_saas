@@ -81,8 +81,12 @@ class Home extends CI_Controller
         $data['approved_leaves'] = $this->employees->count_approved_leaves();
         $data['finished_leaves'] = $this->employees->count_finished_leaves();
         $data['upcoming_leaves'] = $this->employees->get_upcoming_leaves();
-
-//        print_r();
+        $data['open_queries'] = $this->employees->count_open_queries();
+        $data['pending_trainings'] = $this->employees->count_pending_trainings();
+        $data['running_appraisals'] = $this->employees->count_running_appraisals();
+        $data['finished_appraisals'] = $this->employees->count_finished_appraisals();
+        $data['hr_documents'] = $this->hr_configurations->view_hr_documents();
+//        print_r($this->hr_configurations->view_hr_documents());
 
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):
