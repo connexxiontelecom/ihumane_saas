@@ -17,11 +17,12 @@ class Logs extends CI_Model
 		return true;
 	}
 
-	public function view_logs(){
+	public function view_logs($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('logs');
 		$this->db->join('user', 'user.user_id = logs.log_user_id');
+		$this->db->where('logs.tenant_id', $tenant_id);
 		$this->db->order_by('log_date', 'desc');
 		return  $this->db->get()->result();
 	}

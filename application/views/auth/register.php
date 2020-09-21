@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include(APPPATH.'/views/stylesheet.php'); ?>
 <body>
 <div id="app">
-	<section class="section">
+		<section class="section">
 		<div class="container mt-5">
 			<div class="row">
 				<div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
@@ -16,6 +16,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 					<div class="card card-primary">
 						<div class="card-header"><h4>Register</h4></div>
+						<div id="ytWidget"></div><script src="https://translate.yandex.net/website-widget/v1/widget.js?widgetId=ytWidget&pageLang=en&widgetTheme=light&autoMode=false" type="text/javascript"></script>
 
 						<div class="card-body">
 							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
