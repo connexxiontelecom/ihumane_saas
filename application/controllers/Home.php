@@ -71,6 +71,11 @@ class Home extends CI_Controller
         $data['total_deduction_year'] = $this->get_total_deduction_year();
         $data['pending_loans'] = $this->loans->count_pending_loans();
         $data['running_loans'] = $this->loans->count_running_loans();
+        $data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
+        $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
+        $data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
+        $data['is_payroll_routine_run'] = $this->is_payroll_routine_run();
+//        print_r(date('m') == 9);
 
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):
@@ -715,4 +720,22 @@ class Home extends CI_Controller
     return $sum;
   }
 
+  public function is_payroll_routine_run(){
+	  $current_month = date('m');
+//	  $current_month = 10;
+	  $current_year = date('Y');
+
+    $salaries = $this->salaries->view_salaries();
+    $check_salary = 0;
+    foreach ($salaries as $salary):
+      if(($salary->salary_pay_month == $current_month) && ($salary->salary_pay_year == $current_year)):
+        $check_salary ++;
+      endif;
+    endforeach;
+    if($check_salary > 0):
+      return true;
+    else:
+      return false;
+    endif;
+  }
 }
