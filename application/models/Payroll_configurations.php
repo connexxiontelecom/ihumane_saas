@@ -122,9 +122,10 @@ class Payroll_configurations extends CI_Model
 
 	// payment definition setup end
 
-	public function view_salary_structures(){
+	public function view_salary_structures($tenant_id){
 		$this->db->select('*');
 		$this->db->from('salary_structure_category');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -145,11 +146,12 @@ class Payroll_configurations extends CI_Model
 
 	}
 
-	public function view_salary_structure($salary_structure_id){
+	public function view_salary_structure($salary_structure_id, $tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('salary_structure_category');
 		$this->db->where('salary_structure_category.salary_structure_id', $salary_structure_id);
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->row();
 	}
 
@@ -157,12 +159,13 @@ class Payroll_configurations extends CI_Model
 
 
 
-	public function view_allowances(){
+	public function view_allowances($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('salary_structure_allowance');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_structure_allowance.payment_definition_id');
 		$this->db->join('salary_structure_category', 'salary_structure_category.salary_structure_id = salary_structure_allowance.salary_structure_category_id');
+		$this->db->where('salary_structure_allowance.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 	}
 
@@ -180,23 +183,25 @@ class Payroll_configurations extends CI_Model
 
 	}
 
-	public function view_allowance($salary_structure_allowance_id){
+	public function view_allowance($salary_structure_allowance_id,$tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('salary_structure_allowance');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_structure_allowance.payment_definition_id');
 		$this->db->join('salary_structure_category', 'salary_structure_category.salary_structure_id = salary_structure_allowance.salary_structure_category_id');
 		$this->db->where('salary_structure_allowance.salary_structure_allowance_id', $salary_structure_allowance_id);
+		$this->db->where('salary_structure_allowance.tenant_id', $tenant_id);
 		return $this->db->get()->row();
 	}
 
-	public function view_salary_structure_allowances($salary_structure_category_id){
+	public function view_salary_structure_allowances($salary_structure_category_id, $tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('salary_structure_allowance');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_structure_allowance.payment_definition_id');
 		//$this->db->join('salary_structure_category', 'salary_structure_category.salary_structure_id = salary_structure_allowance.salary_structure_category_id');
 		$this->db->where('salary_structure_allowance.salary_structure_category_id', $salary_structure_category_id);
+		$this->db->where('salary_structure_allowance.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 	}
 
@@ -234,17 +239,19 @@ class Payroll_configurations extends CI_Model
 		return true;
 	}
 
-	public function view_payroll_month_year(){
+	public function view_payroll_month_year($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('payroll_month_year');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function get_payroll_month_year(){
+	public function get_payroll_month_year($tenant_id){
 		$this->db->select('*');
 		$this->db->from('payroll_month_year');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->row();
 	}
 
@@ -310,17 +317,19 @@ class Payroll_configurations extends CI_Model
 		return true;
 	}
 
-	public function view_minimum_tax_rate(){
+	public function view_minimum_tax_rate($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('minimum_tax_rate');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function get_minimum_tax_rate(){
+	public function get_minimum_tax_rate($tenant_id){
 		$this->db->select('*');
 		$this->db->from('minimum_tax_rate');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->row();
 	}
 
@@ -337,40 +346,45 @@ class Payroll_configurations extends CI_Model
 		return true;
 	}
 
-	public function view_pension_rate(){
+	public function view_pension_rate($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('pension_rate');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function get_pension_rate(){
+	public function get_pension_rate($tenant_id){
 		$this->db->select('*');
 		$this->db->from('pension_rate');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->row();
 	}
 
-	public function view_payment_definitions_order(){
+	public function view_payment_definitions_order($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('payment_definition');
+		$this->db->where('tenant_id', $tenant_id);
 		$this->db->order_by('payment_definition_type', 'desc');
 		return $this->db->get()->result();
 
 	}
 
-	public function get_income_payments() {
+	public function get_income_payments($tenant_id) {
     $this->db->select('*');
     $this->db->from('payment_definition');
     $this->db->where('payment_definition.payment_definition_type', 1);
+    $this->db->where('tenant_id', $tenant_id);
     return $this->db->get()->result();
   }
 
-  public function get_deduction_payments() {
+  public function get_deduction_payments($tenant_id) {
     $this->db->select('*');
     $this->db->from('payment_definition');
     $this->db->where('payment_definition.payment_definition_type', 0);
+    $this->db->where('tenant_id', $tenant_id);
     return $this->db->get()->result();
   }
 

@@ -589,7 +589,7 @@ class Payroll_configuration extends CI_Controller
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -604,7 +604,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures();
+				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures($tenant_id);
 
 				$this->load->view('payroll_config/salary_structure', $data);
 				else:
@@ -630,10 +630,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -648,6 +652,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$salary_structure_array = array(
 					'salary_structure_category_name' => $salary_structure_name,
+					'tenant_id' => $tenant_id
 
 				);
 				$salary_structure_array = $this->security->xss_clean($salary_structure_array);
@@ -678,6 +683,9 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 			endif;
 		else:
+			redirect('error_404');
+		endif;
+		else:
 			redirect('/login');
 		endif;
 
@@ -687,9 +695,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -737,6 +750,9 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 			endif;
 		else:
+			redirect('error_404');
+		endif;
+		else:
 			redirect('/login');
 		endif;
 
@@ -754,7 +770,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -769,7 +785,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-				$data['salary_structure_category'] = $this->payroll_configurations->view_salary_structure($allowance_id);
+				$data['salary_structure_category'] = $this->payroll_configurations->view_salary_structure($allowance_id, $tenant_id);
 
 				if(empty($data['salary_structure_category'])):
 					redirect('/error_404');
@@ -777,7 +793,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$salary_structure_category_id = $data['salary_structure_category']->salary_structure_id;
 
-				$data['allowances'] = $this->payroll_configurations->view_salary_structure_allowances($salary_structure_category_id);
+				$data['allowances'] = $this->payroll_configurations->view_salary_structure_allowances($salary_structure_category_id, $tenant_id);
 				//print_r($data['salary_structure_category']);
 
 				;
@@ -816,7 +832,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -830,9 +846,9 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['allowances'] = $this->payroll_configurations->view_allowances();
+				$data['allowances'] = $this->payroll_configurations->view_allowances($tenant_id);
 
-				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures();
+				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures($tenant_id);
 
 				$this->load->view('payroll_config/allowance', $data);
 
@@ -881,8 +897,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures();
-				$data['payment_definitions'] = $this->payroll_configurations->view_standard_payment_definition();
+				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_standard_payment_definition($tenant_id);
 
 				$this->load->view('payroll_config/new_salary_allowance', $data);
 				else:
@@ -905,10 +921,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -934,6 +954,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					'salary_structure_category_id'=> $salary_structure_category,
 					'payment_definition_id' => $payment_definition[$i],
 					'salary_structure_allowance_amount' => $allowance_amount[$i],
+						'tenant_id' => $tenant_id
 
 				);
 				$allowance_array = $this->security->xss_clean($allowance_array);
@@ -968,6 +989,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -985,7 +1010,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -999,15 +1024,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['allowance'] = $this->payroll_configurations->view_allowance($allowance_id);
+				$data['allowance'] = $this->payroll_configurations->view_allowance($allowance_id,$tenant_id);
 
 				if(empty($data['allowance'])):
 					redirect('/error_404');
 				else:
 
 
-				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['salary_structures'] = $this->payroll_configurations->view_salary_structures($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 
 				$this->load->view('payroll_config/edit_salary_allowance', $data);
 				endif;
@@ -1033,10 +1058,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1088,6 +1117,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1108,7 +1141,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1119,7 +1152,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_configuration == 1):
 
 
-				$data['employee'] = $this->employees->get_employee($employee_id);
+				$data['employee'] = $this->employees->get_employee($employee_id, $tenant_id);
 
 				if(empty($data['employee'])):
 
@@ -1139,8 +1172,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						else:
 
 							$data['user_data'] = $this->users->get_user($username);
-							$data['salary_structures'] =  $this->payroll_configurations->view_salary_structures();
-							$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+							$data['salary_structures'] =  $this->payroll_configurations->view_salary_structures($tenant_id);
+							$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							//print_r($data['employees']);
@@ -1180,7 +1213,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1194,7 +1227,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['payroll_years'] = $this->payroll_configurations->view_payroll_month_year();
+				$data['payroll_years'] = $this->payroll_configurations->view_payroll_month_year($tenant_id);
 			$this->load->view('payroll_config/payroll_month_year', $data);
 			else:
 
@@ -1221,10 +1254,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1245,7 +1282,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$payroll_data = array(
 					'payroll_month_year_year' => $year,
-					'payroll_month_year_month'=> $month
+					'payroll_month_year_month'=> $month,
+					'tenant_id' => $tenant_id
 
 				);
 
@@ -1284,6 +1322,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1298,10 +1340,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1363,6 +1409,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1381,7 +1432,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1396,7 +1447,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['minimum_tax_rates'] = $this->payroll_configurations->view_minimum_tax_rate();
+				$data['minimum_tax_rates'] = $this->payroll_configurations->view_minimum_tax_rate($tenant_id);
 				$this->load->view('payroll_config/minimum_tax_rate', $data);
 
 				else:
@@ -1422,7 +1473,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1446,6 +1501,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$tax_data = array(
 						'minimum_tax_rate' => $minimum_tax_rate,
+						'tenant_id' => $tenant_id
 
 
 					);
@@ -1485,6 +1541,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1496,10 +1556,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1563,6 +1627,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1581,7 +1649,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1595,7 +1663,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['pension_rates'] = $this->payroll_configurations->view_pension_rate();
+				$data['pension_rates'] = $this->payroll_configurations->view_pension_rate($tenant_id);
 				$this->load->view('payroll_config/pension_rate', $data);
 
 				else:
@@ -1620,10 +1688,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1644,6 +1716,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$pension_data = array(
 						'pension_rate' => $pension_rate,
+						'tenant_id' => $tenant_id
 
 
 					);
@@ -1683,6 +1756,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1694,10 +1771,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -1761,6 +1842,9 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;

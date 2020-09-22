@@ -19,87 +19,90 @@ class Salaries extends CI_Model
 		return true;
 	}
 
-	public function view_salaries(){
+	public function view_salaries($tenant_id){
 		$this->db->select('*');
-		$this->db->from('salary');
+		$this->db->from('salary_'.$tenant_id);
 		return $this->db->get()->result();
 
 	}
 
 
-	public function get_personalized_income($employee_id){
+	public function get_personalized_income($employee_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('personalized_salary_structure');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = personalized_salary_structure.personalized_payment_definition');
 		$this->db->where('personalized_salary_structure.personalized_employee_id', $employee_id);
+		$this->db->where('personalized_salary_structure.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function get_categorized_income($salary_structure_category_id){
+	public function get_categorized_income($salary_structure_category_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('salary_structure_allowance');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_structure_allowance.payment_definition_id');
 		$this->db->where('salary_structure_allowance.salary_structure_category_id', $salary_structure_category_id);
+		$this->db->where('salary_structure_allowance.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
-	public function get_variational_payment($employee_id){
+	public function get_variational_payment($employee_id, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('variational_payment');
+		$this->db->from('variational_payment_'.$tenant_id);
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment.variational_payment_definition_id');
-		$this->db->where('variational_payment.variational_employee_id', $employee_id);
+		$this->db->where('variational_payment_'.$tenant_id.'variational_employee_id', $employee_id);
 		return $this->db->get()->result();
 
 	}
 
+	//salary
 
-	public function get_taxable_incomes($employee_id, $payroll_year, $payroll_month){
+	public function get_taxable_incomes($employee_id, $payroll_year, $payroll_month, $tenant_id){
 
 		$this->db->select('*');
-		$this->db->from('salary');
+		$this->db->from('salary_'.$tenant_id);
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
-		$this->db->where('salary.salary_employee_id', $employee_id);
-		$this->db->where('salary.salary_pay_year', $payroll_year);
-		$this->db->where('salary.salary_pay_month', $payroll_month);
+		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $payroll_year);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $payroll_month);
 		return $this->db->get()->result();
 
 
 	}
 
-	public function undo_salary_routine($payroll_month, $payroll_year){
+	public function undo_salary_routine($payroll_month, $payroll_year, $tenant_id){
 
 		$this->db->where('salary_pay_month', $payroll_month);
 		$this->db->where('salary_pay_year', $payroll_year);
 		$this->db->where('salary_confirmed', 0);
-		$this->db->delete('salary');
+		$this->db->delete('salary_'.$tenant_id);
 		return true;
 	}
 
-	public function approve_payroll($payroll_month, $payroll_year, $payroll_data){
+	public function approve_payroll($payroll_month, $payroll_year, $payroll_data, $tenant_id){
 
 		$this->db->where('salary_pay_month', $payroll_month);
 		$this->db->where('salary_pay_year', $payroll_year);
 		$this->db->where('salary_confirmed', 0);
-		$this->db->update('salary', $payroll_data);
+		$this->db->update('salary_'.$tenant_id, $payroll_data);
 		return true;
 	}
 
 
-	public function get_employee_income($employee_id, $payroll_month, $payroll_year, $in_de){
+	public function get_employee_income($employee_id, $payroll_month, $payroll_year, $in_de, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('salary');
+		$this->db->from('salary'.$tenant_id);
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
-		$this->db->where('salary.salary_employee_id', $employee_id);
-		$this->db->where('salary.salary_pay_month', $payroll_month);
-		$this->db->where('salary.salary_pay_year', $payroll_year);
+		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $payroll_month);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $payroll_year);
 		$this->db->where('payment_definition.payment_definition_type', $in_de);
 		return $this->db->get()->result();
 	}
 
-	public function view_min_payroll_year(){
+	public function view_min_payroll_year($tenant_id){
 		$this->db->select_min('salary_pay_year');
-		$this->db->from('salary');
+		$this->db->from('salary_'.$tenant_id);
 		return $this->db->get()->result();
 	}
 
@@ -119,13 +122,13 @@ class Salaries extends CI_Model
 		return true;
 	}
 
-	public function view_salaries_emolument($employee_id, $month, $year){
+	public function view_salaries_emolument($employee_id, $month, $year, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('salary');
-		$this->db->where('salary.salary_employee_id', $employee_id);
-		$this->db->where('salary.salary_pay_month', $month);
-		$this->db->where('salary.salary_pay_year', $year);
-		$this->db->where('salary.salary_confirmed', 1);
+		$this->db->from('salary_'.$tenant_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $month);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $year);
+		$this->db->where('salary_'.$tenant_id.'.salary_confirmed', 1);
 		return $this->db->get()->result();
 
 	}
@@ -155,16 +158,16 @@ class Salaries extends CI_Model
 
 	}
 
-	public function get_employee_income_pay($employee_id, $payment_definition_id, $month, $year){
+	public function get_employee_income_pay($employee_id, $payment_definition_id, $month, $year, $tenant_id){
 
 		$this->db->select('*');
-		$this->db->from('salary');
+		$this->db->from('salary_'.$tenant_id);
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
-		$this->db->where('salary.salary_employee_id', $employee_id);
-		$this->db->where('salary.salary_pay_month', $month);
-		$this->db->where('salary.salary_pay_year', $year);
-		$this->db->where('salary.salary_payment_definition_id', $payment_definition_id);
-		$this->db->where('salary.salary_confirmed', 1);
+		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $month);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $year);
+		$this->db->where('salary_'.$tenant_id.'.salary_payment_definition_id', $payment_definition_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_confirmed', 1);
 		return $this->db->get()->row();
 
 	}
@@ -180,15 +183,15 @@ class Salaries extends CI_Model
 		$this->dbforge->drop_column('emolument_report', $field_name);
 	}
 
-	public function get_sheet($payroll_month, $payroll_year, $payment_definition_id, $in_de){
+	public function get_sheet($payroll_month, $payroll_year, $payment_definition_id, $in_de, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('salary');
+		$this->db->from('salary_'.$tenant_id);
 		$this->db->join('employee', 'employee.employee_id = salary.salary_employee_id');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
-		$this->db->where('salary.salary_pay_month', $payroll_month);
-		$this->db->where('salary.salary_pay_year', $payroll_year);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $payroll_month);
+		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $payroll_year);
 		$this->db->where('payment_definition.payment_definition_type', $in_de);
-		$this->db->where('salary.salary_payment_definition_id', $payment_definition_id);
+		$this->db->where('salary_'.$tenant_id.'.salary_payment_definition_id', $payment_definition_id);
 		return $this->db->get()->result();
 	}
 
@@ -204,27 +207,27 @@ class Salaries extends CI_Model
 		return $this->db->get()->result();
 	}
 
-  public function get_salaries_by_payment_id($payment_ids) {
+  public function get_salaries_by_payment_id($payment_ids, $tenant_id) {
     $this->db->select('*');
-    $this->db->from('salary');
-    $this->db->where_in('salary.salary_payment_definition_id', $payment_ids);
+    $this->db->from('salary_'.$tenant_id);
+    $this->db->where_in('salary_'.$tenant_id.'.salary_payment_definition_id', $payment_ids);
     return $this->db->get()->result();
   }
 
-  public function get_salaries_current_month($payment_ids) {
+  public function get_salaries_current_month($payment_ids, $tenant_id) {
     $this->db->select('*');
-    $this->db->from('salary');
-    $this->db->where_in('salary.salary_payment_definition_id', $payment_ids);
-    $this->db->where('salary.salary_pay_month', date('m'));
-    $this->db->where('salary.salary_pay_year', date('Y'));
+    $this->db->from('salary_'.$tenant_id);
+    $this->db->where_in('salary_'.$tenant_id.'.salary_payment_definition_id', $payment_ids);
+    $this->db->where('salary_'.$tenant_id.'.salary_pay_month', date('m'));
+    $this->db->where('salary_'.$tenant_id.'.salary_pay_year', date('Y'));
     return $this->db->get()->result();
   }
 
-  public function get_salaries_current_year($payment_ids) {
+  public function get_salaries_current_year($payment_ids, $tenant_id) {
     $this->db->select('*');
-    $this->db->from('salary');
-    $this->db->where_in('salary.salary_payment_definition_id', $payment_ids);
-    $this->db->where('salary.salary_pay_year', date('Y'));
+    $this->db->from('salary_'.$tenant_id);
+    $this->db->where_in('salary_'.$tenant_id.'.salary_payment_definition_id', $payment_ids);
+    $this->db->where('salary_'.$tenant_id.'.salary_pay_year', date('Y'));
     return $this->db->get()->result();
   }
 

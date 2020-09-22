@@ -30,10 +30,11 @@ class Payroll extends CI_Controller
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -46,7 +47,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['employees'] = $this->employees->get_employee_by_salary_setup();
+				$data['employees'] = $this->employees->get_employee_by_salary_setup($tenant_id);
 
 				//print_r($data['employees']);
 				$this->load->view('payroll_config/employee_salary_structure', $data);
@@ -73,10 +74,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		//$employee_id = $this->uri->segment(2);
 
 		if(isset($username)):
-
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -110,6 +113,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 								'personalized_employee_id'=> $employee_id,
 								'personalized_payment_definition' => $payment_definition[$i],
 								'personalized_amount' => $allowance_amount[$i],
+								'tenant_id' => $tenant_id
 
 							);
 							$personalized_array = $this->security->xss_clean($personalized_array);
@@ -134,7 +138,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 						if(($query == true) && ($query_p == true)):
 
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Add Employee Salary Structure"
 							);
@@ -171,7 +175,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						$query = $this->employees->update_employee($employee_id, $employee_array);
 
 						if($query == true):
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Added Employee Salary Structure"
 							);
@@ -198,6 +202,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -212,10 +222,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -231,7 +242,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					redirect('/error_404');
 				else:
 
-					$data['employee'] = $this->employees->get_employee($employee_id);
+					$data['employee'] = $this->employees->get_employee($employee_id, $tenant_id);
 
 					if(empty($data['employee'])):
 
@@ -243,13 +254,13 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 								$data['user_data'] = $this->users->get_user($username);
-								$data['salary_structures'] =  $this->payroll_configurations->view_salary_structures();
+								$data['salary_structures'] =  $this->payroll_configurations->view_salary_structures($tenant_id);
 
-								$data['payment_definitions'] = $this->payroll_configurations->view_employee_personalized($employee_id);
+								$data['payment_definitions'] = $this->payroll_configurations->view_employee_personalized($employee_id, $tenant_id);
 
 								$data['csrf_name'] = $this->security->get_csrf_token_name();
 								$data['csrf_hash'] = $this->security->get_csrf_hash();
-								$data['personalized_allowances'] = $this->payroll_configurations->view_employee_personalized($employee_id);
+								$data['personalized_allowances'] = $this->payroll_configurations->view_employee_personalized($employee_id, $tenant_id);
 
 								$this->load->view('payroll_config/view_employee_salary_structure', $data);
 
@@ -260,14 +271,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 								$data['user_data'] = $this->users->get_user($username);
-								$data['salary_structures'] =  $this->payroll_configurations->view_salary_structures();
+								$data['salary_structures'] =  $this->payroll_configurations->view_salary_structures($tenant_id);
 
-								$data['payment_definitions'] = $this->payroll_configurations->view_employee_personalized($employee_id);
+								$data['payment_definitions'] = $this->payroll_configurations->view_employee_personalized($employee_id, $tenant_id);
 
 								$data['csrf_name'] = $this->security->get_csrf_token_name();
 								$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-								$data['allowances'] = $this->payroll_configurations->view_salary_structure_allowances($data['employee']->employee_salary_structure_category);
+								$data['allowances'] = $this->payroll_configurations->view_salary_structure_allowances($data['employee']->employee_salary_structure_category, $tenant_id);
 
 
 								//print_r($data['allowances']);
@@ -316,7 +327,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -518,7 +530,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 						if(($query == true) && ($query_p == true)):
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Updated Employee Salary"
 							);
@@ -614,7 +626,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -654,7 +667,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -800,7 +814,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					endif;
 
 					if($query == true):
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Added A New Variational Payment"
 						);
@@ -858,7 +872,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -968,7 +983,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				endforeach;
 
 					if($query == true):
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Approved Variational Payment"
 						);
@@ -1012,7 +1027,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1073,7 +1089,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -1531,7 +1548,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 			if($query == true):
 
-				$log_array = array(
+				$log_array = array( 'tenant_id' => $tenant_id,
 					'log_user_id' => $this->users->get_user($username)->user_id,
 					'log_description' => "Ran Payroll Routine"
 				);
@@ -1573,7 +1590,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1749,7 +1767,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						$query = $this->loans->undo_loan_repayment($payroll_month, $payroll_year);
 
 						if($query == true):
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Undo Payroll Routine"
 							);
@@ -1872,7 +1890,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 						if($query == true):
 
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Approved Payroll Routine"
 							);
