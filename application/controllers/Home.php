@@ -57,13 +57,8 @@ class Home extends CI_Controller
 
 				$date = date('Y-m-d', time());
 				$data['present_employees'] = $this->biometric->check_today_attendance($date);
-        $online_users = $this->users->view_online_users();
-        foreach ($online_users as $key => $user) {
-          if ($user->user_token == ''){
-            unset($online_users[$key]);
-          }
-        }
-        $data['online_users'] = $online_users;
+
+        $data['online_users'] = $this->get_online_users();
         $data['total_income_month'] = $this->get_total_income_month();
 
         $data['total_deduction_month'] = $this->get_total_deduction_month();
@@ -88,7 +83,7 @@ class Home extends CI_Controller
         $data['pending_trainings'] = $this->employees->count_pending_trainings();
         $data['running_appraisals'] = $this->employees->count_running_appraisals();
         $data['finished_appraisals'] = $this->employees->count_finished_appraisals();
-        $data['hr_documents'] = $this->hr_configurations->view_hr_documents();
+        $data['hr_documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
 //        print_r($this->hr_configurations->view_hr_documents());
 
 				$this->load->view('index', $data);
@@ -654,8 +649,16 @@ class Home extends CI_Controller
 //		$this->configurations->create_loan_repayment_table(1);
 //		$this->configurations->create_variational_payment_table(1);
 
+	}
 
-
+	public function get_online_users() {
+		$online_users = $this->users->view_online_users();
+		foreach ($online_users as $key => $user) {
+			if ($user->user_token == '' || ((time() - $user->user_token) / 60) > 120){
+				unset($online_users[$key]);
+			}
+		}
+		return $online_users;
 	}
 
 	public function timestamp(){

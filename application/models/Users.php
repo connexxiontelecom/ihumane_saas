@@ -70,9 +70,7 @@ class Users extends CI_Model
 	public function view_online_users(){
 	  $this->db->select('*');
     $this->db->from('user');
-    $this->db->where('user_token !=', ' ');
-    $this->db->or_where('user_token !=', null);
-	return $this->db->get()->result();
+		return $this->db->get()->result();
   }
 
 	public function get_user($username){
