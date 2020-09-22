@@ -107,6 +107,7 @@ $route['hr_documents'] = 'hr_configuration/hr_documents';
 $route['add_hr_document'] = 'hr_configuration/add_hr_document';
 $route['view_hr_document/:num'] = 'hr_configuration/view_hr_document/$1';
 $route['delete_hr_document/:num'] = 'hr_configuration/delete_hr_document/$1';
+$route['count_hr_documents'] = 'hr_configuration/count_hr_documents';
 
 
 $route['user'] = 'user/user';
@@ -118,6 +119,7 @@ $route['edit_user'] = 'user/edit_user';
 $route['employee'] = 'employee/employee';
 $route['new_employee'] = 'employee/new_employee';
 $route['add_employee'] = 'employee/add_employee';
+$route['get_employees'] = 'employee/get_employees';
 $route['employee_upload_others'] = 'employee/employee_upload_others';
 $route['view_employee/:num'] = 'employee/view_employee/$1';
 $route['update_employee/:num'] = 'employee/update_employee/$1';
@@ -301,6 +303,7 @@ $route['get_chats'] = 'employee_main/get_chats';
 $route['get_online'] = 'employee_main/get_online';
 $route['documents'] = 'employee_main/documents';
 $route['view_document/:num'] = 'employee_main/view_document/$1';
+
 $route['change_password'] = 'employee_main/change_password';
 $route['change_password_'] = 'employee_main/change_password_';
 $route['get_notifications'] = 'employee_main/get_notifications';

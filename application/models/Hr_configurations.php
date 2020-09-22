@@ -632,6 +632,9 @@ class Hr_configurations extends CI_Model
 		return true;
 	}
 
+	public function count_documents(){
+	  return $this->db->count_all('hr_document');
+  }
 
 
 

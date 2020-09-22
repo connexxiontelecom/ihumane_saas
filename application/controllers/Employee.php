@@ -62,6 +62,10 @@ class Employee extends CI_Controller
 
 	}
 
+	public function get_employees() {
+	  echo json_encode($this->employees->view_employees());
+  }
+
 	public function new_employee()
 	{
 		error_reporting(0);

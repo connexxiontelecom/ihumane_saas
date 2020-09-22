@@ -613,5 +613,64 @@ class Employees extends CI_Model
 		return true;
 	}
 
+	public function count_pending_leaves() {
+	  $this->db->select('*');
+	  $this->db->from('employee_leave');
+	  $this->db->where('employee_leave.leave_status', 0);
+	  return $this->db->count_all_results();
+  }
+
+  public function count_approved_leaves() {
+    $this->db->select('*');
+    $this->db->from('employee_leave');
+    $this->db->where('employee_leave.leave_status', 1);
+    return $this->db->count_all_results();
+  }
+
+  public function count_finished_leaves() {
+    $this->db->select('*');
+    $this->db->from('employee_leave');
+    $this->db->where('employee_leave.leave_status', 2);
+    return $this->db->count_all_results();
+  }
+
+  public function get_upcoming_leaves() {
+    $this->db->select('*');
+    $this->db->from('employee_leave');
+    $this->db->where('employee_leave.leave_status', 1);
+    $this->db->join('employee', 'employee.employee_id = employee_leave.leave_employee_id');
+    $this->db->join('leave_type', 'leave_type.leave_id = employee_leave.leave_leave_type');
+    $this->db->order_by('employee_leave.leave_start_date', 'ASC');
+    $this->db->limit(3);
+    return $this->db->get()->result();
+  }
+
+  public function count_open_queries() {
+	  $this->db->select('*');
+	  $this->db->from('query');
+	  $this->db->where('query.query_status', 1);
+    return $this->db->count_all_results();
+  }
+
+  public function count_pending_trainings() {
+	  $this->db->select('*');
+	  $this->db->from('employee_training');
+	  $this->db->where('employee_training.employee_training_status', 0);
+    return $this->db->count_all_results();
+  }
+
+  public function count_running_appraisals() {
+    $this->db->select('*');
+    $this->db->from('employee_appraisal');
+    $this->db->where('employee_appraisal.employee_appraisal_status', 0);
+    return $this->db->count_all_results();
+  }
+
+  public function count_finished_appraisals() {
+    $this->db->select('*');
+    $this->db->from('employee_appraisal');
+    $this->db->where('employee_appraisal.employee_appraisal_status', 1);
+    return $this->db->count_all_results();
+  }
 
 }

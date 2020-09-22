@@ -113,6 +113,7 @@ class Loans extends CI_Model
 		return true;
 	}
 
+
 	public function count_pending_loans($tenant_id) {
     $this->db->select('*');
     $this->db->from('loans_'.$tenant_id);
@@ -124,7 +125,7 @@ class Loans extends CI_Model
     $this->db->select('*');
     $this->db->from('loans_'.$tenant_id);
     $this->db->where('loans_'.$tenant_id.'.loan_status', 0);
-    return $this->db->count_all_results();
+
   }
 
 }

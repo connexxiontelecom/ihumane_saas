@@ -74,7 +74,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									Login
 								</button>
 							</div>
-							<div class="text-center mt-5text-muted">
+							<div class="text-center mt-5 text-muted">
 								Copyright &copy; <a href="https://telecom.connexxiongroup.com" target="_blank">Connexxion Telecom</a>
 							</div>
 					</div>

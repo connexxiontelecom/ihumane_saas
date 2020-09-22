@@ -1,71 +1,36 @@
 
 <nav class="navbar navbar-expand-lg main-navbar">
-	<form class="form-inline mr-auto">
+	<form class="form-inline mr-auto" onsubmit="return false;">
 		<ul class="navbar-nav mr-3">
 			<li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
 			<li><a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none"><i class="fas fa-search"></i></a></li>
 		</ul>
 		<div class="search-element">
-			<input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="250">
+			<input class="form-control" type="search" placeholder="Search Employees" aria-label="Search" data-width="250" onkeyup="filter(this)">
 			<button class="btn" type="submit"><i class="fas fa-search"></i></button>
 			<div class="search-backdrop"></div>
-<!--			<div class="search-result">-->
-<!--				<div class="search-header">-->
-<!--					Histories-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">How to hack NASA using CSS</a>-->
-<!--					<a href="#" class="search-close"><i class="fas fa-times"></i></a>-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">Kodinger.com</a>-->
-<!--					<a href="#" class="search-close"><i class="fas fa-times"></i></a>-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">#Stisla</a>-->
-<!--					<a href="#" class="search-close"><i class="fas fa-times"></i></a>-->
-<!--				</div>-->
-<!--				<div class="search-header">-->
-<!--					Result-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">-->
-<!--						<img class="mr-3 rounded" width="30" src="../assets/img/products/product-3-50.png" alt="product">-->
-<!--						oPhone S9 Limited Edition-->
-<!--					</a>-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">-->
-<!--						<img class="mr-3 rounded" width="30" src="../assets/img/products/product-2-50.png" alt="product">-->
-<!--						Drone X2 New Gen-7-->
-<!--					</a>-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">-->
-<!--						<img class="mr-3 rounded" width="30" src="../assets/img/products/product-1-50.png" alt="product">-->
-<!--						Headphone Blitz-->
-<!--					</a>-->
-<!--				</div>-->
-<!--				<div class="search-header">-->
-<!--					Projects-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">-->
-<!--						<div class="search-icon bg-danger text-white mr-3">-->
-<!--							<i class="fas fa-code"></i>-->
-<!--						</div>-->
-<!--						Stisla Admin Template-->
-<!--					</a>-->
-<!--				</div>-->
-<!--				<div class="search-item">-->
-<!--					<a href="#">-->
-<!--						<div class="search-icon bg-primary text-white mr-3">-->
-<!--							<i class="fas fa-laptop"></i>-->
-<!--						</div>-->
-<!--						Create a new Homepage Design-->
-<!--					</a>-->
-<!--				</div>-->
-<!--			</div>-->
+			<div class="search-result pl-2 pb-3" >
+				<div class="search-header mb-2">
+					Employees
+				</div>
+        <div class="search-items" id="search-items" style="max-height: 300px; overflow-y: auto">
+
+        </div>
+        <script language="javascript" type="text/javascript">
+          function filter(element) {
+            let value = $(element).val();
+            $("#search-items > .search-item").each(function() {
+
+              if ($(this).text().search(new RegExp(value, "i")) > -1) {
+                $(this).show();
+              }
+              else {
+                $(this).hide();
+              }
+            });
+          }
+        </script>
+			</div>
 		</div>
 	</form>
 	<ul class="navbar-nav navbar-right">
@@ -203,11 +168,8 @@
 
 <script>
 	$(document).ready(function () {
-
-
 		setInterval(timestamp, 5000);
 		function timestamp() {
-
 			var employee_id = 0;
 			$.ajax({
 				type: "POST",
@@ -217,7 +179,6 @@
 					var data = JSON.parse(data);
 					for (i = 0; i < data.length; i++) {
 						var notification_id = data[i].notification_id;
-
 						Push.create("iHumane", {
 							body: data[i].notification_type,
 							icon: "https://app.ihumane.net//assets/img/ihumane-logo-1.png",
@@ -229,15 +190,34 @@
 							}
 						});
 						$.playSound("<?php echo base_url('assets/notification/done-for-you.mp3'); ?>");
-
 					}
-
 				},
 				error: function () {
 					console.log(this.error);
 				}
 			});
 		}
+
+    $.ajax({
+      url: '<?php echo site_url('get_employees')?>',
+      success: function(employees) {
+        let employeeList = JSON.parse(employees)
+        for(let i = 0; i<employeeList.length; i++){
+          console.log(employeeList[i])
+          $('.search-items').append(`
+            <div class="search-item">
+              <a href="<?php echo site_url('view_employee').'/'; ?>${employeeList[i].employee_id}">
+                <img class="mr-3 rounded" width="30" height="30" src="<?php echo base_url()?>/uploads/employee_passports/${employeeList[i].employee_passport}" alt="product">
+                ${employeeList[i].employee_first_name} ${employeeList[i].employee_last_name}
+              </a>
+            </div>
+          `)
+        }
+        // console.log(JSON.parse(employees));
+      }
+    });
+
+
 	})
 
 </script>

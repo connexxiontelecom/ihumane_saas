@@ -21,7 +21,6 @@ class Home extends CI_Controller
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
 		$this->load->model('salaries');
-
 		$this->load->model('loans');
 
 
@@ -58,13 +57,8 @@ class Home extends CI_Controller
 
 				$date = date('Y-m-d', time());
 				$data['present_employees'] = $this->biometric->check_today_attendance($date);
-        $online_users = $this->users->view_online_users();
-        foreach ($online_users as $key => $user) {
-          if ($user->user_token == ''){
-            unset($online_users[$key]);
-          }
-        }
-        $data['online_users'] = $online_users;
+
+        $data['online_users'] = $this->get_online_users();
         $data['total_income_month'] = $this->get_total_income_month();
 
         $data['total_deduction_month'] = $this->get_total_deduction_month();
@@ -74,7 +68,27 @@ class Home extends CI_Controller
 
         $data['pending_loans'] = $this->loans->count_pending_loans($tenant_id);
 				//print_r($data['total_deduction_year']);
+
         $data['running_loans'] = $this->loans->count_running_loans($tenant_id);
+
+        $data['running_loans'] = $this->loans->count_running_loans();
+        $data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
+        $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
+        $data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
+        $data['is_payroll_routine_run'] = $this->is_payroll_routine_run();
+        $data['csrf_name'] = $this->security->get_csrf_token_name();
+        $data['csrf_hash'] = $this->security->get_csrf_hash();
+        $data['pending_leaves'] = $this->employees->count_pending_leaves();
+        $data['approved_leaves'] = $this->employees->count_approved_leaves();
+        $data['finished_leaves'] = $this->employees->count_finished_leaves();
+        $data['upcoming_leaves'] = $this->employees->get_upcoming_leaves();
+        $data['open_queries'] = $this->employees->count_open_queries();
+        $data['pending_trainings'] = $this->employees->count_pending_trainings();
+        $data['running_appraisals'] = $this->employees->count_running_appraisals();
+        $data['finished_appraisals'] = $this->employees->count_finished_appraisals();
+        $data['hr_documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
+//        print_r($this->hr_configurations->view_hr_documents());
+
 
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):
@@ -639,8 +653,16 @@ class Home extends CI_Controller
 //		$this->configurations->create_loan_repayment_table(1);
 //		$this->configurations->create_variational_payment_table(1);
 
+	}
 
-
+	public function get_online_users() {
+		$online_users = $this->users->view_online_users();
+		foreach ($online_users as $key => $user) {
+			if ($user->user_token == '' || ((time() - $user->user_token) / 60) > 120){
+				unset($online_users[$key]);
+			}
+		}
+		return $online_users;
 	}
 
 	public function timestamp(){
@@ -758,4 +780,22 @@ class Home extends CI_Controller
 		endif;
   }
 
+  public function is_payroll_routine_run(){
+	  $current_month = date('m');
+//	  $current_month = 10;
+	  $current_year = date('Y');
+
+    $salaries = $this->salaries->view_salaries();
+    $check_salary = 0;
+    foreach ($salaries as $salary):
+      if(($salary->salary_pay_month == $current_month) && ($salary->salary_pay_year == $current_year)):
+        $check_salary ++;
+      endif;
+    endforeach;
+    if($check_salary > 0):
+      return true;
+    else:
+      return false;
+    endif;
+  }
 }
