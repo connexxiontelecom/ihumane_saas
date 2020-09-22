@@ -168,7 +168,7 @@ class Employees extends CI_Model
 
 	}
 
-	public function get_employees_by_department($department_id){
+	public function get_employees_by_department($department_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('employee');
 		$this->db->join('grade', 'grade.grade_id = employee.employee_grade_id');
@@ -177,6 +177,7 @@ class Employees extends CI_Model
 		$this->db->where('department.department_id', $department_id);
 		$this->db->where('employee.employee_status !=', 0);
 		$this->db->where('employee.employee_status !=', 3);
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}

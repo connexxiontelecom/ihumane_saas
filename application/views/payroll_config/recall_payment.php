@@ -20,10 +20,13 @@
             <div class="breadcrumb-item">Recall Variational Payment</div>
           </div>
 				</div>
+
         <div class="section-body">
+			<?php if (!empty($variational_payments)): ?>
           <div class="section-title">Recall Variational Payment</div>
           <p class="section-lead">You can submit the previous month's variational payment as a new variational payment here</p>
           <div class="row">
+
             <div class="col-12">
               <form method="post" action="<?php echo site_url('add_variational_payment'); ?>" class="needs-validation" novalidate>
                 <div class="card card-primary">
@@ -100,7 +103,15 @@
                 </div>
               </form>
             </div>
+
           </div>
+
+
+			<?php else: ?>
+
+				<div class="section-title">No Previous Variational Payment</div>
+		<?php endif;
+			?>
         </div>
       </section>
 		</div>

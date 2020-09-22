@@ -27,10 +27,11 @@ class Loan extends CI_Controller
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -42,7 +43,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['loans'] = $this->loans->view_loans();
+				$data['loans'] = $this->loans->view_loans($tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -73,10 +74,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -88,11 +90,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employees'] = $this->employees->view_employees();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['employees'] = $this->employees->view_employees($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year();
+				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 
 				$this->load->view('loan/new_loan', $data);
 
@@ -118,10 +120,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -133,8 +139,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$data['user_data'] = $this->users->get_user($username);
 
 
-				$payroll_month = $this->payroll_configurations->get_payroll_month_year()->payroll_month_year_month;
-				$payroll_year = $this->payroll_configurations->get_payroll_month_year()->payroll_month_year_year;
+				$payroll_month = $this->payroll_configurations->get_payroll_month_year($tenant_id)->payroll_month_year_month;
+				$payroll_year = $this->payroll_configurations->get_payroll_month_year($tenant_id)->payroll_month_year_year;
 
 				$employee_id = $this->input->post('employee_id');
 				$payment_definition = $this->input->post('payment_definition_id');
@@ -180,7 +186,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$loan_array = $this->security->xss_clean($loan_array);
 
 							//print_r($loan_array);
-						 $query = $this->loans->add_loan($loan_array);
+						 $query = $this->loans->add_loan($loan_array, $tenant_id);
 
 						 if(($query == true)):
 							 $log_array = array(
@@ -337,6 +343,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -352,9 +363,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 
+			$user_type = $this->users->get_user($username)->user_type;
+
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+		if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
+
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -368,14 +384,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_management == 1):
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employees'] = $this->employees->view_employees();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['employees'] = $this->employees->view_employees($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year();
+				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 
 
-				$data['loan'] = $this->loans->view_loan($loan_id);
+				$data['loan'] = $this->loans->view_loan($loan_id, $tenant_id);
 
 				if(empty($data['loan'])):
 
@@ -388,12 +404,20 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				endif;
 
+
+
 			else:
 
 				redirect('/access_denied');
 
 			endif;
-		endif;
+
+
+			endif;
+			else:
+				redirect('access_denied');
+
+				endif;
 	else:
 			redirect('/login');
 		endif;
@@ -404,10 +428,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -418,11 +446,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				if($permission->payroll_management == 1):
 					$data['user_data'] = $this->users->get_user($username);
 
-					$data['employees'] = $this->employees->view_employees();
-					$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+					$data['employees'] = $this->employees->view_employees($tenant_id);
+					$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
-					$data['payroll'] = $this->payroll_configurations->get_payroll_month_year();
+					$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 
 					$reschedule_type = $this->input->post('reschedule_type');
 
@@ -436,15 +464,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$loan_id = $this->input->post('loan_id');
 
-					$end_month = $this->loans->view_loan($loan_id)->loan_end_month;
-					$end_year = $this->loans->view_loan($loan_id)->loan_end_year;
+					$end_month = $this->loans->view_loan($loan_id, $tenant_id)->loan_end_month;
+					$end_year = $this->loans->view_loan($loan_id, $tenant_id)->loan_end_year;
 
 
 //					$loan_skip_year =  $this->loans->view_loan($loan_id)->loan_skip_year;
 //					$loan_skip_month =  $this->loans->view_loan($loan_id)->loan_skip_month;
 
-					$loan_balance = $this->loans->view_loan($loan_id)->loan_balance;
-					$log = $this->loans->view_loan_log($loan_id, $skip_month, $skip_year);
+					$loan_balance = $this->loans->view_loan($loan_id, $tenant_id)->loan_balance;
+					$log = $this->loans->view_loan_log($loan_id, $skip_month, $skip_year, $tenant_id);
 
 					if(!empty($log)):
 
@@ -486,8 +514,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						'loan_log_skip_year' => $skip_year
 					);
 					$log_array = $this->security->xss_clean($log_array);
-					$query = $this->loans->update_loan($loan_id, $loan_array);
-					$query_log = $this->loans->insert_loan_log($log_array);
+					$query = $this->loans->update_loan($loan_id, $loan_array, $tenant_id);
+					$query_log = $this->loans->insert_loan_log($log_array, $tenant_id);
 
 					if(($query == true) && ($query_log == true)):
 						$log_array = array(
@@ -496,10 +524,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						);
 
 						$notification_data = array(
-							'notification_employee_id'=> $this->loans->view_loan($loan_id)->employee_id,
+							'notification_employee_id'=> $this->loans->view_loan($loan_id, $tenant_id)->employee_id,
 							'notification_link'=> 'my_loan',
 							'notification_type' => 'Your Loan has been Skipped for a Month',
-							'notification_status'=> 0
+							'notification_status'=> 0,
+							'tenant_id' => $tenant_id
 						);
 
 						$this->employees->insert_notifications($notification_data);
@@ -526,7 +555,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$loan_id = $this->input->post('loan_id');
 
-					$loan_balance = $this->loans->view_loan($loan_id)->loan_balance;
+					$loan_balance = $this->loans->view_loan($loan_id, $tenant_id)->loan_balance;
 
 						$loan_array = array(
 							'loan_monthly_repayment' => $new_monthly_repayment,
@@ -545,8 +574,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 						$log_array = $this->security->xss_clean($log_array);
 
-						$query = $this->loans->update_loan($loan_id, $loan_array);
-						$query_log = $this->loans->insert_loan_log($log_array);
+						$query = $this->loans->update_loan($loan_id, $loan_array, $tenant_id);
+						$query_log = $this->loans->insert_loan_log($log_array, $tenant_id);
 
 						if(($query == true) && ($query_log == true)):
 							$log_array = array(
@@ -557,10 +586,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 							$this->logs->add_log($log_array);
 
 							$notification_data = array(
-								'notification_employee_id'=> $this->loans->view_loan($loan_id)->employee_id,
+								'notification_employee_id'=> $this->loans->view_loan($loan_id, $tenant_id)->employee_id,
 								'notification_link'=> 'my_loan',
 								'notification_type' => 'Your Loan Repayment Amount has been changed',
-								'notification_status'=> 0
+								'notification_status'=> 0,
+								'tenant_id' => $tenant_id
+
 							);
 
 							$this->employees->insert_notifications($notification_data);
@@ -583,6 +614,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				endif;
 
+				else:
+					redirect('error_404');
+					endif;
+
 		else:
 			redirect('/login');
 		endif;
@@ -600,11 +635,16 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		else:
 
 			if(isset($username)):
+				$user_type = $this->users->get_user($username)->user_type;
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
 				$loan_id = $this->uri->segment(2);
 
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -616,10 +656,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$data['user_data'] = $this->users->get_user($username);
 
 					$data['employees'] = $this->employees->view_employees();
-					$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+					$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
-					$data['payroll'] = $this->payroll_configurations->get_payroll_month_year();
+					$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 
 
 					$loan_array = array(
@@ -631,22 +671,24 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 
-					$query = $this->loans->update_loan($loan_id, $loan_array);
+					$query = $this->loans->update_loan($loan_id, $loan_array, $tenant_id);
 
 					if($query == true):
 
 						$log_array = array(
 							'log_user_id' => $this->users->get_user($username)->user_id,
-							'log_description' => "Approved Loan"
+							'log_description' => "Approved Loan",
+							'tenant_id' => $tenant_id
 						);
 
 						$this->logs->add_log($log_array);
 
 						$notification_data = array(
-							'notification_employee_id'=> $this->loans->view_loan($loan_id)->employee_id,
+							'notification_employee_id'=> $this->loans->view_loan($loan_id, $tenant_id)->employee_id,
 							'notification_link'=> 'my_loan',
 							'notification_type' => 'Your Loan application has been approved',
-							'notification_status'=> 0
+							'notification_status'=> 0,
+							'tenant_id' => $tenant_id
 						);
 
 						$this->employees->insert_notifications($notification_data);
@@ -674,6 +716,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				endif;
 
+				else:
+					redirect('access_denied');
+					endif;
+
 			else:
 				redirect('/login');
 			endif;
@@ -692,11 +738,16 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		else:
 
 			if(isset($username)):
+				$user_type = $this->users->get_user($username)->user_type;
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
 				$loan_id = $this->uri->segment(2);
 
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -723,7 +774,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 
-					$query = $this->loans->update_loan($loan_id, $loan_array);
+					$query = $this->loans->update_loan($loan_id, $loan_array, $tenant_id);
 
 					if($query == true):
 
@@ -735,10 +786,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 						$this->logs->add_log($log_array);
 
 						$notification_data = array(
-							'notification_employee_id'=> $this->loans->view_loan($loan_id)->employee_id,
+							'notification_employee_id'=> $this->loans->view_loan($loan_id, $tenant_id)->employee_id,
 							'notification_link'=> 'my_loan',
 							'notification_type' => 'Your Loan application was rejected',
-							'notification_status'=> 0
+							'notification_status'=> 0,
+							'tenant_id' => $tenant_id
 						);
 
 						$this->employees->insert_notifications($notification_data);
@@ -765,6 +817,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					redirect('/access_denied');
 
 				endif;
+
+				else:
+
+					redirect('access_denied');
+					endif;
 
 			else:
 				redirect('/login');

@@ -562,7 +562,7 @@ class Employee extends CI_Controller
 
 					if (empty($data['employee'])):
 
-						redirect('/access_denied');
+						redirect('error_404');
 					else:
 
 						$this->load->view('employee/update_employee', $data);
@@ -679,7 +679,7 @@ class Employee extends CI_Controller
 
 				if (!$upload):
 
-					$employee_passport_name = $this->employees->get_employee($employee_id)->employee_passport;
+					$employee_passport_name = $this->employees->get_employee($employee_id, $tenant_id)->employee_passport;
 				else:
 					$file_data = $this->upload->data();
 					$employee_passport_name = $file_data['file_name'];

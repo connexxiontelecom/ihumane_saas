@@ -30,7 +30,7 @@ class Payroll_report extends CI_Controller
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -41,10 +41,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['employees'] = $this->employees->get_employee_by_salary_setup();
+				$data['employees'] = $this->employees->get_employee_by_salary_setup($tenant_id);
 
 
 				$this->load->view('payroll_report/base', $data);
@@ -67,6 +68,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 		if(isset($username)):
 
+				
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -80,13 +82,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$data['user_data'] = $this->users->get_user($username);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
+				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
+				$data['tenant_id'] = $tenant_id;
 
 				$this->load->view('payroll_report/emolument_report', $data);
 
@@ -108,10 +112,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -126,7 +134,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
+				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
 
 				$month = $this->input->post('month');
 				$year = $this->input->post('year');
@@ -145,7 +153,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if(empty($check)):
 					$this->salaries->optimize_emolument_report();
 
-				$payment_definitions = $this->payroll_configurations->view_payment_definitions_order();
+				$payment_definitions = $this->payroll_configurations->view_payment_definitions_order($tenant_id);
 
 				foreach ($payment_definitions as $payment_definition):
 
@@ -157,7 +165,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				endforeach;
 
 
-				$employees = $this->employees->view_employees();
+				$employees = $this->employees->view_employees($tenant_id);
 
 				foreach ($employees as $employee):
 					$emolument_data = array(
@@ -168,7 +176,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					$this->salaries->insert_emolument($emolument_data);
 
-					$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year);
+					$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year, $tenant_id);
 
 					foreach ($salaries as $salary):
 
@@ -187,7 +195,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['emoluments'] = $this->salaries->view_emolument_sheet();
 
-
+				$data['tenant_id'] = $tenant_id;
 
 
 
@@ -213,7 +221,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 
-					$payment_definitions = $this->payroll_configurations->view_payment_definitions_order();
+					$payment_definitions = $this->payroll_configurations->view_payment_definitions_order($tenant_id);
 
 					foreach ($payment_definitions as $payment_definition):
 
@@ -225,7 +233,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					endforeach;
 
 
-					$employees = $this->employees->view_employees();
+					$employees = $this->employees->view_employees($tenant_id);
 
 					foreach ($employees as $employee):
 						$emolument_data = array(
@@ -236,7 +244,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 						$this->salaries->insert_emolument($emolument_data);
 
-						$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year);
+						$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year, $tenant_id);
 
 						foreach ($salaries as $salary):
 
@@ -254,6 +262,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 					$data['emoluments'] = $this->salaries->view_emolument_sheet();
+					$data['tenant_id'] = $tenant_id;
 
 
 
@@ -278,6 +287,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -326,7 +339,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -337,14 +350,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$data['user_data'] = $this->users->get_user($username);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 
 				$this->load->view('payroll_report/deduction_report', $data);
 				else:
@@ -365,10 +379,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -382,7 +400,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
+				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
 
 				$month = $this->input->post('month');
 				$year = $this->input->post('year');
@@ -394,12 +412,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					redirect('error_404');
 
 				else:
-					$data['payment'] = $this->payroll_configurations->view_payment_definition($payment_definition_id);
+					$data['payment'] = $this->payroll_configurations->view_payment_definition($payment_definition_id, $tenant_id);
 
 					$data['payroll_month'] = $month;
 					$data['payroll_year'] = $year;
 
-					$data['deductions'] = $this->salaries->get_sheet($month, $year, $payment_definition_id, 0);
+					$data['deductions'] = $this->salaries->get_sheet($month, $year, $payment_definition_id, 0, $tenant_id);
 
 					//print_r($data['deductions']);
 
@@ -418,6 +436,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -442,14 +465,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 			if($permission->payroll_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$data['user_data'] = $this->users->get_user($username);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 
 				$this->load->view('payroll_report/pay_order', $data);
 
@@ -472,7 +496,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -489,8 +517,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 
 				$month = $this->input->post('month');
 				$year = $this->input->post('year');
@@ -506,7 +534,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$data['payroll_month'] = $month;
 					$data['payroll_year'] = $year;
 
-					$data['employees'] = $this->employees->view_employees();
+					$data['employees'] = $this->employees->view_employees($tenant_id);
+					$data['tenant_id'] = $tenant_id;
 
 					//print_r($data['deductions']);
 
@@ -522,6 +551,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
