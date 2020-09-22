@@ -37,8 +37,9 @@ class Employee_main extends CI_Controller
 
 
 				if($user_type == 2 || $user_type == 3):
+					$tenant_id = $this->users->get_user($username)->tenant_id;
 
-					$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 						$terminations = $this->employees->get_employee_terminations($employee_id);
 
@@ -118,8 +119,9 @@ class Employee_main extends CI_Controller
 				$data['user_data'] = $this->users->get_user($username);
 				$data['queries'] = $this->employees->get_queries_employee($employee_id);
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 				$data['memos'] = $this->employees->get_memos();
 				$data['specific_memos'] = $this->employees->get_my_memo($employee_id);
 

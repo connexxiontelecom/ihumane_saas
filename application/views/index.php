@@ -17,7 +17,13 @@
                   <div class="card-body">
                     <h5 class="card-title">Hello, <?php echo $user_data->user_name; ?>!</h5>
                     <p class="card-text">Welcome back. You have <?php echo count($notifications)?> notifications.</p>
-                    <a href="<?php echo site_url('employee') ?>" class="btn btn-primary">Manage Employees</a>
+	                  <?php if($employee_management == 1):?>
+                      <a href="<?php echo site_url('employee') ?>" class="btn btn-primary">Manage Employees</a>
+                    <?php elseif($payroll_management == 1):?>
+                      <a href="<?php echo site_url('employee_salary_structure') ?>" class="btn btn-primary">Manage Salary Structures</a>
+                    <?php elseif($user_management == 1):?>
+                      <a href="<?php echo site_url('user') ?>" class="btn btn-primary">Manage Users</a>
+	                  <?php endif;?>
                   </div>
                 </div>
               </div>
@@ -25,23 +31,14 @@
                 <div class="row">
                   <div class="card card-statistic-2" style="border-radius: 12px;">
                     <div class="card-stats" >
-                      <div class="card-stats-title" style="border-radius: 12px; !important;">Company Statistics -
+                      <div class="card-stats-title" style="border-radius: 12px; !important;">Company Overview
+                        -
                         <div class="dropdown d-inline">
-                          <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">August</a>
+                          <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">App Config</a>
                           <ul class="dropdown-menu dropdown-menu-sm">
-                            <li class="dropdown-title">Select Month</li>
-                            <li><a href="#" class="dropdown-item">January</a></li>
-                            <li><a href="#" class="dropdown-item">February</a></li>
-                            <li><a href="#" class="dropdown-item">March</a></li>
-                            <li><a href="#" class="dropdown-item">April</a></li>
-                            <li><a href="#" class="dropdown-item">May</a></li>
-                            <li><a href="#" class="dropdown-item">June</a></li>
-                            <li><a href="#" class="dropdown-item">July</a></li>
-                            <li><a href="#" class="dropdown-item active">August</a></li>
-                            <li><a href="#" class="dropdown-item">September</a></li>
-                            <li><a href="#" class="dropdown-item">October</a></li>
-                            <li><a href="#" class="dropdown-item">November</a></li>
-                            <li><a href="#" class="dropdown-item">December</a></li>
+                            <li class="dropdown-title">App Config</li>
+                            <li><a href="#" class="dropdown-item">Company Settings</a></li>
+                            <li><a href="#" class="dropdown-item">Manage Subscription</a></li>
                           </ul>
                         </div>
                       </div>
@@ -84,6 +81,7 @@
                 </div>
               </div>
             </div>
+            <?php if($payroll_management == 1):?>
             <div class="row">
               <div class="col-lg-8 col-md-12 col-12 col-sm-12">
                 <div class="card" style="border-radius: 12px;">
@@ -299,6 +297,7 @@
 <!--                </div>-->
               </div>
             </div>
+            <?php endif;?>
             <div class="row">
               <div class="col-lg-8 col-md-12 col-12 col-sm-12">
                 <div class="row">
