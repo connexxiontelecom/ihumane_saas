@@ -27,7 +27,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -40,7 +41,7 @@ class Employee extends CI_Controller
 				if ($permission->employee_management == 1):
 					$data['notifications'] = $this->employees->get_notifications(0);
 
-					$data['employees'] = $this->employees->view_employees();
+					$data['employees'] = $this->employees->view_employees($tenant_id);
 					$data['user_data'] = $this->users->get_user($username);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -73,7 +74,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -89,20 +91,20 @@ class Employee extends CI_Controller
 //				$data['employees'] = $this->users->view_employees();
 					$data['notifications'] = $this->employees->get_notifications(0);
 
-					$data['grades'] = $this->hr_configurations->view_grades();
-					$data['roles'] = $this->hr_configurations->view_job_roles();
-					$data['qualifications'] = $this->hr_configurations->view_qualifications();
-					$data['banks'] = $this->hr_configurations->view_banks();
-					$data['locations'] = $this->hr_configurations->view_locations();
-					$data['health_insurances'] = $this->hr_configurations->view_health_insurances();
-					$data['pensions'] = $this->hr_configurations->view_pensions();
-					$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
+					$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
+					$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
+					$data['qualifications'] = $this->hr_configurations->view_qualifications($tenant_id);
+					$data['banks'] = $this->hr_configurations->view_banks($tenant_id);
+					$data['locations'] = $this->hr_configurations->view_locations($tenant_id);
+					$data['health_insurances'] = $this->hr_configurations->view_health_insurances($tenant_id);
+					$data['pensions'] = $this->hr_configurations->view_pensions($tenant_id);
+					$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
 					$employee_unique_id = "ihumane_" . random_string('alnum', 3);
 
-					$employee_check = $this->employees->get_employee($employee_unique_id);
+					$employee_check = $this->employees->get_unique_employee($employee_unique_id);
 
 					while (!empty($employee_check)):
-						$employee_check = $this->employees->get_employee($employee_unique_id);
+						$employee_check = $this->employees->get_uinque_employee($employee_unique_id);
 					endwhile;
 
 					$errormsg = ' ';
@@ -140,6 +142,11 @@ class Employee extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['payroll_management'] = $permission->payroll_management;
@@ -290,7 +297,8 @@ class Employee extends CI_Controller
 					'employee_emergency_name' => $employee_emergency_name,
 					'employee_emergency_contact' => $employee_emergency_phone,
 					'employee_paye_number' => $employee_paye_number,
-					'employee_subsidiary_id' => $employee_subsidiary
+					'employee_subsidiary_id' => $employee_subsidiary,
+					'tenant_id' => $tenant_id
 
 				);
 
@@ -302,7 +310,8 @@ class Employee extends CI_Controller
 					'user_password' => password_hash($employee_password, PASSWORD_BCRYPT),
 					'user_name' => $employee_name,
 					'user_type' => 2,
-					'user_status' => 1
+					'user_status' => 1,
+					'tenant_id' => $tenant_id
 				);
 
 				$permission_array = array(
@@ -313,7 +322,8 @@ class Employee extends CI_Controller
 					'user_management' => 0,
 					'configuration' => 0,
 					'hr_configuration' => 0,
-					'payroll_configuration' => 0
+					'payroll_configuration' => 0,
+					'tenant_id' => $tenant_id
 				);
 
 
@@ -350,7 +360,8 @@ class Employee extends CI_Controller
 							'company_name' => $company_name[$i],
 							'job_description' => $job_description[$i],
 							'start_date' => $experience_start_date[$i],
-							'end_date' => $experience_end_date[$i]
+							'end_date' => $experience_end_date[$i],
+							'tenant_id' => $tenant_id
 						);
 						$new_array = $this->security->xss_clean($new_array);
 						$this->employees->add_work_experience($new_array);
@@ -359,7 +370,7 @@ class Employee extends CI_Controller
 				endwhile;
 
 				if (isset($employee_id)):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Employee"
 					);
@@ -369,7 +380,8 @@ class Employee extends CI_Controller
 					$employee_history_array = array(
 						'employee_history_employee_id' => $employee_id,
 						'employee_history_details' => "You were Hired",
-						'employee_history_date' => $employment_start_date
+						'employee_history_date' => $employment_start_date,
+						'tenant_id' => $tenant_id
 					);
 
 					$this->employees->insert_employee_history($employee_history_array);
@@ -396,6 +408,10 @@ class Employee extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -433,7 +449,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -454,25 +471,25 @@ class Employee extends CI_Controller
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 					$data['notifications'] = $this->employees->get_notifications(0);
-					$data['grades'] = $this->hr_configurations->view_grades();
-					$data['roles'] = $this->hr_configurations->view_job_roles();
-					$data['qualifications'] = $this->hr_configurations->view_qualifications();
-					$data['banks'] = $this->hr_configurations->view_banks();
-					$data['locations'] = $this->hr_configurations->view_locations();
-					$data['health_insurances'] = $this->hr_configurations->view_health_insurances();
-					$data['pensions'] = $this->hr_configurations->view_pensions();
-					$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
+					$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
+					$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
+					$data['qualifications'] = $this->hr_configurations->view_qualifications($tenant_id);
+					$data['banks'] = $this->hr_configurations->view_banks($tenant_id);
+					$data['locations'] = $this->hr_configurations->view_locations($tenant_id);
+					$data['health_insurances'] = $this->hr_configurations->view_health_insurances($tenant_id);
+					$data['pensions'] = $this->hr_configurations->view_pensions($tenant_id);
+					$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
 
 					$data['work_experiences'] = $this->employees->get_work_experience($employee_id);
 
-					$data['employee'] = $this->employees->get_employee($employee_id);
+					$data['employee'] = $this->employees->get_employee($employee_id, $tenant_id);
 
 					$data['other_documents'] = $this->employees->get_other_document($employee_id);
 
 
 					if (empty($data['employee'])):
 
-						redirect('/access_denied');
+						redirect('error_404');
 					else:
 
 						$this->load->view('employee/view_employee', $data);
@@ -505,7 +522,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -526,18 +544,18 @@ class Employee extends CI_Controller
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-					$data['grades'] = $this->hr_configurations->view_grades();
-					$data['roles'] = $this->hr_configurations->view_job_roles();
-					$data['qualifications'] = $this->hr_configurations->view_qualifications();
-					$data['banks'] = $this->hr_configurations->view_banks();
-					$data['locations'] = $this->hr_configurations->view_locations();
-					$data['health_insurances'] = $this->hr_configurations->view_health_insurances();
-					$data['pensions'] = $this->hr_configurations->view_pensions();
-					$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
+					$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
+					$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
+					$data['qualifications'] = $this->hr_configurations->view_qualifications($tenant_id);
+					$data['banks'] = $this->hr_configurations->view_banks($tenant_id);
+					$data['locations'] = $this->hr_configurations->view_locations($tenant_id);
+					$data['health_insurances'] = $this->hr_configurations->view_health_insurances($tenant_id);
+					$data['pensions'] = $this->hr_configurations->view_pensions($tenant_id);
+					$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
 
 					$data['work_experiences'] = $this->employees->get_work_experience($employee_id);
 
-					$data['employee'] = $this->employees->get_employee($employee_id);
+					$data['employee'] = $this->employees->get_employee($employee_id, $tenant_id);
 
 					$data['other_documents'] = $this->employees->get_other_document($employee_id);
 
@@ -571,6 +589,12 @@ class Employee extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+
+			$method = $this->input->server('REQUEST_METHOD');
+
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['payroll_management'] = $permission->payroll_management;
@@ -731,7 +755,7 @@ class Employee extends CI_Controller
 
 
 				if ($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Update Employee Record"
 					);
@@ -769,6 +793,11 @@ class Employee extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -785,7 +814,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -845,7 +875,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -968,7 +999,7 @@ class Employee extends CI_Controller
 						$query = $this->employees->update_employee($employee_id, $employee_data);
 
 						if ($query == true):
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Initiated Employee Transfer"
 							);
@@ -1051,7 +1082,7 @@ class Employee extends CI_Controller
 						$query = $this->employees->update_employee($employee_id, $employee_data);
 
 						if ($query == true):
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Initiated Employee Transfer"
 							);
@@ -1103,7 +1134,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -1156,7 +1188,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -1261,7 +1294,7 @@ class Employee extends CI_Controller
 
 						if ($query == true):
 
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Initiated Employee Transfer"
 							);
@@ -1312,7 +1345,7 @@ class Employee extends CI_Controller
 
 					if ($query == true):
 
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Initiated Employee Transfer"
 						);
@@ -1362,7 +1395,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -1436,7 +1470,7 @@ class Employee extends CI_Controller
 
 						if ($query == true):
 
-							$log_array = array(
+							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,
 								'log_description' => "Updated Employee Leave"
 							);
@@ -1531,7 +1565,7 @@ class Employee extends CI_Controller
 
 							if ($query == true):
 
-								$log_array = array(
+								$log_array = array( 'tenant_id' => $tenant_id,
 									'log_user_id' => $this->users->get_user($username)->user_id,
 									'log_description' => "Approved Employee Leave"
 								);
@@ -1632,7 +1666,7 @@ class Employee extends CI_Controller
 
 							if ($query == true):
 
-								$log_array = array(
+								$log_array = array( 'tenant_id' => $tenant_id,
 									'log_user_id' => $this->users->get_user($username)->user_id,
 									'log_description' => "Discarded Employee Leave"
 								);
@@ -1698,7 +1732,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -1743,7 +1778,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -1969,7 +2005,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2038,7 +2075,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2095,7 +2133,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2197,7 +2236,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2237,7 +2277,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2278,7 +2319,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2373,7 +2415,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2467,7 +2510,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2522,7 +2566,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2602,7 +2647,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2711,7 +2757,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2798,7 +2845,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2847,7 +2895,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2924,7 +2973,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -2998,7 +3048,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -3097,7 +3148,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -3214,7 +3266,8 @@ class Employee extends CI_Controller
 		if (isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if ($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -3446,7 +3499,7 @@ class Employee extends CI_Controller
 
 						$this->employees->insert_notifications($notification_data);
 
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Updated Training "
 						);

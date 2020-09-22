@@ -392,7 +392,7 @@
                             <div class="col-sm-6">
                               <label for="hmo-provider">HMO Provider</label><span style="color: red"> *</span>
                               <select id="hmo-provider" class="select2 form-control" required name="employee_hmo_id" style="width: 100%; height:42px !important;">
-                                <option value=""> N/A </option>
+                                <option value="0"> N/A </option>
                                 <?php foreach ($health_insurances as $health_insurance) : ?>
                                   <option value="<?php echo $health_insurance->health_insurance_id; ?>"> <?php echo $health_insurance->health_insurance_hmo; ?></option>
                                 <?php endforeach; ?>
