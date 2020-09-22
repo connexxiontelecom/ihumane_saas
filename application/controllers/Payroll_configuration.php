@@ -100,7 +100,7 @@ class Payroll_configuration extends CI_Controller
 					'tax_rate_rate'=>$tax_rate_rate
 				);
 				$tax_rate_array = $this->security->xss_clean($tax_rate_array);
-				$query = $this->payroll_configurations->add_tax_rate($tenant_id, $tax_rate_array);
+				$query = $this->payroll_configurations->add_tax_rate($tax_rate_array, $tenant_id);
 
 				if($query == true):
 					$log_array = array( 'tenant_id' => $tenant_id,

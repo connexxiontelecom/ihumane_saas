@@ -50,7 +50,7 @@ class Home extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employees'] = $this->employees->view_employees();
+				$data['employees'] = $this->employees->view_employees($tenant_id);
 				$data['users'] = $this->users->view_users();
 				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
 				$data['leaves'] = $this->employees->get_employees_leaves();
@@ -66,8 +66,11 @@ class Home extends CI_Controller
         $data['total_income_year'] = $this->get_total_income_year();
         $data['total_deduction_year'] = $this->get_total_deduction_year();
 
-        $data['pending_loans'] = $this->loans->count_pending_loans();
+        $data['pending_loans'] = $this->loans->count_pending_loans($tenant_id);
 				//print_r($data['total_deduction_year']);
+
+        $data['running_loans'] = $this->loans->count_running_loans($tenant_id);
+
         $data['running_loans'] = $this->loans->count_running_loans();
         $data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
         $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
@@ -85,6 +88,7 @@ class Home extends CI_Controller
         $data['finished_appraisals'] = $this->employees->count_finished_appraisals();
         $data['hr_documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
 //        print_r($this->hr_configurations->view_hr_documents());
+
 
 				$this->load->view('index', $data);
 			elseif($this->users->get_user($username)->user_type == 2):

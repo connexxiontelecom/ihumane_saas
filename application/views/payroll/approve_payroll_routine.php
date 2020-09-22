@@ -70,7 +70,7 @@
                                     &#8358;
                                     <?php
                                     $gross_pay = 0;
-                                    $salaries = $CI->salaries->get_employee_income($employee->employee_id, $payroll_month, $payroll_year, 1);
+                                    $salaries = $CI->salaries->get_employee_income($employee->employee_id, $payroll_month, $payroll_year, 1, $tenant_id);
                                     foreach ($salaries as $salary):
                                       $_gross_pay = $salary->salary_amount;
                                       $gross_pay = $gross_pay + $_gross_pay;
@@ -82,7 +82,7 @@
                                     &#8358;
                                     <?php
                                     $total_deduction = 0;
-                                    $salaries = $CI->salaries->get_employee_income($employee->employee_id, $payroll_month, $payroll_year, 0);
+                                    $salaries = $CI->salaries->get_employee_income($employee->employee_id, $payroll_month, $payroll_year, 0, $tenant_id);
                                     foreach ($salaries as $salary):
                                       $_total_deduction = $salary->salary_amount;
                                       $total_deduction = $total_deduction + $_total_deduction;
