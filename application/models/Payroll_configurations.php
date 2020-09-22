@@ -15,7 +15,7 @@ class Payroll_configurations extends CI_Model
 	// Tax Rates Setup begin
 	public function add_tax_rate($tax_rate_data, $tenant_id){
 
-		$this->db->insert('tax_rate'.$tenant_id, $tax_rate_data);
+		$this->db->insert('tax_rate_'.$tenant_id, $tax_rate_data);
 		return true;
 	}
 
@@ -213,11 +213,12 @@ class Payroll_configurations extends CI_Model
 
 	}
 
-	public function view_employee_personalized($employee_id){
+	public function view_employee_personalized($employee_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('personalized_salary_structure');
 		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = personalized_salary_structure.personalized_payment_definition');
 		$this->db->where('personalized_salary_structure.personalized_employee_id', $employee_id);
+		$this->db->where('personalized_salary_structure.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
@@ -255,52 +256,53 @@ class Payroll_configurations extends CI_Model
 		return $this->db->get()->row();
 	}
 
-	public function insert_variational_payment($data){
+	public function insert_variational_payment($data, $tenant_id){
 
-		$this->db->insert('variational_payment', $data);
+		$this->db->insert('variational_payment_'.$tenant_id, $data);
 		return true;
 	}
 
-	public function view_variational_payments(){
+	public function view_variational_payments($tenant_id){
 
 		$this->db->select('*');
-		$this->db->from('variational_payment');
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment.variational_payment_definition_id');
-		$this->db->join('employee', 'employee.employee_id = variational_payment.variational_employee_id');
+		$this->db->from('variational_payment_'.$tenant_id);
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment_'.$tenant_id.'.variational_payment_definition_id');
+		$this->db->join('employee', 'employee.employee_id = variational_payment_'.$tenant_id.'.variational_employee_id');
 		$this->db->join('job_role', 'job_role.job_role_id = employee.employee_job_role_id');
 		$this->db->join('department', 'department.department_id = job_role.department_id');
 		$query = $this->db->get()->result();
 		return $query;
 	}
 
-	public function view_variational_payment($id){
+	public function view_variational_payment($id, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('variational_payment');
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment.variational_payment_definition_id');
-		$this->db->join('employee', 'employee.employee_id = variational_payment.variational_employee_id');
+		$this->db->from('variational_payment_'.$tenant_id);
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment_'.$tenant_id.'.variational_payment_definition_id');
+		$this->db->join('employee', 'employee.employee_id = variational_payment_'.$tenant_id.'.variational_employee_id');
 		$this->db->join('job_role', 'job_role.job_role_id = employee.employee_job_role_id');
 		$this->db->join('department', 'department.department_id = job_role.department_id');
-		$this->db->where('variational_payment.variational_payment_id', $id);
+		$this->db->where('variational_payment_'.$tenant_id.'.variational_payment_id', $id);
 		$query = $this->db->get()->row();
 		return $query;
 	}
 
-	public function view_variational_payments_previous_month($previous_month, $previous_year){
+	public function view_variational_payments_previous_month($previous_month, $previous_year, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('variational_payment');
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment.variational_payment_definition_id');
-		$this->db->join('employee', 'employee.employee_id = variational_payment.variational_employee_id');
+		$this->db->from('variational_payment_'.$tenant_id);
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment_'.$tenant_id.'.variational_payment_definition_id');
+		$this->db->join('employee', 'employee.employee_id = variational_payment_'.$tenant_id.'.variational_employee_id');
 		$this->db->join('job_role', 'job_role.job_role_id = employee.employee_job_role_id');
 		$this->db->join('department', 'department.department_id = job_role.department_id');
 		$this->db->where('variational_payroll_month', $previous_month);
 		$this->db->where('variational_payroll_year', $previous_year);
+
 		$query = $this->db->get()->result();
 		return $query;
 	}
 
-	public function update_variational_payments($id, $data){
-		$this->db->where('variational_payment.variational_payment_id', $id);
-		$this->db->update('variational_payment', $data);
+	public function update_variational_payments($id, $data, $tenant_id){
+		$this->db->where('variational_payment_'.$tenant_id.'.variational_payment_id', $id);
+		$this->db->update('variational_payment_'.$tenant_id, $data);
 		return true;
 	}
 

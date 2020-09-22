@@ -49,8 +49,8 @@ class Salaries extends CI_Model
 	public function get_variational_payment($employee_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('variational_payment_'.$tenant_id);
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment.variational_payment_definition_id');
-		$this->db->where('variational_payment_'.$tenant_id.'variational_employee_id', $employee_id);
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = variational_payment_'.$tenant_id.'.variational_payment_definition_id');
+		$this->db->where('variational_payment_'.$tenant_id.'.variational_employee_id', $employee_id);
 		return $this->db->get()->result();
 
 	}
@@ -61,7 +61,7 @@ class Salaries extends CI_Model
 
 		$this->db->select('*');
 		$this->db->from('salary_'.$tenant_id);
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_'.$tenant_id.'.salary_payment_definition_id');
 		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $payroll_year);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $payroll_month);
@@ -91,8 +91,8 @@ class Salaries extends CI_Model
 
 	public function get_employee_income($employee_id, $payroll_month, $payroll_year, $in_de, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('salary'.$tenant_id);
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
+		$this->db->from('salary_'.$tenant_id);
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_'.$tenant_id.'.salary_payment_definition_id');
 		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $payroll_month);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $payroll_year);
@@ -162,7 +162,7 @@ class Salaries extends CI_Model
 
 		$this->db->select('*');
 		$this->db->from('salary_'.$tenant_id);
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_'.$tenant_id.'.salary_payment_definition_id');
 		$this->db->where('salary_'.$tenant_id.'.salary_employee_id', $employee_id);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $month);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $year);
@@ -186,8 +186,8 @@ class Salaries extends CI_Model
 	public function get_sheet($payroll_month, $payroll_year, $payment_definition_id, $in_de, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('salary_'.$tenant_id);
-		$this->db->join('employee', 'employee.employee_id = salary.salary_employee_id');
-		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary.salary_payment_definition_id');
+		$this->db->join('employee', 'employee.employee_id = salary_'.$tenant_id.'.salary_employee_id');
+		$this->db->join('payment_definition', 'payment_definition.payment_definition_id = salary_'.$tenant_id.'.salary_payment_definition_id');
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_month', $payroll_month);
 		$this->db->where('salary_'.$tenant_id.'.salary_pay_year', $payroll_year);
 		$this->db->where('payment_definition.payment_definition_type', $in_de);

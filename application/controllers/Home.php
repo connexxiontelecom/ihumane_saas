@@ -51,7 +51,7 @@ class Home extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employees'] = $this->employees->view_employees();
+				$data['employees'] = $this->employees->view_employees($tenant_id);
 				$data['users'] = $this->users->view_users();
 				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
 				$data['leaves'] = $this->employees->get_employees_leaves();
