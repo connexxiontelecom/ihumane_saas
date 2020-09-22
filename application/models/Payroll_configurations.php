@@ -13,42 +13,42 @@ class Payroll_configurations extends CI_Model
 	}
 
 	// Tax Rates Setup begin
-	public function add_tax_rate($tax_rate_data){
+	public function add_tax_rate($tax_rate_data, $tenant_id){
 
-		$this->db->insert('tax_rate', $tax_rate_data);
+		$this->db->insert('tax_rate'.$tenant_id, $tax_rate_data);
 		return true;
 	}
 
-	public function update_tax_rate($tax_rate_id, $tax_rate_data){
+	public function update_tax_rate($tax_rate_id, $tax_rate_data, $tenant_id){
 
-		$this->db->where('tax_rate.tax_rate_id', $tax_rate_id);
-		$this->db->update('tax_rate', $tax_rate_data);
+		$this->db->where('tax_rate_'.$tenant_id.'.tax_rate_id', $tax_rate_id);
+		$this->db->update('tax_rate_'.$tenant_id, $tax_rate_data);
 		return true;
 
 
 	}
 
-	public function view_tax_rates(){
+	public function view_tax_rates($tenant_id){
 
 		$this->db->select('*');
-		$this->db->from('tax_rate');
+		$this->db->from('tax_rate_'.$tenant_id);
 		$this->db->order_by('tax_rate_id', 'asc');
 		return $this->db->get()->result();
 
 	}
 
-	public function view_tax_rates_asc(){
+	public function view_tax_rates_asc($tenant_id){
 
 		$this->db->select('*');
-		$this->db->from('tax_rate');
+		$this->db->from('tax_rate_'.$tenant_id);
 		$this->db->order_by('tax_rate_id', 'asc');
 		return $this->db->get()->result();
 
 	}
 
-	public function view_tax_rate($tax_rate_id){
+	public function view_tax_rate($tax_rate_id, $tenant_id){
 		$this->db->select('*');
-		$this->db->from('tax_rate');
+		$this->db->from('tax_rate_'.$tenant_id);
 		$this->db->where('tax_rate_id', $tax_rate_id);
 		$query = $this->db->get();
 		return $query->row();
@@ -81,35 +81,39 @@ class Payroll_configurations extends CI_Model
 
 	}
 
-	public function view_payment_definitions(){
+	public function view_payment_definitions($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('payment_definition');
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}
 
-	public function view_standard_payment_definition(){
+	public function view_standard_payment_definition($tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('payment_definition');
 		$this->db->where('payment_definition_variant', 0);
+		$this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
 	}
 
-	public function view_payment_definition($payment_definition_id){
+	public function view_payment_definition($payment_definition_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('payment_definition');
 		$this->db->where('payment_definition_id', $payment_definition_id);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 
 	}
 
-	public function get_fixed_id($is){
+	public function get_fixed_id($is, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('payment_definition');
 		$this->db->where('payment_definition_desc', $is);
+		$this->db->where('tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 	}
