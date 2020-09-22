@@ -1,10 +1,10 @@
 <div class="main-sidebar">
 	<aside id="sidebar-wrapper">
 		<div class="sidebar-brand" style="padding-top: 12px">
-			<a href="<?php echo site_url() ?>"><img src="<?php echo base_url() ?>/assets/img/ihumane-logo-1.png" alt="logo" width="100" class="shadow-light mb-5 mt-2"></a>
+			<a href="<?php echo site_url() ?>"><img src="<?php echo base_url() ?>/assets/img/ihumane-logo-1.png" alt="logo" width="100" class="mb-5 mt-2"></a>
 		</div>
 		<div class="sidebar-brand sidebar-brand-sm" style="padding-top: 12px">
-			<a href="<?php echo site_url() ?>"><img src="<?php echo base_url() ?>/assets/img/ihumane-logo-2.png" alt="logo" width="25" class="shadow-light mb-5 mt-2"></a>
+			<a href="<?php echo site_url() ?>"><img src="<?php echo base_url() ?>/assets/img/ihumane-logo-2.png" alt="logo" width="25" class="mb-5 mt-2"></a>
 		</div>
 		<ul class="sidebar-menu">
 			<li class="menu-header">Dashboard</li>

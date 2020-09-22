@@ -556,7 +556,8 @@
                           drawBorder: false,
                         },
                         ticks: {
-                          stepSize: 1000000
+                          stepSize: 1000000,
+                          beginAtZero: true,
                         }
                       }],
                       xAxes: [{
