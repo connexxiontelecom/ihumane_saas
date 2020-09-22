@@ -63,7 +63,9 @@ class Employee extends CI_Controller
 	}
 
 	public function get_employees() {
-	  echo json_encode($this->employees->view_employees());
+      $username = $this->session->userdata('user_username');
+      $tenant_id = $this->users->get_user($username)->tenant_id;
+	  echo json_encode($this->employees->view_employees($tenant_id));
   }
 
 	public function new_employee()

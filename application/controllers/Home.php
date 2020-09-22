@@ -75,7 +75,7 @@ class Home extends CI_Controller
         $data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
         $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
         $data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
-        $data['is_payroll_routine_run'] = $this->is_payroll_routine_run();
+        $data['is_payroll_routine_run'] = $this->is_payroll_routine_run($tenant_id);
         $data['csrf_name'] = $this->security->get_csrf_token_name();
         $data['csrf_hash'] = $this->security->get_csrf_hash();
         $data['pending_leaves'] = $this->employees->count_pending_leaves();
@@ -780,12 +780,12 @@ class Home extends CI_Controller
 		endif;
   }
 
-  public function is_payroll_routine_run(){
+  public function is_payroll_routine_run($tenant_id){
 	  $current_month = date('m');
 //	  $current_month = 10;
 	  $current_year = date('Y');
 
-    $salaries = $this->salaries->view_salaries();
+    $salaries = $this->salaries->view_salaries($tenant_id);
     $check_salary = 0;
     foreach ($salaries as $salary):
       if(($salary->salary_pay_month == $current_month) && ($salary->salary_pay_year == $current_year)):
