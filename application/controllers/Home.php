@@ -21,7 +21,6 @@ class Home extends CI_Controller
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
 		$this->load->model('salaries');
-
 		$this->load->model('loans');
 
 
@@ -35,7 +34,7 @@ class Home extends CI_Controller
 
 		if(isset($username)):
 
-
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
 
@@ -53,7 +52,7 @@ class Home extends CI_Controller
 
 				$data['employees'] = $this->employees->view_employees();
 				$data['users'] = $this->users->view_users();
-				$data['departments'] = $this->hr_configurations->view_departments();
+				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
 				$data['leaves'] = $this->employees->get_employees_leaves();
 
 				$date = date('Y-m-d', time());

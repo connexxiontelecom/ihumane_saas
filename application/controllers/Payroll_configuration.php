@@ -28,11 +28,12 @@ class Payroll_configuration extends CI_Controller
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -44,7 +45,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['tax_rates'] = $this->payroll_configurations->view_tax_rates();
+				$data['tax_rates'] = $this->payroll_configurations->view_tax_rates($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -73,10 +74,15 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+
+		if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -94,10 +100,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					'tax_rate_rate'=>$tax_rate_rate
 				);
 				$tax_rate_array = $this->security->xss_clean($tax_rate_array);
-				$query = $this->payroll_configurations->add_tax_rate($tax_rate_array);
+				$query = $this->payroll_configurations->add_tax_rate($tenant_id, $tax_rate_array);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Tax Rate"
 					);
@@ -105,7 +111,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$this->logs->add_log($log_array);
 
 					$msg = array(
-						'msg'=> 'tax_rate Added Successfully',
+						'msg'=> 'Tax Rate Added Successfully',
 						'location' => site_url('tax_rates'),
 						'type' => 'success'
 
@@ -121,6 +127,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('error_404');
+
+			endif;
 		else:
 			redirect('/login');
 		endif;
@@ -131,9 +143,16 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
-			$permission = $this->users->check_permission($username);
+
+			$method = $this->input->server('REQUEST_METHOD');
+
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+
+				$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -154,17 +173,17 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				);
 				$tax_rate_array = $this->security->xss_clean($tax_rate_array);
 				$tax_rate_array = $this->security->xss_clean($tax_rate_array);
-				$query = $this->payroll_configurations->update_tax_rate($tax_rate_id, $tax_rate_array);
+				$query = $this->payroll_configurations->update_tax_rate($tax_rate_id, $tax_rate_array, $tenant_id);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Tax Rate"
 					);
 
 					$this->logs->add_log($log_array);
 					$msg = array(
-						'msg'=> 'tax_rate Updated Successfully',
+						'msg'=> 'Tax Rate Updated Successfully',
 						'location' => site_url('tax_rates'),
 						'type' => 'success'
 
@@ -180,6 +199,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+		else:
+				redirect('error_4040');
+
+		endif;
 		else:
 			redirect('/login');
 		endif;
@@ -194,10 +218,12 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -210,9 +236,9 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['tax_rates'] = $this->payroll_configurations->view_tax_rates();
+				$data['tax_rates'] = $this->payroll_configurations->view_tax_rates($tenant_id);
 
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -246,10 +272,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -295,10 +322,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -343,6 +374,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					'payment_definition_desc' => $payment_definition_desc,
 					'payment_definition_tie_number' => $payment_definition_tie_number,
 					'payment_definition_basic' => $payment_definition_basic,
+					'tenant_id' => $tenant_id
 				);
 				$payment_definition_array = $this->security->xss_clean($payment_definition_array);
 
@@ -351,7 +383,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->payroll_configurations->add_payment_definition($payment_definition_array);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Payment Definition"
 					);
@@ -374,6 +406,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('error_404');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -390,10 +427,11 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -405,7 +443,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['payment_definition'] = $this->payroll_configurations->view_payment_definition($payment_definition_id);
+				$data['payment_definition'] = $this->payroll_configurations->view_payment_definition($payment_definition_id, $tenant_id);
 
 				if(empty($data['payment_definition'])):
 
@@ -447,10 +485,14 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
 
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -502,7 +544,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->payroll_configurations->update_payment_definition($payment_definition_id, $payment_definition_array);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Payment Definition"
 					);
@@ -526,6 +568,10 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 			endif;
 		else:
+
+		redirect('error_404');
+		endif;
+		else:
 			redirect('/login');
 		endif;
 
@@ -539,7 +585,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -607,7 +654,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->payroll_configurations->add_salary_structure($salary_structure_array);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Salary Structure"
 					);
@@ -666,7 +713,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->payroll_configurations->update_salary_structure($salary_structure_id, $salary_structure_array);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Salary Structure"
 					);
@@ -703,7 +750,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -764,7 +812,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -813,7 +862,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -895,7 +945,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added New Allowance"
 					);
@@ -931,7 +981,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1014,7 +1065,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->payroll_configurations->update_allowance($allowance_id, $allowance_array);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Updated Salary Allowance"
 					);
@@ -1053,7 +1104,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1124,7 +1176,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1201,7 +1254,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 				$query = $this->payroll_configurations->insert_payroll_month_year($payroll_data);
 
 				if($query == true):
-					$log_array = array(
+					$log_array = array( 'tenant_id' => $tenant_id,
 						'log_user_id' => $this->users->get_user($username)->user_id,
 						'log_description' => "Added Payroll Year and Month"
 					);
@@ -1280,7 +1333,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					if($query == true):
 
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Updated Payroll Year and Month"
 						);
@@ -1324,7 +1377,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1401,7 +1455,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$query = $this->payroll_configurations->insert_minimum_tax_rate($tax_data);
 
 					if($query == true):
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Added New Minimum Tax Rate"
 						);
@@ -1479,7 +1533,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					if($query == true):
 
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Updated Minimum Tax Rate"
 						);
@@ -1523,7 +1577,8 @@ $data['notifications'] = $this->employees->get_notifications(0);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-			if($user_type == 1 || $user_type == 3):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 $data['notifications'] = $this->employees->get_notifications(0);
@@ -1598,7 +1653,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 					$query = $this->payroll_configurations->insert_pension_rate($pension_data);
 
 					if($query == true):
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Added New Pension Rate"
 						);
@@ -1676,7 +1731,7 @@ $data['notifications'] = $this->employees->get_notifications(0);
 
 					if($query == true):
 
-						$log_array = array(
+						$log_array = array( 'tenant_id' => $tenant_id,
 							'log_user_id' => $this->users->get_user($username)->user_id,
 							'log_description' => "Updated Pension Rate"
 						);
