@@ -21,7 +21,6 @@ class Home extends CI_Controller
 		$this->load->model('biometric');
 		$this->load->model('backoffices');
 		$this->load->model('salaries');
-
 		$this->load->model('loans');
 
 
