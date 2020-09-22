@@ -89,7 +89,7 @@
     <?php if($this->uri->segment(1) == '' || $this->uri->segment(1) == 'home'):?>
       <!-- Dashboard charts-->
       <script src="<?php echo base_url(); ?>assets/modules/chart.min.js"></script>
-<!--      <script src="--><?php //echo base_url(); ?><!--assets/js/page/index-0.js"></script>-->
+      <!-- <script src="--><?php //echo base_url(); ?><!--assets/js/page/index-0.js"></script>-->
     <?php endif;?>
 		<!-- Template JS File -->
 		<script src="<?php echo base_url(); ?>assets/js/scripts.js"></script>
