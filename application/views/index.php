@@ -298,6 +298,7 @@
               </div>
             </div>
             <?php endif;?>
+            <?php if($employee_management == 1):?>
             <div class="row">
               <div class="col-lg-8 col-md-12 col-12 col-sm-12">
                 <div class="row">
@@ -452,6 +453,7 @@
                 </div>
               </div>
             </div>
+            <?php endif;?>
           </div>
         </section>
       </div>
