@@ -65,15 +65,15 @@
                   </div>
                   <div class="card-stats-items" style="border-radius: 12px;">
                     <div class="card-stats-item">
-                      <div class="card-stats-item-count">0</div>
-                      <div class="card-stats-item-label">Self Appraisals</div>
+                      <div class="card-stats-item-count"><?php echo count($appraisals)?></div>
+                      <div class="card-stats-item-label">Appraisals</div>
                     </div>
                     <div class="card-stats-item">
-                      <div class="card-stats-item-count">0</div>
-                      <div class="card-stats-item-label">Empl. Appraisals</div>
+                      <div class="card-stats-item-count"><?php echo count($appraisees)?></div>
+                      <div class="card-stats-item-label">Appraisees</div>
                     </div>
                     <div class="card-stats-item">
-                      <div class="card-stats-item-count">0</div>
+                      <div class="card-stats-item-count"><?php echo count($trainings)?></div>
                       <div class="card-stats-item-label">Trainings</div>
                     </div>
                   </div>
@@ -86,7 +86,15 @@
                     <h4>Appraisal Results</h4>
                   </div>
                   <div class="card-body">
-                    0
+                    <?php
+                      $num_results = 0;
+                      if(!empty($appraisals)):
+                        foreach($appraisals as $appraisal):
+                          if ($appraisal->employee_appraisal_status == 1): $num_results ++; endif;
+                        endforeach;
+                      endif;
+                      echo $num_results;
+                    ?>
                   </div>
                 </div>
               </div>
