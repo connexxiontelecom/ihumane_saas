@@ -5,6 +5,8 @@
 	$CI->load->model('hr_configurations');
 	$CI->load->model('chats');
 	$CI->load->model('employees');
+  $username = $this->session->userdata('user_username');
+  $tenant_id = $this->users->get_user($username)->tenant_id;
 ?>
 
 <body class="layout-3">
@@ -37,16 +39,19 @@
 									<?php foreach ($users as $user):
 									if($user->user_type == 3 || $user->user_type == 2):
 									//if(!empty($user->user_token)):
-									$employee_details = @$this->employees->get_employee_by_unique($user->user_username);
+										$employee_details = @$this->employees->get_employee_by_unique($user->user_username, $tenant_id);
 									if($employee_details->employee_id !== $employee_id):
-
 									?>
 								<li class="media">
+
 									<a class="link" href="#" data-rel="<?php echo $employee_details->employee_id; ?>">
-										<img alt="image" class="mr-3 rounded-circle" width="50" src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee_details->employee_passport; ?>">
-										<div class="media-body">
-											<div class="mt-0 mb-1 font-weight-bold"><?php echo $employee_details->employee_first_name." ". $employee_details->employee_last_name; ?></div>
-										</div>
+                    <div class="media">
+                      <img alt="image" class="mr-3 rounded" width="30" height="30" src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee_details->employee_passport; ?>">
+                      <div class="media-body">
+                        <div class="mt-0 mb-1 font-weight-bold"><?php echo $employee_details->employee_first_name." ". $employee_details->employee_last_name; ?></div>
+                      </div>
+                    </div>
+
 									</a>
 								</li>
 									<?php
@@ -63,7 +68,7 @@
 						<div class="content-container" style="display: none">
 							<?php foreach ($users as $user):
 								if($user->user_type == 3 || $user->user_type == 2):
-										$employee_details = @$CI->employees->get_employee_by_unique($user->user_username);
+									$employee_details = @$CI->employees->get_employee_by_unique($user->user_username, $tenant_id);
 										?>
 									<div id="<?php echo $employee_details->employee_id; ?>">
 										<div class="card chat-box" style="height: 470px">
@@ -125,7 +130,7 @@
 		function timestamp() {
 			<?php foreach ($users as $user):
 			if($user->user_type == 2 || $user->user_type == 3):
-			$employee_details = @$CI->employees->get_employee_by_unique($user->user_username); ?>
+			$employee_details = @$CI->employees->get_employee_by_unique($user->user_username, $tenant_id); ?>
 			var sender_ids = <?php echo $employee_id; ?>;
 			var reciever_ids = <?php echo $employee_details->employee_id; ?>;
 			$.ajax({
@@ -184,9 +189,7 @@
 
 				<?php foreach ($users as $user):
 				if($user->user_type == 2 || $user->user_type == 3):
-
-				$employee_details = @$CI->employees->get_employee_by_unique($user->user_username); ?>
-
+				$employee_details = @$CI->employees->get_employee_by_unique($user->user_username, $tenant_id); ?>
 				$.ajax({
 					type: "GET",
 					url: '<?php echo site_url('get_chats'); ?>',
