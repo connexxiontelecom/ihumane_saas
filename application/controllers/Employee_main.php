@@ -155,6 +155,7 @@ class Employee_main extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -167,7 +168,7 @@ class Employee_main extends CI_Controller
 
 			if($user_type == 2 || $user_type == 3):
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 				$terminations = $this->employees->get_employee_terminations($employee_id);
 
@@ -244,7 +245,7 @@ class Employee_main extends CI_Controller
 					$data['user_data'] = $this->users->get_user($username);
 					$data['notifications'] = $this->employees->get_notifications($employee_id);
 
-					$data['employee'] = $this->employees->get_employee_by_unique($username);
+					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -270,6 +271,7 @@ class Employee_main extends CI_Controller
 
 	public function employee_history(){
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -282,13 +284,13 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 
 				$data['histories'] = $this->employees->view_employee_history($employee_id);
@@ -314,6 +316,7 @@ class Employee_main extends CI_Controller
 	public function my_leave(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -329,9 +332,9 @@ class Employee_main extends CI_Controller
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 
 				$data['leaves'] = $this->employees-> check_existing_employee_leaves($employee_id);
@@ -355,6 +358,7 @@ class Employee_main extends CI_Controller
 	public function request_leave(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -370,9 +374,9 @@ class Employee_main extends CI_Controller
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
-				$data['leaves'] = $this->hr_configurations->view_leaves();
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+				$data['leaves'] = $this->hr_configurations->view_leaves($tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 				//$data['employees'] = $this->employees->view_employees();
 
@@ -545,6 +549,7 @@ class Employee_main extends CI_Controller
 	public function appraisals(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -557,13 +562,13 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 
@@ -591,6 +596,7 @@ class Employee_main extends CI_Controller
 	public function appraise_employee(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -603,13 +609,13 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 				$data['histories'] = $this->employees->view_employee_history($employee_id);
@@ -639,6 +645,7 @@ class Employee_main extends CI_Controller
 		$appraisal_id = $this->uri->segment(2);
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -651,13 +658,13 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 
@@ -884,6 +891,7 @@ class Employee_main extends CI_Controller
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			if($user_type == 2 || $user_type == 3):
@@ -899,12 +907,12 @@ class Employee_main extends CI_Controller
 
 					$data['user_data'] = $this->users->get_user($username);
 
-					$data['employee'] = $this->employees->get_employee_by_unique($username);
+					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-					$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 					$data['notifications'] = $this->employees->get_notifications($employee_id);
 
@@ -934,6 +942,7 @@ class Employee_main extends CI_Controller
 	public function pay_slip(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -949,17 +958,17 @@ class Employee_main extends CI_Controller
 
 					$data['user_data'] = $this->users->get_user($username);
 
-					$data['employee'] = $this->employees->get_employee_by_unique($username);
+					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-					$data['employee_id'] = $this->employees->get_employee_by_unique($username)->employee_id;
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+					$data['employee_id'] = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
-					$data['min_payroll_year'] = $this->salaries->view_min_payroll_year();
+					$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
 
 					$this->load->view('employee_self_service/pay_slip', $data);
 
@@ -982,6 +991,7 @@ class Employee_main extends CI_Controller
 	public function pay_slips(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1007,19 +1017,19 @@ class Employee_main extends CI_Controller
 					$data['payroll_month'] = $month;
 					$data['payroll_year'] = $year;
 					$data['user_data'] = $this->users->get_user($username);
-					$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 					$data['notifications'] = $this->employees->get_notifications($employee_id);
-					$data['employee'] = $this->employees->get_employee_by_unique($username);
+					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 
-					$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 					if(empty($check)):
 
 						$this->salaries->optimize_emolument_report();
 
 
-						$payment_definitions = $this->payroll_configurations->view_payment_definitions_order();
+						$payment_definitions = $this->payroll_configurations->view_payment_definitions_order($tenant_id);
 
 						foreach ($payment_definitions as $payment_definition):
 
@@ -1033,7 +1043,7 @@ class Employee_main extends CI_Controller
 						
 
 
-						$employees = $this->employees->view_employees();
+						$employees = $this->employees->view_employees($tenant_id);
 
 						foreach ($employees as $employee):
 							if($employee->employee_id == $employee_id):
@@ -1153,6 +1163,7 @@ class Employee_main extends CI_Controller
 	public function my_loan(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1165,20 +1176,20 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 
 
-				$data['employee_id'] = $this->employees->get_employee_by_unique($username)->employee_id;
-				$data['loans'] = $this->loans->view_loans();
+				$data['employee_id'] = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+				$data['loans'] = $this->loans->view_loans($tenant_id);
 
-				$data['employees'] = $this->employees->view_employees();
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['employees'] = $this->employees->view_employees($tenant_id);
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year();
+				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 				$this->load->view('employee_self_service/my_loan', $data);
 
@@ -1199,6 +1210,7 @@ class Employee_main extends CI_Controller
 	public function my_new_loan(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1211,19 +1223,19 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 
 
-				$data['employee_id'] = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee_id'] = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 
-				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions();
+				$data['payment_definitions'] = $this->payroll_configurations->view_payment_definitions($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year();
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
 
 				$this->load->view('employee_self_service/my_new_loan', $data);
@@ -1373,6 +1385,7 @@ class Employee_main extends CI_Controller
 
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1385,9 +1398,9 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 				$check_resignation_attempts = $this->employees->get_employee_resignations($employee_id);
 
@@ -1417,9 +1430,9 @@ class Employee_main extends CI_Controller
 					else:
 
 
-				$data['employee_id'] = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee_id'] = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 					$data['resignations'] = $this->employees->get_resignations();
-						$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 						$data['notifications'] = $this->employees->get_notifications($employee_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
@@ -1524,6 +1537,7 @@ class Employee_main extends CI_Controller
 
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1536,8 +1550,8 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
@@ -1626,6 +1640,7 @@ class Employee_main extends CI_Controller
 	public function my_memos(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1638,8 +1653,8 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 				$data['employee_id'] = $employee_id;
@@ -1668,6 +1683,7 @@ class Employee_main extends CI_Controller
 	public function my_specific_memos(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1680,8 +1696,8 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 				$data['employee_id'] = $employee_id;
@@ -1744,6 +1760,7 @@ class Employee_main extends CI_Controller
 	public function my_trainings(){
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1756,8 +1773,8 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 				$data['employee_id'] = $employee_id;
@@ -1789,6 +1806,7 @@ class Employee_main extends CI_Controller
 		$employee_training_id = $this->uri->segment(3);
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1805,7 +1823,7 @@ class Employee_main extends CI_Controller
 
 				else:
 
-					$check_existing_training = $this->hr_configurations-> view_training($training_id);
+					$check_existing_training = $this->hr_configurations-> view_training($training_id, $tenant_id);
 
 					$check_existing_employee_training = $this->employees-> get_employee_training_($employee_training_id);
 
@@ -1831,7 +1849,7 @@ class Employee_main extends CI_Controller
 							$data['user_data'] = $this->users->get_user($username);
 						//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 						$data['training'] = $check_existing_training;
-						$data['training_materials'] = $this->hr_configurations->view_training_materials($training_id);
+						$data['training_materials'] = $this->hr_configurations->view_training_materials($training_id, $tenant_id);
 
 
 						$data['csrf_name'] = $this->security->get_csrf_token_name();
@@ -1843,8 +1861,8 @@ class Employee_main extends CI_Controller
 
 
 
-						$data['employee'] = $this->employees->get_employee_by_unique($username);
-						$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+						$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 						$data['employee_id'] = $employee_id;
@@ -1882,6 +1900,7 @@ class Employee_main extends CI_Controller
 		$employee_training_id = $this->uri->segment(3);
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -1898,7 +1917,7 @@ class Employee_main extends CI_Controller
 
 				else:
 
-					$check_existing_training = $this->hr_configurations-> view_training($training_id);
+					$check_existing_training = $this->hr_configurations-> view_training($training_id, $tenant_id);
 
 					$check_existing_employee_training = $this->employees-> get_employee_training_($employee_training_id);
 
@@ -1926,7 +1945,7 @@ class Employee_main extends CI_Controller
 							$data['user_data'] = $this->users->get_user($username);
 							//$data['employees'] = $this->employees->get_employee_by_salary_setup();
 							$data['training'] = $check_existing_training;
-							$data['questions'] = $this->hr_configurations->view_training_questions($training_id);
+							$data['questions'] = $this->hr_configurations->view_training_questions($training_id, $tenant_id);
 
 
 
@@ -1949,8 +1968,8 @@ class Employee_main extends CI_Controller
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							$data['employee_training_id'] = $employee_training_id;
-							$data['employee'] = $this->employees->get_employee_by_unique($username);
-							$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+							$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+							$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 							$data['employee_id'] = $employee_id;
 							$data['notifications'] = $this->employees->get_notifications($employee_id);
 
@@ -2071,6 +2090,7 @@ class Employee_main extends CI_Controller
 
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -2102,8 +2122,8 @@ class Employee_main extends CI_Controller
 							$data['employee_training'] = $check_existing_employee_training;
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
-							$data['employee'] = $this->employees->get_employee_by_unique($username);
-							$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+							$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+							$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 							$data['employee_id'] = $employee_id;
 							$data['notifications'] = $this->employees->get_notifications($employee_id);
 
@@ -2141,6 +2161,7 @@ class Employee_main extends CI_Controller
 
 
 		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
@@ -2156,10 +2177,10 @@ class Employee_main extends CI_Controller
 
 						$data['csrf_name'] = $this->security->get_csrf_token_name();
 						$data['csrf_hash'] = $this->security->get_csrf_hash();
-						$data['employee'] = $this->employees->get_employee_by_unique($username);
-						$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+						$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 						$data['employee_id'] = $employee_id;
-						$data['users'] = $this->users->view_users();
+						$data['users'] = $this->users->view_users($tenant_id);
 						$data['notifications'] = $this->employees->get_notifications($employee_id);
 
 						//print_r($check_existing_employee_training);
@@ -2218,11 +2239,12 @@ class Employee_main extends CI_Controller
 	public function get_chats(){
 		$sender_id = $_GET['sender_id'];
 		$reciever_id = $_GET['reciever_id'];
+		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+		$chats = $this->chats->get_chat();
 
-	 	$chats = $this->chats->get_chat();
-
-	 	$employee = $this->employees->get_employee($sender_id);
-	 	$employee_details = $this->employees->get_employee($reciever_id);
+	 	$employee = $this->employees->get_employee($sender_id, $tenant_id);
+	 	$employee_details = $this->employees->get_employee($reciever_id, $tenant_id);
 
 		foreach ($chats as $chat):
 		if($chat->chat_sender_id == $employee->employee_id && $chat->chat_reciever_id == $employee_details->employee_id): ?>

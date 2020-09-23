@@ -58,11 +58,12 @@ class Users extends CI_Model
 		return $query->row();
 	}
 
-	public function view_users(){
+	public function view_users($tenant_id){
 		$this->db->select('*');
 		$this->db->from('user');
 		$this->db->join('permission', 'permission.username = user.user_username');
 		$this->db->where('user_status <', 5);
+		$this->db->where('user.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
 	}

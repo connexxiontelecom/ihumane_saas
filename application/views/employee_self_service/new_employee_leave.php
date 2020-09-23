@@ -48,8 +48,10 @@
 												<div class="card-body p-0">
 													<div class="tickets-list">
 														<?php
+                              $username = $this->session->userdata('user_username');
+                              $tenant_id = $this->users->get_user($username)->tenant_id;
 															$wallet_array = array();
-															$leaves = $CI->hr_configurations->view_leaves();
+															$leaves = $CI->hr_configurations->view_leaves($tenant_id);
 															$year =  date('Y');
 															$year = 2021;
 															foreach ($leaves as $leave):
