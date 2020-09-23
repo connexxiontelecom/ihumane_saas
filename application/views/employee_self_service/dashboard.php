@@ -197,67 +197,90 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Recent Queries</h4>
+            <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+              <div class="row">
+                <div class="col-4">
+                  <div class="alert alert-success alert-has-icon" style="border-radius: 12px;">
+                    <div class="alert-icon"><i class="far fa-check-circle"></i></div>
+                    <div class="alert-body">
+                      <div class="alert-title">Payslip</div>
+                      Your Payslip for September is ready
+                    </div>
+                  </div>
                 </div>
+                <div class="col-8">
+                  <div class="card card-statistic-2" style="border-radius: 12px;">
+                    <div class="card-chart">
+                      <canvas id="balance-chart" height="80"></canvas>
+                    </div>
+                    <div class="card-icon shadow-primary bg-primary">
+                      <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="card-wrap">
+                      <div class="card-header">
+                        <h4>Income Payments (<?php echo date('Y')?>)</h4>
+                      </div>
+                      <div class="card-body">
+                        $187,130
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card" style="border-radius: 12px;">
                 <div class="card-body">
-                  <ul class="list-unstyled list-unstyled-border">
-                    <?php if(!empty($queries)):
-                      $count = 0;
-                      foreach($queries as $query):
-                        ?>
-                        <li class="media">
-                          <div class="media-body">
-                            <small class="float-right text-primary"><?php echo date('F j, Y', strtotime($query->query_date)); ?></small>
-                            <div class="media-title"><?php echo $query->query_subject; ?> - <?php if($query->query_status == 1){ echo "Opened"; } if($query->query_status == 0){ echo "Closed"; } ?></div>
-                            <span class="text-small text-muted"><?php echo strip_tags($query->query_body); ?></span>
-                          </div>
-                        </li>
+                  <div class="summary">
+                    <div class="summary-info">
+                      <h4><?php echo count($queries)?> Queries</h4>
+                      <?php
+                        $num_open = 0;
+                        if(!empty($queries)):
+                        foreach($queries as $query):
+                          if($query->query_status == 1): $num_open ++; endif;
+                        endforeach;
+                        endif;
+                      ?>
+                      <div class="text-muted"><?php echo $num_open?> Open Queries</div>
+                      <div class="d-block mt-2">
+                        <a href="<?php echo base_url('my_queries'); ?>">View Queries</a>
+                      </div>
+                    </div>
+                    <div class="summary-item">
+                      <h6>Open Queries</h6>
+                      <ul class="list-unstyled list-unstyled-border">
+	                      <?php if(!empty($queries)):
+	                      $count = 0;
+	                      foreach($queries as $query):
+                          if($query->query_status == 1):
+	                      ?>
+                          <li class="media">
+                            <div class="media-body">
+                              <div class="media-right">
+                                <div class="dropleft">
+                                  <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item has-icon" href="<?php echo site_url('view_my_query').'/'.$query->query_id; ?>"><i class="fas fa-eye"></i> View Query</a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="media-title"><a href="#"><?php echo $query->query_subject; ?></a></div>
+                              <div class="text-muted trunc text-small"> <small class="font-italic <?php echo $query->query_type == 0 ? 'text-warning' : 'text-danger' ?>" style="font-size: 10px;"><?php echo $query->query_type == 0 ? 'Warning' : 'Query' ?></small> <div class="bullet"></div> Opened <?php echo date("F j, Y", strtotime($query->query_date));?></div>
+                            </div>
+                          </li>
                         <?php
                         if($count == 5 ):
                           break;
                         endif;
-
                         $count++;
-                      endforeach;
-                    endif;
-                    ?>
-                  </ul>
-                  <div class="text-center pt-1 pb-1">
-                    <a href="<?php echo site_url('my_queries'); ?>" class="btn btn-primary btn-lg btn-round">
-                      View All
-                    </a>
+                        endif;
+                        endforeach;
+                        endif;
+                        ?>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-lg-6 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Calendar</h4>
-                </div>
-                <div class="card-body">
-                  <div class="fc-overflow">
-                    <div id="myEvent"></div>
-                  </div>
-                </div>
-              </div>
-<!--              <script src="https://apps.elfsight.com/p/platform.js" defer></script>-->
-<!--              <div class="elfsight-app-94db080b-fd1a-434a-a153-c96187c02ee5"></div>-->
-							<?php if($response):  //print_r($response); ?>
-								<div class="card">
-									<div class="card-header">
-										<h4>Weather</h4>
-									</div>
-									<div class="card-body">
-
-									</div>
-								</div>
-							<?php endif;?>
             </div>
           </div>
         </div>
@@ -414,6 +437,62 @@
 				}
 			})
 		}
+    var balance_chart = document.getElementById("balance-chart").getContext('2d');
+
+    var balance_chart_bg_color = balance_chart.createLinearGradient(0, 0, 0, 70);
+    balance_chart_bg_color.addColorStop(0, 'rgba(63,82,227,.2)');
+    balance_chart_bg_color.addColorStop(1, 'rgba(63,82,227,0)');
+
+    var myChart = new Chart(balance_chart, {
+      type: 'line',
+      data: {
+        labels: ['16-07-2018', '17-07-2018', '18-07-2018', '19-07-2018', '20-07-2018', '21-07-2018', '22-07-2018', '23-07-2018', '24-07-2018', '25-07-2018', '26-07-2018', '27-07-2018', '28-07-2018', '29-07-2018', '30-07-2018', '31-07-2018'],
+        datasets: [{
+          label: 'Balance',
+          data: [0, 0, 80, 50, 72, 52, 60, 41, 30, 45, 70, 40, 93, 63, 50, 62],
+          backgroundColor: balance_chart_bg_color,
+          borderWidth: 3,
+          borderColor: 'rgba(63,82,227,1)',
+          pointBorderWidth: 0,
+          pointBorderColor: 'transparent',
+          pointRadius: 3,
+          pointBackgroundColor: 'transparent',
+          pointHoverBackgroundColor: 'rgba(63,82,227,1)',
+        }]
+      },
+      options: {
+        layout: {
+          padding: {
+            bottom: -1,
+            left: -1
+          }
+        },
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [{
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+            ticks: {
+              beginAtZero: true,
+              display: false
+            }
+          }],
+          xAxes: [{
+            gridLines: {
+              drawBorder: false,
+              display: false,
+            },
+            ticks: {
+              display: false
+            }
+          }]
+        },
+      }
+    });
 	});
 	// helper functions
 	const PI2 = Math.PI * 2
