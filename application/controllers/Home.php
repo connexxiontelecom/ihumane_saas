@@ -51,7 +51,7 @@ class Home extends CI_Controller
 				$data['user_data'] = $this->users->get_user($username);
 
 				$data['employees'] = $this->employees->view_employees($tenant_id);
-				$data['users'] = $this->users->view_users();
+				$data['users'] = $this->users->view_users($tenant_id);
 				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
 				$data['leaves'] = $this->employees->get_employees_leaves();
 
@@ -781,20 +781,13 @@ class Home extends CI_Controller
 
   public function is_payroll_routine_run($tenant_id){
 	  $current_month = date('m');
-//	  $current_month = 10;
 	  $current_year = date('Y');
-
     $salaries = $this->salaries->view_salaries($tenant_id);
-    $check_salary = 0;
     foreach ($salaries as $salary):
       if(($salary->salary_pay_month == $current_month) && ($salary->salary_pay_year == $current_year)):
-        $check_salary ++;
+        return true;
       endif;
     endforeach;
-    if($check_salary > 0):
-      return true;
-    else:
-      return false;
-    endif;
+    return false;
   }
 }
