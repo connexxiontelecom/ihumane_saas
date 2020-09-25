@@ -239,7 +239,7 @@
                         <h4>Income Payments (<?php echo date('Y')?>)</h4>
                       </div>
                       <div class="card-body">
-                        $187,130
+                        &#8358; <?php echo  number_format($total_income_year);?>
                       </div>
                     </div>
                   </div>
@@ -447,6 +447,8 @@
 	$(document).ready(function() {
 
 		setInterval(timestamp, 1000);
+		statistics();
+
 		function timestamp() {
 			$.ajax({
 				url: '<?php echo site_url('timestamp')?>',
@@ -455,62 +457,81 @@
 				}
 			})
 		}
-    var balance_chart = document.getElementById("balance-chart").getContext('2d');
 
-    var balance_chart_bg_color = balance_chart.createLinearGradient(0, 0, 0, 70);
-    balance_chart_bg_color.addColorStop(0, 'rgba(63,82,227,.2)');
-    balance_chart_bg_color.addColorStop(1, 'rgba(63,82,227,0)');
+		function statistics() {
+		  $.ajax({
+        url: '<?php echo site_url('get_income_payments')?>',
+        success: function(response) {
+          let json_response = JSON.parse(response);
+          let income_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    var myChart = new Chart(balance_chart, {
-      type: 'line',
-      data: {
-        labels: ['16-07-2018', '17-07-2018', '18-07-2018', '19-07-2018', '20-07-2018', '21-07-2018', '22-07-2018', '23-07-2018', '24-07-2018', '25-07-2018', '26-07-2018', '27-07-2018', '28-07-2018', '29-07-2018', '30-07-2018', '31-07-2018'],
-        datasets: [{
-          label: 'Balance',
-          data: [0, 0, 80, 50, 72, 52, 60, 41, 30, 45, 70, 40, 93, 63, 50, 62],
-          backgroundColor: balance_chart_bg_color,
-          borderWidth: 3,
-          borderColor: 'rgba(63,82,227,1)',
-          pointBorderWidth: 0,
-          pointBorderColor: 'transparent',
-          pointRadius: 3,
-          pointBackgroundColor: 'transparent',
-          pointHoverBackgroundColor: 'rgba(63,82,227,1)',
-        }]
-      },
-      options: {
-        layout: {
-          padding: {
-            bottom: -1,
-            left: -1
+          if (json_response.success) {
+            let income_stats = json_response.salaries;
+            let i;
+            for (i = 0; i < income_stats.length; i++) {
+              income_amounts[income_stats[i].salary_pay_month - 1] += parseInt(income_stats[i].salary_amount);
+            }
           }
-        },
-        legend: {
-          display: false
-        },
-        scales: {
-          yAxes: [{
-            gridLines: {
-              display: false,
-              drawBorder: false,
+
+          let balance_chart = $('#balance-chart')[0].getContext('2d');
+          let balance_chart_bg_color = balance_chart.createLinearGradient(0, 0, 0, 70);
+          balance_chart_bg_color.addColorStop(0, 'rgba(81,170,76,.2)');
+          balance_chart_bg_color.addColorStop(1, 'rgba(81,170,76,0)');
+          let myChart = new Chart(balance_chart, {
+            type: 'line',
+            data: {
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              datasets: [{
+                label: 'Balance',
+                data: income_amounts,
+                backgroundColor: balance_chart_bg_color,
+                borderWidth: 3,
+                borderColor: 'rgba(81,170,76,1)',
+                pointBorderWidth: 0,
+                pointBorderColor: 'transparent',
+                pointRadius: 3,
+                pointBackgroundColor: 'transparent',
+                pointHoverBackgroundColor: 'rgba(81,170,76, 1)',
+              }]
             },
-            ticks: {
-              beginAtZero: true,
-              display: false
+            options: {
+              layout: {
+                padding: {
+                  bottom: -1,
+                  left: -1
+                }
+              },
+              legend: {
+                display: false
+              },
+              scales: {
+                yAxes: [{
+                  gridLines: {
+                    display: false,
+                    drawBorder: false,
+                  },
+                  ticks: {
+                    beginAtZero: true,
+                    display: false
+                  }
+                }],
+                xAxes: [{
+                  gridLines: {
+                    drawBorder: false,
+                    display: false,
+                  },
+                  ticks: {
+                    display: false
+                  }
+                }]
+              },
             }
-          }],
-          xAxes: [{
-            gridLines: {
-              drawBorder: false,
-              display: false,
-            },
-            ticks: {
-              display: false
-            }
-          }]
-        },
-      }
-    });
+          });
+        }
+      })
+    }
+
+
 	});
 	// helper functions
 	const PI2 = Math.PI * 2
