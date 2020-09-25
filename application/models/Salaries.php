@@ -231,6 +231,14 @@ class Salaries extends CI_Model
     return $this->db->get()->result();
   }
 
+  public function get_employee_salary($employee_id, $tenant_id){
+		$this->db->select('*');
+		$this->db->from('salary_'.$tenant_id);
+		$this->db->where('salary_employee_id', $employee_id);
+		$this->db->where('salary_pay_month', date('m'));
+		$this->db->where('salary_pay_year', date('Y'));
+		return $this->db->get()->result();
+  }
 
 
 }

@@ -28,6 +28,7 @@ class Employee_main extends CI_Controller
 
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 //				//$data['employees'] = $this->employees->view_employees();
@@ -37,7 +38,6 @@ class Employee_main extends CI_Controller
 
 
 				if($user_type == 2 || $user_type == 3):
-					$tenant_id = $this->users->get_user($username)->tenant_id;
 
 					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
@@ -119,7 +119,6 @@ class Employee_main extends CI_Controller
 				$data['user_data'] = $this->users->get_user($username);
 				$data['queries'] = $this->employees->get_queries_employee($employee_id);
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
-				$tenant_id = $this->users->get_user($username)->tenant_id;
 
 				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 				$data['memos'] = $this->employees->get_memos();
@@ -131,7 +130,7 @@ class Employee_main extends CI_Controller
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
-
+				$data['is_payroll_ready'] = $this->is_payroll_ready($employee_id, $tenant_id);
 
 				$this->load->view('employee_self_service/dashboard', $data);
 
@@ -155,9 +154,9 @@ class Employee_main extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 //				//$data['employees'] = $this->employees->view_employees();
@@ -271,9 +270,9 @@ class Employee_main extends CI_Controller
 
 	public function employee_history(){
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -316,9 +315,9 @@ class Employee_main extends CI_Controller
 	public function my_leave(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
@@ -358,9 +357,9 @@ class Employee_main extends CI_Controller
 	public function request_leave(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
@@ -549,10 +548,10 @@ class Employee_main extends CI_Controller
 	public function appraisals(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
@@ -596,9 +595,9 @@ class Employee_main extends CI_Controller
 	public function appraise_employee(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -645,10 +644,10 @@ class Employee_main extends CI_Controller
 		$appraisal_id = $this->uri->segment(2);
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
@@ -942,9 +941,9 @@ class Employee_main extends CI_Controller
 	public function pay_slip(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -991,9 +990,9 @@ class Employee_main extends CI_Controller
 	public function pay_slips(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -2588,6 +2587,11 @@ class Employee_main extends CI_Controller
 		$employee_id = $this->input->post('employee_id');
 
 		 echo json_encode($this->employees->get_notifications($employee_id));
+	}
+
+	public function is_payroll_ready($employee_id, $tenant_id) {
+	  $salaries = $this->salaries->get_employee_salary($employee_id, $tenant_id);
+	  return !empty($salaries);
 	}
 
 

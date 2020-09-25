@@ -208,13 +208,23 @@
             <div class="col-lg-6 col-md-6 col-12 col-sm-12">
               <div class="row">
                 <div class="col-4">
+                  <?php if ($is_payroll_ready): ?>
                   <div class="alert alert-success alert-has-icon" style="border-radius: 12px;">
                     <div class="alert-icon"><i class="far fa-check-circle"></i></div>
                     <div class="alert-body">
                       <div class="alert-title">Payslip</div>
-                      Your Payslip for September is ready
+                      Your Payslip for <?php echo date('F')?> is ready view it <a class="font-weight-bold font-italic" href="<?php echo base_url('pay_slip') ?>">here</a>.
                     </div>
                   </div>
+                  <?php else:?>
+                    <div class="alert alert-warning alert-has-icon" style="border-radius: 12px;">
+                      <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+                      <div class="alert-body">
+                        <div class="alert-title">Payslip</div>
+                        Your Payslip for <?php echo date('F')?> is not ready view others <a class="font-weight-bold font-italic" href="<?php echo base_url('pay_slip') ?>">here</a>.
+                      </div>
+                    </div>
+                  <?php endif;?>
                 </div>
                 <div class="col-8">
                   <div class="card card-statistic-2" style="border-radius: 12px;">
