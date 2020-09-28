@@ -46,7 +46,10 @@
                       </thead>
                       <tbody>
                       <?php if(!empty($appraisals)):
-                        foreach($appraisals as $appraisal):
+	                      $username = $this->session->userdata('user_username');
+	                      $tenant_id = $this->users->get_user($username)->tenant_id;
+
+	                      foreach($appraisals as $appraisal):
                           ?>
                           <tr>
                             <td><?php echo $appraisal->employee_last_name." ".$appraisal->employee_first_name; ?></td>

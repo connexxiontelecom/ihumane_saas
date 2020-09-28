@@ -240,7 +240,7 @@ class Salaries extends CI_Model
 		return $this->db->get()->result();
   }
 
-  public function get_employee_income_salaries($employee_id, $tenant_id, $payment_ids){
+  public function get_employee_salaries_by_payment_id($employee_id, $tenant_id, $payment_ids){
 	  $this->db->select('*');
 	  $this->db->from('salary_'.$tenant_id);
 	  $this->db->where('salary_employee_id', $employee_id);

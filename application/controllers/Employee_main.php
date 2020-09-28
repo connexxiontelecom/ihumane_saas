@@ -131,7 +131,6 @@ class Employee_main extends CI_Controller
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 				$data['is_payroll_ready'] = $this->is_payroll_ready($employee_id, $tenant_id);
-				$data['total_income_year'] = $this->get_total_income_year();
 
 				$this->load->view('employee_self_service/dashboard', $data);
 
@@ -768,6 +767,7 @@ class Employee_main extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -778,13 +778,13 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
@@ -1056,7 +1056,7 @@ class Employee_main extends CI_Controller
 
 							$this->salaries->insert_emolument($emolument_data);
 
-							$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year);
+							$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year, $tenant_id);
 
 							foreach ($salaries as $salary):
 
@@ -1097,7 +1097,7 @@ class Employee_main extends CI_Controller
 						endforeach;
 
 
-						$payment_definitions = $this->payroll_configurations->view_payment_definitions_order();
+						$payment_definitions = $this->payroll_configurations->view_payment_definitions_order($tenant_id);
 
 						foreach ($payment_definitions as $payment_definition):
 
@@ -1109,7 +1109,7 @@ class Employee_main extends CI_Controller
 						endforeach;
 
 
-						$employees = $this->employees->view_employees();
+						$employees = $this->employees->view_employees($tenant_id);
 
 						foreach ($employees as $employee):
 							if($employee->employee_id == $employee_id):
@@ -1121,7 +1121,7 @@ class Employee_main extends CI_Controller
 
 								$this->salaries->insert_emolument($emolument_data);
 
-								$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year);
+								$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year, $tenant_id);
 
 								foreach ($salaries as $salary):
 
@@ -1137,7 +1137,7 @@ class Employee_main extends CI_Controller
 							endif;
 						endforeach;
 
-						$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 						$data['notifications'] = $this->employees->get_notifications($employee_id);
 						$data['emoluments'] = $this->salaries->view_emolument_sheet();
 
@@ -1683,9 +1683,9 @@ class Employee_main extends CI_Controller
 	public function my_specific_memos(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -1726,7 +1726,9 @@ class Employee_main extends CI_Controller
 	public function view_notification(){
 		$username = $this->session->userdata('user_username');
 		if(isset($username)):
-		$notification_id = $query_id = $this->uri->segment(2);
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$notification_id = $query_id = $this->uri->segment(2);
 
 		$notification = $this->employees->get_notification($notification_id);
 		if(empty($notification)):
@@ -1737,7 +1739,7 @@ class Employee_main extends CI_Controller
 
 
 
-		$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+		$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 		if($employee_id == $notification->notification_employee_id):
 
 			$notification_data = array(
@@ -2609,10 +2611,10 @@ class Employee_main extends CI_Controller
 				$income_payments_ids[] = $income_payment->payment_definition_id;
 			}
 			if(!empty($income_payments_ids)):
-        $salaries = $this->salaries->get_employee_income_salaries($employee_id, $tenant_id, $income_payments_ids);
+        $income = $this->salaries->get_employee_salaries_by_payment_id($employee_id, $tenant_id, $income_payments_ids);
         $json_response = array(
           'success' => true,
-          'salaries' => $salaries
+          'income' => $income
         );
         echo json_encode($json_response);
       else:
@@ -2624,25 +2626,29 @@ class Employee_main extends CI_Controller
 		endif;
 	}
 
-	public function get_total_income_year() {
+	public function get_deduction_payments() {
 		$username = $this->session->userdata('user_username');
-    if(isset($username)):
-	    $tenant_id = $this->users->get_user($username)->tenant_id;
-	    $employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-	    $income_payments = $this->payroll_configurations->get_income_payments($tenant_id);
-	    $income_payments_ids = array();
-	    foreach ($income_payments as $income_payment) {
-		    $income_payments_ids[] = $income_payment->payment_definition_id;
-	    }
-	    if(!empty($income_payments_ids)):
-		    $salaries = $this->salaries->get_employee_income_salaries($employee_id, $tenant_id, $income_payments_ids);
-	      $sum = 0;
-	      foreach($salaries as $salary) {
-	        $sum += $salary->salary_amount;
-	      }
-	      return $sum;
-	    endif;
-    endif;
-    return 0;
+		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+			$deduction_payments = $this->payroll_configurations->get_deduction_payments($tenant_id);
+			$deduction_payments_ids = array();
+			foreach ($deduction_payments as $deduction_payment) {
+				$deduction_payments_ids[] = $deduction_payment->payment_definition_id;
+			}
+			if(!empty($deduction_payments_ids)):
+				$deductions = $this->salaries->get_employee_salaries_by_payment_id($employee_id, $tenant_id, $deduction_payments_ids);
+				$json_response = array(
+					'success' => true,
+					'deductions' => $deductions
+				);
+				echo json_encode($json_response);
+      else:
+	      $json_response = array(
+		      'success' => false
+	      );
+	      echo json_encode($json_response);
+			endif;
+		endif;
 	}
 }

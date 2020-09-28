@@ -53,14 +53,16 @@
 											</thead>
 											<tbody>
 											<?php $emolument_fields = $CI->salaries->view_emolument_fields();
+											$username = $this->session->userdata('user_username');
+											$tenant_id = $this->users->get_user($username)->tenant_id;
 											foreach($emolument_fields as $emolument_field):
 												$payment_definition_field = stristr($emolument_field,"payment_definition_");
 												if(!empty($payment_definition_field)):
 													$payment_definition_id =  str_replace("payment_definition_","",$payment_definition_field);
 													?>
 													<tr>
-														<?php $payment_definition_check = $CI->payroll_configurations->view_payment_definition($payment_definition_id);
-														$emolument_detail = $CI->salaries->get_employee_income_pay($emolument->employee_id, $payment_definition_id, $payroll_month, $payroll_year); ?>
+														<?php $payment_definition_check = $CI->payroll_configurations->view_payment_definition($payment_definition_id, $tenant_id);
+														$emolument_detail = $CI->salaries->get_employee_income_pay($emolument->employee_id, $payment_definition_id, $payroll_month, $payroll_year, $tenant_id); ?>
 														<td>
 															<?php
 															if($payment_definition_check->payment_definition_type == 1):
@@ -92,7 +94,7 @@
 													<b style="color: green;">
 														<?php
 														$gross_pay = 0;
-														$salaries = $CI->salaries->get_employee_income($emolument->employee_id, $payroll_month, $payroll_year, 1);
+														$salaries = $CI->salaries->get_employee_income($emolument->employee_id, $payroll_month, $payroll_year, 1, $tenant_id);
 														foreach ($salaries as $salary):
 															$_gross_pay = $salary->salary_amount;
 															$gross_pay = $gross_pay + $_gross_pay;
@@ -105,7 +107,7 @@
 													<b style="color: red;">
 														<?php
 														$total_deduction = 0;
-														$salaries = $CI->salaries->get_employee_income($emolument->employee_id, $payroll_month, $payroll_year, 0);
+														$salaries = $CI->salaries->get_employee_income($emolument->employee_id, $payroll_month, $payroll_year, 0, $tenant_id);
 														foreach ($salaries as $salary):
 															$_total_deduction = $salary->salary_amount;
 															$total_deduction = $total_deduction + $_total_deduction;

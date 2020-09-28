@@ -1818,7 +1818,9 @@ class Employee extends CI_Controller
 
 
 					$data['user_data'] = $this->users->get_user($username);
+
 					$data['appraisals'] = $this->employees->get_appraisals($tenant_id);
+
 					$data['employees'] = $this->employees->view_employees($tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -1891,11 +1893,13 @@ class Employee extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+
 			$method = $this->input->server('REQUEST_METHOD');
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -1970,8 +1974,10 @@ class Employee extends CI_Controller
 						$appraisal_id = $this->employees->insert_appraisal($appraisal_array);
 
 						//1 == employee comment 2 == quantitative 3 == qualitative, 4 == supervisor
-
 						$self_assessments_questions = $this->hr_configurations->view_self_assessments($tenant_id);
+
+
+					
 
 						foreach ($self_assessments_questions as $self_assessments_question):
 
@@ -2085,11 +2091,13 @@ class Employee extends CI_Controller
 
 				endif;
 
+
 //				$data['employees'] = $this->employees->view_employees($tenant_id);
 //				$data['csrf_name'] = $this->security->get_csrf_token_name();
 //				$data['csrf_hash'] = $this->security->get_csrf_hash();
 //
 //				$this->load->view('employee/new_employee_appraisal', $data);
+
 
 
 			else:

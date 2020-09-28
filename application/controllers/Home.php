@@ -146,6 +146,7 @@ class Home extends CI_Controller
 
 
 		if(isset($user_username)):
+
 			redirect('home');
 		else:
 
@@ -193,9 +194,11 @@ class Home extends CI_Controller
 								redirect('home');
 								elseif($this->users->get_user($username)->user_type == 2):
 
+
 									$tenant_id = $this->users->get_user($username)->tenant_id;
 
 									$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
 
 
 									$trainings =  $this->employees->get_employee_training($employee_id);
