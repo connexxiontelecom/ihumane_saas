@@ -39,7 +39,7 @@ class Employee extends CI_Controller
 				$data['hr_configuration'] = $permission->hr_configuration;
 
 				if ($permission->employee_management == 1):
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 					$data['employees'] = $this->employees->view_employees($tenant_id);
 					$data['user_data'] = $this->users->get_user($username);
@@ -91,7 +91,7 @@ class Employee extends CI_Controller
 				if ($permission->employee_management == 1):
 
 //				$data['employees'] = $this->users->view_employees();
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 					$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
 					$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
@@ -157,7 +157,7 @@ class Employee extends CI_Controller
 			$data['configuration'] = $permission->configuration;
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			if ($permission->employee_management == 1):
 				$config['upload_path'] = 'uploads/employee_passports';
 				$config['allowed_types'] = 'gif|jpg|png|jpeg';
@@ -472,7 +472,7 @@ class Employee extends CI_Controller
 					$data['user_data'] = $this->users->get_user($username);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
 					$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 					$data['qualifications'] = $this->hr_configurations->view_qualifications($tenant_id);
@@ -538,7 +538,7 @@ class Employee extends CI_Controller
 
 				if ($permission->employee_management == 1):
 
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$errormsg = ' ';
 					$error_msg = array('error' => $errormsg);
 					$data['error'] = $errormsg;
@@ -610,7 +610,7 @@ class Employee extends CI_Controller
 
 			if ($permission->employee_management == 1):
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$employee_unique_id = $this->input->post('employee_unique_id');
 				$employee_first_name = $this->input->post('employee_first_name');
 				$employee_last_name = $this->input->post('employee_last_name');
@@ -836,7 +836,7 @@ class Employee extends CI_Controller
 					$data['user_data'] = $this->users->get_user($username);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['grades'] = $this->hr_configurations->view_grades($tenant_id);
 					$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 					$data['qualifications'] = $this->hr_configurations->view_qualifications($tenant_id);
@@ -887,7 +887,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -953,7 +953,7 @@ class Employee extends CI_Controller
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
 
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			if ($permission->employee_management == 1):
 
 				$employee_id = $this->input->post('employee_id');
@@ -1161,7 +1161,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -1227,7 +1227,7 @@ class Employee extends CI_Controller
 					$data['user_data'] = $this->users->get_user($username);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['leaves'] = $this->hr_configurations->view_leaves($tenant_id);
 					$data['employees'] = $this->employees->view_employees($tenant_id);
 
@@ -1276,7 +1276,7 @@ class Employee extends CI_Controller
 			$data['configuration'] = $permission->configuration;
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 			if ($permission->employee_management == 1):
 				$employee_id = $this->input->post('employee_id');
@@ -1447,7 +1447,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -1492,7 +1492,7 @@ class Employee extends CI_Controller
 			$data['configuration'] = $permission->configuration;
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 			if ($permission->employee_management == 1):
 				$leave_id = $this->input->post('leave_id');
@@ -1599,7 +1599,7 @@ class Employee extends CI_Controller
 			$data['configuration'] = $permission->configuration;
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 			if ($permission->employee_management == 1):
 				if ($this->agent->referrer() !== site_url('employee_leave')):
@@ -1693,7 +1693,7 @@ class Employee extends CI_Controller
 	public function discard_employee_leave()
 	{
 		$username = $this->session->userdata('user_username');
-		$data['notifications'] = $this->employees->get_notifications(0);
+		$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if (isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1812,7 +1812,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -1859,7 +1859,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -1905,7 +1905,7 @@ class Employee extends CI_Controller
 			$data['configuration'] = $permission->configuration;
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 			if ($permission->employee_management == 1):
 
@@ -2125,7 +2125,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -2196,7 +2196,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 					$employee = $this->employees->get_employee($employee_id, $tenant_id);
@@ -2261,7 +2261,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					$termination_employee_id = $this->input->post('termination_employee_id');
@@ -2369,7 +2369,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					$data['user_data'] = $this->users->get_user($username);
@@ -2409,7 +2409,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -2451,7 +2451,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -2549,7 +2549,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					$check = $this->employees->get_resignation($resignation_id, $tenant_id);
@@ -2644,7 +2644,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -2701,7 +2701,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					$method = $this->input->server('REQUEST_METHOD');
@@ -2783,7 +2783,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -2902,7 +2902,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -2991,7 +2991,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -3041,7 +3041,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -3122,7 +3122,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					$method = $this->input->server('REQUEST_METHOD');
@@ -3197,7 +3197,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					$data['user_data'] = $this->users->get_user($username);
@@ -3249,7 +3249,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if($permission->payroll_configuration == 1):
 
 
@@ -3298,7 +3298,7 @@ class Employee extends CI_Controller
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
 
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if ($permission->employee_management == 1):
 
 					extract($_POST);
@@ -3419,7 +3419,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				if ($permission->employee_management == 1):
 
@@ -3495,7 +3495,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if($permission->employee_management == 1):
 
 
@@ -3544,7 +3544,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if($permission->employee_management == 1):
 
 
@@ -3583,7 +3583,7 @@ class Employee extends CI_Controller
 
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['payroll_management'] = $permission->payroll_management;
@@ -3695,7 +3695,7 @@ class Employee extends CI_Controller
 	public function view_training_result(){
 		$username = $this->session->userdata('user_username');
 		$employee_training_id = $this->uri->segment(2);
-		$data['notifications'] = $this->employees->get_notifications(0);
+
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
@@ -3709,7 +3709,7 @@ class Employee extends CI_Controller
 				$data['configuration'] = $permission->configuration;
 				$data['payroll_configuration'] = $permission->payroll_configuration;
 				$data['hr_configuration'] = $permission->hr_configuration;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				if($permission->employee_management == 1):
 
 					if(empty($employee_training_id)):
@@ -3732,7 +3732,7 @@ class Employee extends CI_Controller
 							$data['employee_training'] = $check_existing_employee_training;
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
-
+							$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 
 
@@ -3787,11 +3787,12 @@ class Employee extends CI_Controller
 
 		$username = $this->session->userdata('user_username');
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$notification_id = $query_id = $this->uri->segment(2);
 
 
 			if($notification_id == 'a'):
-				$notifications = $this->employees->get_notifications(0);
+				$notifications = $this->employees->get_notifications(0, $tenant_id);
 			if(!empty($notifications)):
 				foreach ($notifications as $notification):
 

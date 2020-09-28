@@ -528,21 +528,23 @@ class Employees extends CI_Model
 		return true;
 	}
 
-	public function get_notifications($employee_id){
+	public function get_notifications($employee_id, $tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('notification');
 		$this->db->where('notification.notification_employee_id', $employee_id);
 		$this->db->where('notification.notification_status', 0);
+		$this->db->where('notification.tenant_id', $tenant_id);
 		$this->db->order_by('notification_date', 'DESC');
 		return $this->db->get()->result();
 	}
 
-	public function get_notification($notification_id){
+	public function get_notification($notification_id, $tenant_id){
 
 		$this->db->select('*');
 		$this->db->from('notification');
 		$this->db->where('notification.notification_id', $notification_id);
+		$this->db->where('notification.tenant_id', $tenant_id);
 		return $this->db->get()->row();
 	}
 
