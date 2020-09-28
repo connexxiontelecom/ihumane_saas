@@ -767,6 +767,7 @@ class Employee_main extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -777,13 +778,13 @@ class Employee_main extends CI_Controller
 
 				$data['user_data'] = $this->users->get_user($username);
 
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id);
@@ -1682,9 +1683,9 @@ class Employee_main extends CI_Controller
 	public function my_specific_memos(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -1725,7 +1726,9 @@ class Employee_main extends CI_Controller
 	public function view_notification(){
 		$username = $this->session->userdata('user_username');
 		if(isset($username)):
-		$notification_id = $query_id = $this->uri->segment(2);
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$notification_id = $query_id = $this->uri->segment(2);
 
 		$notification = $this->employees->get_notification($notification_id);
 		if(empty($notification)):
@@ -1736,7 +1739,7 @@ class Employee_main extends CI_Controller
 
 
 
-		$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+		$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 		if($employee_id == $notification->notification_employee_id):
 
 			$notification_data = array(
