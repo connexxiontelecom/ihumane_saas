@@ -20,10 +20,11 @@ $CI->load->model('employees');
 		<div class="main-content">
 			<section class="section">
 				<div class="section-header">
-					<h1>APPRAISAL -> <?php echo $CI->employees->get_appraisal($appraisal_id)->employee_last_name." ". $CI->employees->get_appraisal($appraisal_id)->employee_first_name ?> </h1>
+					<h1>Complete Appraisal </h1>
 					<div class="section-header-breadcrumb">
 						<div class="breadcrumb-item active"><a href="<?php echo base_url(); ?>">Dashboard</a></div>
-						<div class="breadcrumb-item">Appraise Employees</div>
+						<div class="breadcrumb-item active"><a href="<?php echo base_url('appraisals') ?>">My Appraisals</a></div>
+						<div class="breadcrumb-item">Complete Appraisal</div>
 					</div>
 				</div>
 				<div class="section-body">
@@ -37,8 +38,6 @@ $CI->load->model('employees');
 										<li class="nav-item waves-effect waves-light">
 											<a class="nav-link active" data-toggle="tab" href="#self" role="tab"> <i class="fas fa-user"></i> Self Performance</a>
 										</li>
-
-
 									</ul>
 								</div>
 							</div>
@@ -82,7 +81,7 @@ $CI->load->model('employees');
 
 													<input type="hidden" name="<?php echo $csrf_name;?>" value="<?php echo $csrf_hash;?>" />
 													<input type="hidden" name="appraisal_id" value="<?php echo $appraisal_id;?>" />
-													<div class="card-footer text-right bg-whitesmoke">
+													<div class="card-footer text-right">
 														<button type="submit" class="btn btn-primary">Submit</button>
 														<input type="reset" class="btn btn-secondary">
 

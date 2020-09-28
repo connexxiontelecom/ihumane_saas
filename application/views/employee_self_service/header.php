@@ -11,8 +11,16 @@
 		</a>
 		<ul class="navbar-nav">
 			<li class="nav-item <?php echo $this->uri->segment(1) != 'documents' && $this->uri->segment(1) != 'view_document' ? 'active' : '' ?>"><a href="<?php echo site_url('employee_main'); ?>" class="nav-link">App</a></li>
-			<li class="nav-item <?php echo $this->uri->segment(1) == 'documents' || $this->uri->segment(1) == 'view_document' ? 'active' : '' ?>"><a href="<?php echo site_url('documents'); ?>" class="nav-link">Docs</a></li>
-			<li class="nav-item"><a href="#" class="nav-link">Help</a></li>
+			<li class="nav-item <?php echo $this->uri->segment(1) == 'documents' || $this->uri->segment(1) == 'view_document' ? 'active' : '' ?>"><a href="<?php echo site_url('documents'); ?>" class="nav-link">Documents</a></li>
+			<li class="nav-item dropdown dropdown-list-toggle">
+        <a href="#" data-toggle="dropdown" class="nav-link nav-link-lg message-toggle">Help</a>
+        <ul class="dropdown-menu dropdown-menu-sm">
+          <li class="dropdown-title">Help Center</li>
+          <li><a href="https://docs.ihumane.net/" target="_blank" class="dropdown-item">IHUMANE Documentation</a></li>
+          <li><a href="https://ihumane.net" target="_blank" class="dropdown-item">Visit Site</a></li>
+          <li><a href="mailto:support@ihumane.net" class="dropdown-item">Contact Support</a></li>
+        </ul>
+      </li>
 		</ul>
 	</div>
 
