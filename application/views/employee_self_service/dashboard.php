@@ -32,205 +32,273 @@
         </div>
         <div class="section-body">
           <div class="row">
-            <div class="col-12 mb-4">
-              <div class="hero bg-primary text-white">
-                <div class="hero-inner">
-                  <h2> <?php
-                    $dob = $employee->employee_dob;
-                    $date = DateTime::createFromFormat("Y-m-d", $dob);
-                    $_dob = $date->format("m")."-".$date->format("d");
-                    $today = date('Y-m-d');
-                    $dates = DateTime::createFromFormat("Y-m-d", $today);
-                    $_today = $dates->format("m")."-".$dates->format("d");
-                    if($_dob == $_today){ echo "Happy Birthday,"; } else {
-                      echo "Welcome,";
-                    } ?> <?php echo $user_data->user_name; ?> </h2>
-									<p class="lead">The self-service portal provides you with access to the full range of human resource functions and responsibilities</p>
-                  <p class="lead" id="timestamp"></p>
+            <div class="col-lg-4 col-md-4 col-md-6 col-12">
+              <div class="card pt-3" id="welcome" style="height: 195px; border-radius: 12px">
+	              <?php
+	              $dob = $employee->employee_dob;
+	              $date = DateTime::createFromFormat("Y-m-d", $dob);
+	              $_dob = $date->format("m")."-".$date->format("d");
+	              $today = date('Y-m-d');
+	              $dates = DateTime::createFromFormat("Y-m-d", $today);
+	              $_today = $dates->format("m")."-".$dates->format("d");
+	              $greeting;
+	              if($_dob == $_today){ $greeting = "Happy Birthday,"; }
+	              else { $greeting = "Hello,";} ?>
+                <div class="card-body">
+	                <?php if($_dob == $_today){ ?>
+                    <script>
+                      let elem = document.getElementById('welcome');
+                      elem.style.removeProperty('height');
+                    </script>
+                    <canvas class="card-img-top" id="birthday" style="margin-top: -15px; border-radius: 12px; margin-bottom: 10px;"></canvas>
+	                <?php } ?>
+                  <h5 class="card-title"><?php echo $greeting.' '.$user_data->user_name; ?>!</h5>
+                  <p class="card-text">Welcome back. You have <?php echo count($notifications)?> notifications.</p>
+                  <a href="<?php echo base_url('personal_information'); ?>" class="btn btn-primary">My Information</a>
                 </div>
-                <?php if($_dob == $_today){ ?>
-                  <canvas id="birthday" style="height: 50vh; display: inherit"></canvas>
-                <?php } ?>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-md-6 col-12">
+              <div class="card card-statistic-2" style="border-radius: 12px;">
+                <div class="card-stats" >
+                  <div class="card-stats-title" style="border-radius: 12px; !important;">Performance Overview
+                  </div>
+                  <div class="card-stats-items" style="border-radius: 12px;">
+                    <div class="card-stats-item">
+                      <div class="card-stats-item-count"><?php echo count($appraisals)?></div>
+                      <div class="card-stats-item-label">Appraisals</div>
+                    </div>
+                    <div class="card-stats-item">
+                      <div class="card-stats-item-count"><?php echo count($appraisees)?></div>
+                      <div class="card-stats-item-label">Appraisees</div>
+                    </div>
+                    <div class="card-stats-item">
+                      <div class="card-stats-item-count"><?php echo count($trainings)?></div>
+                      <div class="card-stats-item-label">Trainings</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-icon shadow-primary bg-primary">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="card-wrap">
+                  <div class="card-header">
+                    <h4>Appraisal Results</h4>
+                  </div>
+                  <div class="card-body">
+                    <?php
+                      $num_results = 0;
+                      if(!empty($appraisals)):
+                        foreach($appraisals as $appraisal):
+                          if ($appraisal->employee_appraisal_status == 1): $num_results ++; endif;
+                        endforeach;
+                      endif;
+                      echo $num_results;
+                    ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-md-6 col-12">
+              <div class="card card-hero" style="height: 195px; border-radius: 12px;">
+                <div class="card-header" style="height: 195px; border-radius: 12px; padding-top: 30px !important;">
+	                <?php if($response): $response = json_decode($response); //print_r($response); ?>
+                  <div class="media">
+                    <div class="media-body">
+                      <h4  class="media-title text-white"><?php echo $location?></h4>
+                      <small class="text-job text-white"><?php echo $response->weather[0]->description?></small>
+                      <h2><?php echo $response->main->temp?>&#176;</h2>
+                      <h6 class="text-white" id="timestamp"><?php echo date('F j, Y g:i:s a', now('Africa/Lagos'));?></h6>
+                    </div>
+                    <div class="media-right">
+                      <a class="text-white" href="javascript:void(0)" data-toggle="modal" data-target="#details"><i class="text-white fa fa-ellipsis-h"></i></a>
+                    </div>
+                  </div>
+                  <?php endif?>
+                </div>
               </div>
             </div>
           </div>
+<!--          <div class="row">-->
+<!--            <div class="col-12 mb-4">-->
+<!--              <div class="hero bg-primary text-white">-->
+<!--                <div class="hero-inner">-->
+<!--                  <h2> --><?php
+//                    $dob = $employee->employee_dob;
+//                    $date = DateTime::createFromFormat("Y-m-d", $dob);
+//                    $_dob = $date->format("m")."-".$date->format("d");
+//                    $today = date('Y-m-d');
+//                    $dates = DateTime::createFromFormat("Y-m-d", $today);
+//                    $_today = $dates->format("m")."-".$dates->format("d");
+//                    if($_dob == $_today){ echo "Happy Birthday,"; } else {
+//                      echo "Welcome,";
+//                    } ?><!-- --><?php //echo $user_data->user_name; ?><!-- </h2>-->
+<!--									<p class="lead">The self-service portal provides you with access to the full range of human resource functions and responsibilities</p>-->
+<!--                  <p class="lead" id="timestamp"></p>-->
+<!--                </div>-->
+<!--                --><?php //if($_dob == $_today){ ?>
+<!--                  <canvas id="birthday" style="height: 50vh; display: inherit"></canvas>-->
+<!--                --><?php //} ?>
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
           <div class="row">
-            <div class="col-lg-6 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Recent Announcements</h4>
-                </div>
+            <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+              <div class="card" style="border-radius: 12px;">
                 <div class="card-body">
-                  <ul class="list-unstyled list-unstyled-border">
-                    <?php if(!empty($memos)):
-                      $count = 1;
-                    foreach($memos as $memo):
-                    ?>
-                    <li class="media">
-                      <div class="media-body">
-                        <small class="float-right text-primary"><?php echo date('F j, Y', strtotime($memo->memo_date)); ?></small>
-                        <div class="media-title"><?php echo $memo->memo_subject; ?></div>
-                        <span class="text-small text-muted"><?php echo $memo->memo_body; ?></span>
+                  <div class="summary">
+                    <div class="summary-info">
+                      <h4><?php echo count($memos)?> Announcements</h4>
+                      <div class="text-muted"><?php echo count($specific_memos)?> Directives</div>
+                      <div class="d-block mt-2">
+                        <a href="<?php echo site_url('employee_leave') ?>">View Announcements</a>
                       </div>
-                    </li>
-                    <?php
-                    if($count == 5 ):
-                      break;
-                    endif;
-                    $count++;
-                    endforeach;
-                    endif;
-                    ?>
-                  </ul>
-                  <div class="text-center pt-1 pb-1">
-                    <a href="<?php echo site_url('my_memos'); ?>" class="btn btn-primary btn-lg btn-round">
-                      View All
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header">
-                  <h4>Recent Memos</h4>
-                </div>
-                <div class="card-body">
-                  <ul class="list-unstyled list-unstyled-border">
-                    <?php if(!empty($specific_memos)):
-                      $count = 1;
-                      foreach($specific_memos as $memo):
-                        ?>
-                        <li class="media">
-                          <div class="media-body">
-                            <small class="float-right text-primary"><?php echo date('F j, Y', strtotime($memo->specific_memo_date)); ?></small>
-                            <div class="media-title"><?php echo $memo->specific_memo_subject; ?></div>
-                            <span class="text-small text-muted"><?php echo $memo->specific_memo_body; ?></span>
-                          </div>
-                        </li>
+                    </div>
+                    <div class="summary-item">
+                      <h6>Recent Announcements & Directives</h6>
+                      <ul class="list-unstyled list-unstyled-border">
+	                      <?php if(!empty($memos)):
+	                      $count = 1;
+	                      foreach($memos as $memo):
+	                      ?>
+                          <li class="media">
+                            <div class="media-body">
+                              <div class="media-right">
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#view_<?php echo $memo->memo_id ?>"><i class="fas fa-ellipsis-h"></i></a>
+                              </div>
+                              <div class="media-title"><a href="#"><?php echo $memo->memo_subject; ?></a></div>
+                              <div class="text-muted trunc text-small"> <small class="font-italic text-info" style="font-size: 10px;">Announcement</small> <div class="bullet"></div> Sent <?php echo date('F j, Y g:i a', strtotime($memo->memo_date)); ?></div>
+                            </div>
+                          </li>
                         <?php
-                        if($count == 5 ):
+                        if($count == 3):
                           break;
                         endif;
                         $count++;
-                      endforeach;
-                    endif;
-                    ?>
-                  </ul>
-                  <div class="text-center pt-1 pb-1">
-                    <a href="<?php echo site_url('my_specific_memos'); ?>" class="btn btn-primary btn-lg btn-round">
-                      View All
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="card">
-                <div class="card-header">
-                  <h4>Recent Queries</h4>
-                </div>
-                <div class="card-body">
-                  <ul class="list-unstyled list-unstyled-border">
-                    <?php if(!empty($queries)):
-                      $count = 0;
-                      foreach($queries as $query):
-                        ?>
-                        <li class="media">
-                          <div class="media-body">
-                            <small class="float-right text-primary"><?php echo date('F j, Y', strtotime($query->query_date)); ?></small>
-                            <div class="media-title"><?php echo $query->query_subject; ?> - <?php if($query->query_status == 1){ echo "Opened"; } if($query->query_status == 0){ echo "Closed"; } ?></div>
-                            <span class="text-small text-muted"><?php echo strip_tags($query->query_body); ?></span>
-                          </div>
-                        </li>
-                        <?php
-                        if($count == 5 ):
-                          break;
-                        endif;
-
-                        $count++;
-                      endforeach;
-                    endif;
-                    ?>
-                  </ul>
-                  <div class="text-center pt-1 pb-1">
-                    <a href="<?php echo site_url('my_queries'); ?>" class="btn btn-primary btn-lg btn-round">
-                      View All
-                    </a>
+	                      endforeach;
+	                      endif;
+	                      ?>
+	                      <?php if(!empty($specific_memos)):
+	                      $count = 1;
+	                      foreach($specific_memos as $memo):
+	                      ?>
+                          <li class="media">
+                            <div class="media-body">
+                              <div class="media-right">
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#view_<?php echo $memo->specific_memo_id ?>"><i class="fas fa-ellipsis-h"></i></a>
+                              </div>
+                              <div class="media-title"><a href="#"><?php echo $memo->specific_memo_subject; ?></a></div>
+                              <div class="text-muted trunc text-small"> <small class="font-italic text-warning" style="font-size: 10px;">Directive</small> <div class="bullet"></div> Sent <?php echo date('F j, Y g:i a', strtotime($memo->specific_memo_date)); ?></div>
+                            </div>
+                          </li>
+		                      <?php
+		                      if($count == 3):
+			                      break;
+		                      endif;
+		                      $count++;
+	                      endforeach;
+	                      endif;
+	                      ?>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Calendar</h4>
+            <div class="col-lg-6 col-md-6 col-12 col-sm-12">
+              <div class="row">
+                <div class="col-4">
+                  <?php if ($is_payroll_ready): ?>
+                  <div class="alert alert-success alert-has-icon" style="border-radius: 12px;">
+                    <div class="alert-icon"><i class="far fa-check-circle"></i></div>
+                    <div class="alert-body">
+                      <div class="alert-title">Payslip</div>
+                      Your Payslip for <?php echo date('F')?> is ready view it <a class="font-weight-bold font-italic" href="<?php echo base_url('pay_slip') ?>">here</a>.
+                    </div>
+                  </div>
+                  <?php else:?>
+                    <div class="alert alert-warning alert-has-icon" style="border-radius: 12px;">
+                      <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
+                      <div class="alert-body">
+                        <div class="alert-title">Payslip</div>
+                        Your Payslip for <?php echo date('F')?> is not ready view others <a class="font-weight-bold font-italic" href="<?php echo base_url('pay_slip') ?>">here</a>.
+                      </div>
+                    </div>
+                  <?php endif;?>
                 </div>
-                <div class="card-body">
-                  <div class="fc-overflow">
-                    <div id="myEvent"></div>
+                <div class="col-8">
+                  <div class="card card-statistic-2" style="border-radius: 12px;">
+                    <div class="card-chart">
+                      <canvas id="balance-chart" height="80"></canvas>
+                    </div>
+                    <div class="card-icon shadow-primary bg-primary">
+                      <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="card-wrap">
+                      <div class="card-header">
+                        <h4>Income Payments (<?php echo date('Y')?>)</h4>
+                      </div>
+                      <div class="card-body">
+                        &#8358; <?php echo  number_format($total_income_year);?>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-<!--              <script src="https://apps.elfsight.com/p/platform.js" defer></script>-->
-<!--              <div class="elfsight-app-94db080b-fd1a-434a-a153-c96187c02ee5"></div>-->
-							<?php if($response): $response = json_decode($response); //print_r($response); ?>
-								<div class="card">
-									<div class="card-header">
-										<h4>Weather</h4>
-									</div>
-									<div class="card-body">
-										<ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder">
-											<li class="media">
-												<div class="media-body">
-													<div class="media-title"><?php echo $location?></div>
-													<div class="text-job text-muted"><?php echo $response->weather[0]->description?></div>
-													<h2><?php echo $response->main->temp?>&#176;</h2>
-												</div>
-											</li>
-											<li class="media">
-												<div class="media-body">
-													<div class="media-title"><?php echo date('g:i a', $response->sys->sunrise);?></div>
-													<div class="text-job text-muted">Sunrise</div>
-												</div>
-												<div class="media-body">
-													<div class="media-title"><?php echo date('g:i a', $response->sys->sunset);?></div>
-													<div class="text-job text-muted">Sunset</div>
-												</div>
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->visibility ?> m</div>
-													<div class="text-job text-muted">Visibility</div>
-												</div>
-											</li>
-											<li class="media">
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->main->temp_min?>&#176;</div>
-													<div class="text-job text-muted">Min Temp</div>
-												</div>
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->main->temp_max?>&#176;</div>
-													<div class="text-job text-muted">Max Temp</div>
-												</div>
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->main->feels_like?>&#176;</div>
-													<div class="text-job text-muted">Feels Like</div>
-												</div>
-											</li>
-											<li class="media">
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->main->pressure?> hPa</div>
-													<div class="text-job text-muted">Pressure</div>
-												</div>
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->main->humidity?> %</div>
-													<div class="text-job text-muted">Humidity</div>
-												</div>
-												<div class="media-body">
-													<div class="media-title"><?php echo $response->wind->speed?> mps</div>
-													<div class="text-job text-muted">Wind Speed</div>
-												</div>
-											</li>
-
-										</ul>
-									</div>
-								</div>
-							<?php endif;?>
+              <div class="card" style="border-radius: 12px;">
+                <div class="card-body">
+                  <div class="summary">
+                    <div class="summary-info">
+                      <h4><?php echo count($queries)?> Queries</h4>
+                      <?php
+                        $num_open = 0;
+                        if(!empty($queries)):
+                        foreach($queries as $query):
+                          if($query->query_status == 1): $num_open ++; endif;
+                        endforeach;
+                        endif;
+                      ?>
+                      <div class="text-muted"><?php echo $num_open?> Open Queries</div>
+                      <div class="d-block mt-2">
+                        <a href="<?php echo base_url('my_queries'); ?>">View Queries</a>
+                      </div>
+                    </div>
+                    <div class="summary-item">
+                      <h6>Open Queries</h6>
+                      <ul class="list-unstyled list-unstyled-border">
+	                      <?php if(!empty($queries)):
+	                      $count = 0;
+	                      foreach($queries as $query):
+                          if($query->query_status == 1):
+	                      ?>
+                          <li class="media">
+                            <div class="media-body">
+                              <div class="media-right">
+                                <div class="dropleft">
+                                  <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item has-icon" href="<?php echo site_url('view_my_query').'/'.$query->query_id; ?>"><i class="fas fa-eye"></i> View Query</a>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="media-title"><a href="#"><?php echo $query->query_subject; ?></a></div>
+                              <div class="text-muted trunc text-small"> <small class="font-italic <?php echo $query->query_type == 0 ? 'text-warning' : 'text-danger' ?>" style="font-size: 10px;"><?php echo $query->query_type == 0 ? 'Warning' : 'Query' ?></small> <div class="bullet"></div> Opened <?php echo date("F j, Y", strtotime($query->query_date));?></div>
+                            </div>
+                          </li>
+                        <?php
+                        if($count == 5 ):
+                          break;
+                        endif;
+                        $count++;
+                        endif;
+                        endforeach;
+                        endif;
+                        ?>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -239,6 +307,136 @@
 		<?php include(APPPATH.'/views/footer.php'); ?>
 	</div>
 </div>
+
+<div class="modal fade" id="details" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle2">Today</h5>
+        <a type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="text-dark">&times;</span>
+        </a>
+      </div>
+      <div class="modal-body">
+	      <?php if($response):  //print_r($response); ?>
+          <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder">
+            <li class="media">
+              <div class="media-body">
+                <div class="media-title"><?php echo $location?></div>
+                <div class="text-job text-muted"><?php echo $response->weather[0]->description?></div>
+                <h2><?php echo $response->main->temp?>&#176;</h2>
+              </div>
+              <div class="media-right pb-3">
+                <i class="fa fa-cloud-sun text-muted" style="font-size: 90px"></i>
+              </div>
+            </li>
+            <li class="media text-center">
+              <div class="media-body">
+                <div class="media-title"><?php echo date('g:i a', $response->sys->sunrise);?></div>
+                <div class="text-job text-muted">Sunrise</div>
+              </div>
+              <div class="media-body">
+                <div class="media-title"><?php echo date('g:i a', $response->sys->sunset);?></div>
+                <div class="text-job text-muted">Sunset</div>
+              </div>
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->visibility ?> m</div>
+                <div class="text-job text-muted">Visibility</div>
+              </div>
+            </li>
+            <li class="media text-center">
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->main->temp_min?>&#176;</div>
+                <div class="text-job text-muted">Min Temp</div>
+              </div>
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->main->temp_max?>&#176;</div>
+                <div class="text-job text-muted">Max Temp</div>
+              </div>
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->main->feels_like?>&#176;</div>
+                <div class="text-job text-muted">Feels Like</div>
+              </div>
+            </li>
+            <li class="media text-center">
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->main->pressure?> hPa</div>
+                <div class="text-job text-muted">Pressure</div>
+              </div>
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->main->humidity?> %</div>
+                <div class="text-job text-muted">Humidity</div>
+              </div>
+              <div class="media-body">
+                <div class="media-title"><?php echo $response->wind->speed?> mps</div>
+                <div class="text-job text-muted">Wind Speed</div>
+              </div>
+            </li>
+          </ul>
+        <?php endif;?>
+      </div>
+      <div class="modal-footer bg-whitesmoke">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php if(!empty($memos)): foreach($memos as $memo): ?>
+  <div class="modal fade" id="view_<?php echo $memo->memo_id ?>" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle2">Announcement</h5>
+          <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="text-dark">&times;</span>
+          </a>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" class="form-control-plaintext" readonly value="<?php echo $memo->memo_subject?>"/>
+          </div>
+          <div class="form-group">
+            <label>Announcement Body</label>
+	          <p><?php echo $memo->memo_body?></p>
+          </div>
+        </div>
+        <div class="modal-footer bg-whitesmoke">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php endforeach; endif;?>
+
+<?php if(!empty($specific_memos)): foreach($specific_memos as $memo): ?>
+  <div class="modal fade" id="view_<?php echo $memo->specific_memo_id ?>" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle2">Directive</h5>
+          <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="text-dark">&times;</span>
+          </a>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" class="form-control-plaintext" readonly value="<?php echo $memo->specific_memo_subject?>"/>
+          </div>
+          <div class="form-group">
+            <label>Directive Body</label>
+            <p><?php echo $memo->specific_memo_body?></p>
+          </div>
+        </div>
+        <div class="modal-footer bg-whitesmoke">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php endforeach; endif;?>
 
 <?php include(APPPATH.'/views/js.php'); ?>
 </body>
@@ -249,6 +447,8 @@
 	$(document).ready(function() {
 
 		setInterval(timestamp, 1000);
+		statistics();
+
 		function timestamp() {
 			$.ajax({
 				url: '<?php echo site_url('timestamp')?>',
@@ -257,6 +457,81 @@
 				}
 			})
 		}
+
+		function statistics() {
+		  $.ajax({
+        url: '<?php echo site_url('get_income_payments')?>',
+        success: function(response) {
+          let json_response = JSON.parse(response);
+          let income_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+          if (json_response.success) {
+            let income_stats = json_response.salaries;
+            let i;
+            for (i = 0; i < income_stats.length; i++) {
+              income_amounts[income_stats[i].salary_pay_month - 1] += parseInt(income_stats[i].salary_amount);
+            }
+          }
+
+          let balance_chart = $('#balance-chart')[0].getContext('2d');
+          let balance_chart_bg_color = balance_chart.createLinearGradient(0, 0, 0, 70);
+          balance_chart_bg_color.addColorStop(0, 'rgba(81,170,76,.2)');
+          balance_chart_bg_color.addColorStop(1, 'rgba(81,170,76,0)');
+          let myChart = new Chart(balance_chart, {
+            type: 'line',
+            data: {
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              datasets: [{
+                label: 'Balance',
+                data: income_amounts,
+                backgroundColor: balance_chart_bg_color,
+                borderWidth: 3,
+                borderColor: 'rgba(81,170,76,1)',
+                pointBorderWidth: 0,
+                pointBorderColor: 'transparent',
+                pointRadius: 3,
+                pointBackgroundColor: 'transparent',
+                pointHoverBackgroundColor: 'rgba(81,170,76, 1)',
+              }]
+            },
+            options: {
+              layout: {
+                padding: {
+                  bottom: -1,
+                  left: -1
+                }
+              },
+              legend: {
+                display: false
+              },
+              scales: {
+                yAxes: [{
+                  gridLines: {
+                    display: false,
+                    drawBorder: false,
+                  },
+                  ticks: {
+                    beginAtZero: true,
+                    display: false
+                  }
+                }],
+                xAxes: [{
+                  gridLines: {
+                    drawBorder: false,
+                    display: false,
+                  },
+                  ticks: {
+                    display: false
+                  }
+                }]
+              },
+            }
+          });
+        }
+      })
+    }
+
+
 	});
 	// helper functions
 	const PI2 = Math.PI * 2

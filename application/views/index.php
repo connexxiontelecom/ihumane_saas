@@ -1,4 +1,16 @@
-<?php include('stylesheet.php'); ?>
+<?php
+  include('stylesheet.php');
+  $location = 'Abuja';
+  $key = '4bbd388761052d71725bcd55680d1d0c';
+  $url = "https://api.openweathermap.org/data/2.5/weather?q=".$location."&appid=".$key."&units=metric";
+  //"https://api.openweathermap.org/data/2.5/weather?q=Abuja&appid=4bbd388761052d71725bcd55680d1d0c&units=metric"
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  curl_close($curl);
+?>
 <body>
   <div id="app">
     <div class="main-wrapper">
@@ -28,55 +40,63 @@
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-md-6 col-12">
-                <div class="row">
-                  <div class="card card-statistic-2" style="border-radius: 12px;">
-                    <div class="card-stats" >
-                      <div class="card-stats-title" style="border-radius: 12px; !important;">Company Overview
-                        -
-                        <div class="dropdown d-inline">
-                          <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">App Config</a>
-                          <ul class="dropdown-menu dropdown-menu-sm">
-                            <li class="dropdown-title">App Config</li>
-                            <li><a href="#" class="dropdown-item">Company Settings</a></li>
-                            <li><a href="#" class="dropdown-item">Manage Subscription</a></li>
-                          </ul>
-                        </div>
-                      </div>
-                      <div class="card-stats-items" style="border-radius: 12px;">
-                        <div class="card-stats-item">
-                          <div class="card-stats-item-count"><?php echo count($departments);?></div>
-                          <div class="card-stats-item-label">Departments</div>
-                        </div>
-                        <div class="card-stats-item">
-                          <div class="card-stats-item-count"><?php echo count($users); ?></div>
-                          <div class="card-stats-item-label">Users</div>
-                        </div>
-                        <div class="card-stats-item">
-                          <div class="card-stats-item-count"><?php echo count($online_users); ?></div>
-                          <div class="card-stats-item-label">Online</div>
-                        </div>
+                <div class="card card-statistic-2" style="border-radius: 12px;">
+                  <div class="card-stats" >
+                    <div class="card-stats-title" style="border-radius: 12px; !important;">Company Overview
+                      -
+                      <div class="dropdown d-inline">
+                        <a class="font-weight-600 dropdown-toggle" data-toggle="dropdown" href="#" id="orders-month">App Config</a>
+                        <ul class="dropdown-menu dropdown-menu-sm">
+                          <li class="dropdown-title">App Config</li>
+                          <li><a href="#" class="dropdown-item">Company Settings</a></li>
+                          <li><a href="#" class="dropdown-item">Manage Subscription</a></li>
+                        </ul>
                       </div>
                     </div>
-                    <div class="card-icon shadow-primary bg-primary">
-                      <i class="fas fa-users"></i>
+                    <div class="card-stats-items" style="border-radius: 12px;">
+                      <div class="card-stats-item">
+                        <div class="card-stats-item-count"><?php echo count($departments);?></div>
+                        <div class="card-stats-item-label">Departments</div>
+                      </div>
+                      <div class="card-stats-item">
+                        <div class="card-stats-item-count"><?php echo count($users); ?></div>
+                        <div class="card-stats-item-label">Users</div>
+                      </div>
+                      <div class="card-stats-item">
+                        <div class="card-stats-item-count"><?php echo count($online_users); ?></div>
+                        <div class="card-stats-item-label">Online</div>
+                      </div>
                     </div>
-                    <div class="card-wrap">
-                      <div class="card-header">
-                        <h4>Total Employees</h4>
-                      </div>
-                      <div class="card-body">
-                        <?php echo count($employees); ?>
-                      </div>
+                  </div>
+                  <div class="card-icon shadow-primary bg-primary">
+                    <i class="fas fa-users"></i>
+                  </div>
+                  <div class="card-wrap">
+                    <div class="card-header">
+                      <h4>Total Employees</h4>
+                    </div>
+                    <div class="card-body">
+				              <?php echo count($employees); ?>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-lg-4 col-md-4 col-md-6 col-12">
                 <div class="card card-hero" style="height: 195px; border-radius: 12px;">
-                  <div class="card-header" style="height: 195px; border-radius: 12px; !important;">
-                    <h1><?php echo date('j')?></h1>
-                    <h4><?php echo date('F')?></h4>
-                    <h6 class="mt-2"><?php echo date('Y')?></h6>
+                  <div class="card-header" style="height: 195px; border-radius: 12px; padding-top: 25px !important; padding-left: 30px !important;">
+	                  <?php if($response): $response = json_decode($response); //print_r($response); ?>
+                      <div class="media">
+                        <div class="media-body">
+                          <h4  class="media-title text-white"><?php echo $location?></h4>
+                          <small class="text-job text-white"><?php echo $response->weather[0]->description?></small>
+                          <h2><?php echo $response->main->temp?>&#176;</h2>
+                          <h6 class="text-white" id="timestamp"><?php echo date('F j, Y g:i:s a', now('Africa/Lagos'));?></h6>
+                        </div>
+                        <div class="media-right">
+                          <a class="text-white" href="javascript:void(0)" data-toggle="modal" data-target="#details"><i class="text-white fa fa-ellipsis-h"></i></a>
+                        </div>
+                      </div>
+	                  <?php endif?>
                   </div>
                 </div>
               </div>
@@ -298,6 +318,7 @@
               </div>
             </div>
             <?php endif;?>
+            <?php if($employee_management == 1):?>
             <div class="row">
               <div class="col-lg-8 col-md-12 col-12 col-sm-12">
                 <div class="row">
@@ -452,11 +473,86 @@
                 </div>
               </div>
             </div>
+            <?php endif;?>
           </div>
         </section>
       </div>
     </div>
   </div>
+  <div class="modal fade" id="details" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle2">Today</h5>
+          <a type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="text-dark">&times;</span>
+          </a>
+        </div>
+        <div class="modal-body">
+				  <?php if($response):  //print_r($response); ?>
+            <ul class="list-unstyled user-progress list-unstyled-border list-unstyled-noborder">
+              <li class="media">
+                <div class="media-body">
+                  <div class="media-title"><?php echo $location?></div>
+                  <div class="text-job text-muted"><?php echo $response->weather[0]->description?></div>
+                  <h2><?php echo $response->main->temp?>&#176;</h2>
+                </div>
+                <div class="media-right pb-3">
+                  <i class="fa fa-cloud-sun text-muted" style="font-size: 90px"></i>
+                </div>
+              </li>
+              <li class="media text-center">
+                <div class="media-body">
+                  <div class="media-title"><?php echo date('g:i a', $response->sys->sunrise);?></div>
+                  <div class="text-job text-muted">Sunrise</div>
+                </div>
+                <div class="media-body">
+                  <div class="media-title"><?php echo date('g:i a', $response->sys->sunset);?></div>
+                  <div class="text-job text-muted">Sunset</div>
+                </div>
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->visibility ?> m</div>
+                  <div class="text-job text-muted">Visibility</div>
+                </div>
+              </li>
+              <li class="media text-center">
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->main->temp_min?>&#176;</div>
+                  <div class="text-job text-muted">Min Temp</div>
+                </div>
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->main->temp_max?>&#176;</div>
+                  <div class="text-job text-muted">Max Temp</div>
+                </div>
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->main->feels_like?>&#176;</div>
+                  <div class="text-job text-muted">Feels Like</div>
+                </div>
+              </li>
+              <li class="media text-center">
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->main->pressure?> hPa</div>
+                  <div class="text-job text-muted">Pressure</div>
+                </div>
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->main->humidity?> %</div>
+                  <div class="text-job text-muted">Humidity</div>
+                </div>
+                <div class="media-body">
+                  <div class="media-title"><?php echo $response->wind->speed?> mps</div>
+                  <div class="text-job text-muted">Wind Speed</div>
+                </div>
+              </li>
+            </ul>
+				  <?php endif;?>
+        </div>
+        <div class="modal-footer bg-whitesmoke">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <?php include(APPPATH . '/views/footer.php'); ?>
   <?php include('js.php'); ?>
   <script>
