@@ -2586,10 +2586,13 @@ class Employee_main extends CI_Controller
 	}
 
 	public function get_notifications(){
-
+		$username = $this->session->userdata('user_username');
+		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 		$employee_id = $this->input->post('employee_id');
 
-		 echo json_encode($this->employees->get_notifications($employee_id));
+		 echo json_encode($this->employees->get_notifications($employee_id, $tenant_id));
+		 endif;
 	}
 
 	public function is_payroll_ready($employee_id, $tenant_id) {

@@ -24,7 +24,7 @@
 						<div class="breadcrumb-item">Appraisal Result</div>
 					</div>
 				</div>
-				<?php $appraisal = $CI->employees->_get_appraisal($appraisal_id); ?>
+				<?php $appraisal = $CI->employees->_get_appraisal($appraisal_id, $tenant_id); ?>
 				<div class="section-body">
           <div class="section-title">All About Appraisal Results</div>
           <p class="section-lead">You can view and print appraisal results here</p>
@@ -40,7 +40,7 @@
 							<div class="row mt-4">
 								<div class="col-md-12">
 									<div class="section-title">Supervisor: <?php echo $appraisal->employee_last_name." ".$appraisal->employee_first_name ?></div>
-									<div class="section-title">Employee: <?php $employee = $CI->employees->get_employee($appraisal->employee_appraisal_employee_id);
+									<div class="section-title">Employee: <?php $employee = $CI->employees->get_employee($appraisal->employee_appraisal_employee_id, $tenant_id);
 									echo $employee->employee_last_name." ".$employee->employee_first_name;?>
                   </div>
 									<p class="section-lead">Period: <?php echo date("M Y", strtotime($appraisal->employee_appraisal_period_from))." - ".date("M Y", strtotime($appraisal->employee_appraisal_period_to)) ; ?></p>
