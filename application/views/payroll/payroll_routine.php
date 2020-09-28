@@ -19,41 +19,39 @@
           <div class="section-title">All About Payroll Routines</div>
           <p class="section-lead">You can run payroll routines here</p>
           <div class="row">
-            <div class="col-12">
+            <div class="col-md-7">
               <div class="card">
                 <div class="card-header">
-                  <h4>Payroll Routines</h4>
+                  <h4>Payroll Routine</h4>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-md" id="datatable-buttons">
-                      <thead>
-                        <tr>
-                          <th>Month and Year</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <?php if(!empty($payroll_year)): ?>
-                          <tr>
-                            <td><?php echo date("F", mktime(0, 0, 0, $payroll_year->payroll_month_year_month, 10))." ".$payroll_year->payroll_month_year_year; ?></td>
-                            <td class="text-center" style="width: 9px">
-                              <div class="dropdown">
-                                <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item has-icon" href="<?php echo site_url('run_payroll_routine')?>">
-                                    <i class="fas fa-chart-line"></i> Run Payroll Routine
-                                  </a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        <?php endif; ?>
-                      </tbody>
-                    </table>
-                  </div>
+	                <?php if(!empty($payroll_year)): ?>
+                    <div class="empty-state" data-height="400">
+                      <div class="empty-state-icon">
+                        <i class="fas fa-coins"></i>
+                      </div>
+                      <h2><?php echo date("F", mktime(0, 0, 0, $payroll_year->payroll_month_year_month, 10))." ".$payroll_year->payroll_month_year_year; ?></h2>
+                      <p class="lead">
+                        The current payroll month & year is <?php echo date("F", mktime(0, 0, 0, $payroll_year->payroll_month_year_month, 10))." ".$payroll_year->payroll_month_year_year; ?>.
+                        <br> Run the Payroll Routine below or set the current payroll month & year.
+                      </p>
+                      <a href="<?php echo site_url('run_payroll_routine')?>" class="btn btn-primary mt-4">Run Payroll Routine</a>
+                      <a href="<?php echo site_url('payroll_month_year') ?>" class="mt-4 bb">Set Payroll Month/Year</a>
+                    </div>
+                  <?php else: ?>
+                    <div class="empty-state" data-height="400">
+                      <div class="empty-state-icon">
+                        <i class="fas fa-question"></i>
+                      </div>
+                      <h2>We couldn't find any data</h2>
+                      <p class="lead">
+                        Sorry we can't find any data, to get rid of this message, make at least 1 entry.
+                      </p>
+                      <a href="#" class="btn btn-primary mt-4">Create new One</a>
+                      <a href="#" class="mt-4 bb">Need Help?</a>
+                    </div>
+	                <?php endif;?>
                 </div>
-                <div class="card-footer bg-whitesmoke"></div>
               </div>
             </div>
           </div>
