@@ -20,6 +20,8 @@ class User extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0);
@@ -37,7 +39,7 @@ class User extends CI_Controller
 
 				if($user_type == 1 || $user_type == 3):
 
-				$data['users'] = $this->users->view_users();
+				$data['users'] = $this->users->view_users($tenant_id);
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();

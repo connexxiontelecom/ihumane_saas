@@ -236,10 +236,10 @@
                     </div>
                     <div class="card-wrap">
                       <div class="card-header">
-                        <h4>Income Payments (<?php echo date('Y')?>)</h4>
+                        <h4>Net Payments (<?php echo date('Y')?>)</h4>
                       </div>
-                      <div class="card-body">
-                        &#8358; <?php echo  number_format($total_income_year);?>
+                      <div class="card-body total-net">
+                        &#8358; -
                       </div>
                     </div>
                   </div>
@@ -458,80 +458,122 @@
 			})
 		}
 
+		function get_amounts(stats) {
+      let amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let i;
+      for (i = 0; i < stats.length; i++) {
+        amounts[stats[i].salary_pay_month - 1] += parseInt(stats[i].salary_amount);
+      }
+      return amounts;
+    }
+
+    function get_net(income, deductions) {
+      let net_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let i;
+      for (i = 0; i < income.length; i++) {
+        net_amounts[i] = income[i] - deductions[i]
+      }
+      return net_amounts;
+    }
+
+    function get_total_net(net_amounts) {
+		  let total = 0;
+		  let i;
+		  for (i = 0; i < net_amounts.length; i++) {
+		    total += net_amounts[i];
+      }
+		  return total;
+    }
+
+    function format_number(num) {
+      return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    function draw_chart(data) {
+      let balance_chart = $('#balance-chart')[0].getContext('2d');
+      let balance_chart_bg_color = balance_chart.createLinearGradient(0, 0, 0, 70);
+      balance_chart_bg_color.addColorStop(0, 'rgba(81,170,76,.2)');
+      balance_chart_bg_color.addColorStop(1, 'rgba(81,170,76,0)');
+      let myChart = new Chart(balance_chart, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          datasets: [{
+            label: 'Net Payment',
+            data: data,
+            backgroundColor: balance_chart_bg_color,
+            borderWidth: 3,
+            borderColor: 'rgba(81,170,76,1)',
+            pointBorderWidth: 0,
+            pointBorderColor: 'transparent',
+            pointRadius: 3,
+            pointBackgroundColor: 'transparent',
+            pointHoverBackgroundColor: 'rgba(81,170,76, 1)',
+          }]
+        },
+        options: {
+          layout: {
+            padding: {
+              bottom: -1,
+              left: -1
+            }
+          },
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              gridLines: {
+                display: false,
+                drawBorder: false,
+              },
+              ticks: {
+                beginAtZero: true,
+                display: false
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                drawBorder: false,
+                display: false,
+              },
+              ticks: {
+                display: false
+              }
+            }]
+          },
+        }
+      });
+    }
+
 		function statistics() {
 		  $.ajax({
         url: '<?php echo site_url('get_income_payments')?>',
         success: function(response) {
           let json_response = JSON.parse(response);
-          let income_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
+          let income_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           if (json_response.success) {
-            let income_stats = json_response.salaries;
-            let i;
-            for (i = 0; i < income_stats.length; i++) {
-              income_amounts[income_stats[i].salary_pay_month - 1] += parseInt(income_stats[i].salary_amount);
-            }
+            income_amounts = get_amounts(json_response.income);
           }
+          $.ajax({
+            url: '<?php echo site_url('get_deduction_payments')?>',
+            success: function(response) {
+              let json_response = JSON.parse(response);
+              let deduction_amounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+              if (json_response.success) {
+                deduction_amounts = get_amounts(json_response.deductions);
+              }
 
-          let balance_chart = $('#balance-chart')[0].getContext('2d');
-          let balance_chart_bg_color = balance_chart.createLinearGradient(0, 0, 0, 70);
-          balance_chart_bg_color.addColorStop(0, 'rgba(81,170,76,.2)');
-          balance_chart_bg_color.addColorStop(1, 'rgba(81,170,76,0)');
-          let myChart = new Chart(balance_chart, {
-            type: 'line',
-            data: {
-              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-              datasets: [{
-                label: 'Balance',
-                data: income_amounts,
-                backgroundColor: balance_chart_bg_color,
-                borderWidth: 3,
-                borderColor: 'rgba(81,170,76,1)',
-                pointBorderWidth: 0,
-                pointBorderColor: 'transparent',
-                pointRadius: 3,
-                pointBackgroundColor: 'transparent',
-                pointHoverBackgroundColor: 'rgba(81,170,76, 1)',
-              }]
-            },
-            options: {
-              layout: {
-                padding: {
-                  bottom: -1,
-                  left: -1
-                }
-              },
-              legend: {
-                display: false
-              },
-              scales: {
-                yAxes: [{
-                  gridLines: {
-                    display: false,
-                    drawBorder: false,
-                  },
-                  ticks: {
-                    beginAtZero: true,
-                    display: false
-                  }
-                }],
-                xAxes: [{
-                  gridLines: {
-                    drawBorder: false,
-                    display: false,
-                  },
-                  ticks: {
-                    display: false
-                  }
-                }]
-              },
+              let net_amounts = get_net(income_amounts, deduction_amounts);
+              let total_net_amount = format_number(get_total_net(net_amounts));
+
+              $('.total-net').html(`&#8358; ${total_net_amount}`);
+              draw_chart(net_amounts);
             }
           });
         }
-      })
+      });
     }
-
-
 	});
 	// helper functions
 	const PI2 = Math.PI * 2

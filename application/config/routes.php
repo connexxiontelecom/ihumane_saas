@@ -304,6 +304,7 @@ $route['get_online'] = 'employee_main/get_online';
 $route['documents'] = 'employee_main/documents';
 $route['view_document/:num'] = 'employee_main/view_document/$1';
 $route['get_income_payments'] = 'employee_main/get_income_payments';
+$route['get_deduction_payments'] = 'employee_main/get_deduction_payments';
 
 $route['change_password'] = 'employee_main/change_password';
 $route['change_password_'] = 'employee_main/change_password_';

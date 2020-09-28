@@ -1751,7 +1751,7 @@ class Employee extends CI_Controller
 
 					$data['user_data'] = $this->users->get_user($username);
 					$data['appraisals'] = $this->employees->get_appraisals();
-					$data['employees'] = $this->employees->view_employees();
+					$data['employees'] = $this->employees->view_employees($tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1797,7 +1797,7 @@ class Employee extends CI_Controller
 
 					$data['user_data'] = $this->users->get_user($username);
 					//$data['appraisals'] = $this->employees->get_appraisals();
-					$data['employees'] = $this->employees->view_employees();
+					$data['employees'] = $this->employees->view_employees($tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1822,6 +1822,8 @@ class Employee extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+            $tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['payroll_management'] = $permission->payroll_management;
@@ -1876,7 +1878,7 @@ class Employee extends CI_Controller
 
 						//1 == employee comment 2 == qunatitative 3 == qualitative, 4 == supervisor
 
-						$self_assessments_questions = $this->hr_configurations->view_self_assessments();
+						$self_assessments_questions = $this->hr_configurations->view_self_assessments($tenant_id);
 
 
 						foreach ($self_assessments_questions as $self_assessments_question):
@@ -1893,10 +1895,10 @@ class Employee extends CI_Controller
 
 						endforeach;
 
-						$employee_job_role_id = $this->employees->get_employee($employee_id)->employee_job_role_id;
+						$employee_job_role_id = $this->employees->get_employee($employee_id, $tenant_id)->employee_job_role_id;
 
 
-						$quantitative_assessment_questions = $this->hr_configurations->view_quantitative_assessments($employee_job_role_id);
+						$quantitative_assessment_questions = $this->hr_configurations->view_quantitative_assessments($employee_job_role_id, $tenant_id);
 
 						foreach ($quantitative_assessment_questions as $quantitative_assessment_question):
 
@@ -1913,7 +1915,7 @@ class Employee extends CI_Controller
 						endforeach;
 
 
-						$qualitative_assessments_questions = $this->hr_configurations->view_qualitative_assessments();
+						$qualitative_assessments_questions = $this->hr_configurations->view_qualitative_assessments($tenant_id);
 
 						foreach ($qualitative_assessments_questions as $qualitative_assessments_question):
 
@@ -1930,7 +1932,7 @@ class Employee extends CI_Controller
 						endforeach;
 
 
-						$supervisor_assessments_questions = $this->hr_configurations->view_supervisor_assessments();
+						$supervisor_assessments_questions = $this->hr_configurations->view_supervisor_assessments($tenant_id);
 
 						foreach ($supervisor_assessments_questions as $supervisor_assessments_question):
 
@@ -1983,7 +1985,7 @@ class Employee extends CI_Controller
 
 				endif;
 
-				$data['employees'] = $this->employees->view_employees();
+				$data['employees'] = $this->employees->view_employees($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 

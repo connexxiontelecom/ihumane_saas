@@ -397,10 +397,10 @@
                   <div class="card-body">
                     <div class="summary">
                       <div class="summary-info">
-                        <h4><?php echo $pending_leaves?> Pending Leaves</h4>
+                        <h4><?php echo $pending_leaves?> Pending Requests</h4>
                         <div class="text-muted"><?php echo $approved_leaves?> Approved and <?php echo $finished_leaves?> Finished.</div>
                         <div class="d-block mt-2">
-                          <a href="<?php echo site_url('employee_leave') ?>">View All</a>
+                          <a href="<?php echo site_url('employee_leave') ?>">View Leaves</a>
                         </div>
                       </div>
                       <div class="summary-item">
