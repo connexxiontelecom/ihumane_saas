@@ -482,7 +482,7 @@
             data: {
               labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
               datasets: [{
-                label: 'Balance',
+                label: 'Payment',
                 data: income_amounts,
                 backgroundColor: balance_chart_bg_color,
                 borderWidth: 3,
