@@ -53,7 +53,7 @@ class Home extends CI_Controller
 				$data['employees'] = $this->employees->view_employees($tenant_id);
 				$data['users'] = $this->users->view_users($tenant_id);
 				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
-				$data['leaves'] = $this->employees->get_employees_leaves();
+				$data['leaves'] = $this->employees->get_employees_leaves($tenant_id);
 
 				$date = date('Y-m-d', time());
 				$data['present_employees'] = $this->biometric->check_today_attendance($date);
@@ -101,32 +101,7 @@ class Home extends CI_Controller
 			redirect('login');
 		endif;
 
-//		$user_data = array(
-//			'user_username' => 'administrator',
-//			'user_email'=> 'admin@admin.com',
-//			'user_password'=> password_hash('password1234', PASSWORD_BCRYPT),
-//			'user_name' => 'Administrator Administrator',
-//			'user_status' => '1'
-//		);
-//
-//		$permission_data = array(
-//			'username' => 'administrator',
-//			'employee_management'=> 1,
-//			'payroll_management' => 1,
-//			'biometrics' => 1,
-//			'user_management' => 1
-//
-//		);
-//
-//		$user_data = $this->security->xss_clean($user_data);
-//		$permission_data = $this->security->xss_clean($permission_data);
-//
-//
-//		$query = $this->users->add($user_data, $permission_data);
-//
-//
-//
-//		echo $query;
+
 	}
 
 	public function logout(){
@@ -218,7 +193,10 @@ class Home extends CI_Controller
 								redirect('home');
 								elseif($this->users->get_user($username)->user_type == 2):
 
-									$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+									$tenant_id = $this->users->get_user($username)->tenant_id;
+
+									$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
 
 									$trainings =  $this->employees->get_employee_training($employee_id);
 
@@ -286,7 +264,9 @@ class Home extends CI_Controller
 
 									elseif($this->users->get_user($username)->user_type == 2):
 
-										$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+										$tenant_id = $this->users->get_user($username)->tenant_id;
+
+										$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 										$trainings =  $this->employees->get_employee_training($employee_id);
 

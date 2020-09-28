@@ -53,7 +53,7 @@
                             <td><?php echo date("M Y", strtotime($appraisal->employee_appraisal_period_from))." - ".date("M Y", strtotime($appraisal->employee_appraisal_period_to)) ; ?></td>
                             <td>
                               <?php
-                                $supervisor = $CI->employees->get_employee($appraisal->employee_appraisal_supervisor_id);
+                                $supervisor = $CI->employees->get_employee($appraisal->employee_appraisal_supervisor_id, $tenant_id);
                                 echo $supervisor->employee_last_name." ".$supervisor->employee_first_name;
                               ?>
                             </td>

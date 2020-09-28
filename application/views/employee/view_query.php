@@ -124,7 +124,8 @@
 														<div class="form-group">
 															<textarea class="form-control" id="query_response" name="query_response" placeholder="Type a reply ..."></textarea>
 															<input type="hidden" name="query_id" id="query_id" value="<?php echo $query->query_id; ?>">
-<!--															<input type="hidden" name="--><?php //echo $csrf_name;?><!--"  value="--><?php //echo $csrf_hash;?><!--" />-->
+
+															<input type="hidden" name="tenant_id" id="tenant_id"  value="<?php echo $tenant_id;?>" />
 														</div>
 														<div class="form-group text-right">
 															<button type="button" id="response_button" class="btn btn-primary btn-lg">
@@ -168,11 +169,12 @@
 			let query_id = $("#query_id").val();
 			let query_response = $("#query_response").val();
 			let query_responder_id = 0;
+			let tenant_id = $("#tenant_id").val();
 
 			$.ajax({
 				type: "GET",
 				url: '<?php echo site_url('new_response'); ?>',
-				data: {query_id:query_id,query_response:query_response, query_responder_id:query_responder_id},
+				data: {query_id:query_id,query_response:query_response, query_responder_id:query_responder_id, tenant_id:tenant_id},
 				success:function(data)
 				{
 					document.getElementById('query_response').value = " ";

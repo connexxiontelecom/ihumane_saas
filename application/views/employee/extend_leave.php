@@ -24,7 +24,7 @@
           <p class="section-lead">You can fill in the form to extend an employee leave here</p>
           <div class="row">
             <div class="col-md-7">
-              <form class="needs-validation" novalidate data-persist="garlic" action="<?php echo site_url('extend_employee_leave'); ?>" id="loan_form">
+              <form class="needs-validation" novalidate data-persist="garlic" method="post" action="<?php echo site_url('extend_employee_leave'); ?>" id="loan_form">
                 <div class="card card-primary">
                   <div class="card-header">
                     <h4>Extend Leave Form</h4>
