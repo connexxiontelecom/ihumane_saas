@@ -71,7 +71,7 @@ class Home extends CI_Controller
 
         $data['running_loans'] = $this->loans->count_running_loans($tenant_id);
 
-        $data['running_loans'] = $this->loans->count_running_loans();
+        //$data['running_loans'] = $this->loans->count_running_loans();
         $data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
         $data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
         $data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
