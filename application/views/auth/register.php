@@ -16,7 +16,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 					<div class="card card-primary">
 						<div class="card-header"><h4>Register</h4></div>
-						<div id="ytWidget"></div><script src="https://translate.yandex.net/website-widget/v1/widget.js?widgetId=ytWidget&pageLang=en&widgetTheme=light&autoMode=false" type="text/javascript"></script>
 
 						<div class="card-body">
 							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation register-form" novalidate>
