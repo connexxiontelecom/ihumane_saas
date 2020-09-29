@@ -27,6 +27,7 @@ class Payroll_report extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -67,6 +68,7 @@ class Payroll_report extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 				
 			$permission = $this->users->check_permission($username);
@@ -336,6 +338,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -451,6 +454,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;

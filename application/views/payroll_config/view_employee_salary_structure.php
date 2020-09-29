@@ -55,22 +55,22 @@
                   <?php elseif($employee->employee_salary_structure_category == 0) : ?>
                     <p class="text-muted">Personalized Salary Structure</p>
                     <?php foreach ($personalized_allowances as $personalized_allowance): ?>
-                      <a href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start">
+                      <div class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
                           <h5 class="mb-1"><?php echo ucwords($personalized_allowance->payment_definition_payment_name); ?></h5>
                           <p>Amount: &#8358; <?php echo number_format($personalized_allowance->personalized_amount); $total_amount += $personalized_allowance->personalized_amount; ?></p>
                         </div>
                         <small>Note, this information is sensitive</small>
-                      </a>
+                      </div>
                     <?php endforeach; ?>
                   <?php endif; ?>
-                  <a href="javascript:void(0)" class="list-group-item list-group-item-action flex-column align-items-start active">
+                  <div class="list-group-item list-group-item-action flex-column align-items-start active">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1">Total</h5>
                       <p>Amount: &#8358; <?php echo number_format($total_amount);?></p>
                     </div>
                     <small>Note, this information is sensitive</small>
-                  </a>
+                  </div>
                 </div>
                 <div class="card-footer text-right bg-whitesmoke">
                   <button type="button" onclick="location.href='<?php echo site_url('employee_salary_structure');?>'" class="btn btn-danger" data-dismiss="modal">Go Back</button>
