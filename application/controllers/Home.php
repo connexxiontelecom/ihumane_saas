@@ -583,6 +583,85 @@ class Home extends CI_Controller
 
 	}
 
+	public function new_subscription_a(){
+
+		$method = $this->input->server('REQUEST_METHOD');
+		if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+			extract($_POST);
+
+		$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+		if(!empty($active_plans)):
+			$id = array();
+			$i = 0;
+
+			foreach ($active_plans as $active_plan):
+
+				$id[$i] = $active_plan->subscription_id;
+
+				$i++;
+
+				endforeach;
+
+				$latest_id = max($id);
+				$plan = $this->backoffices->get_plan($plan_id);
+
+				$old_sub = $this->users->get_sub_details($latest_id);
+
+				$start_date = $old_sub->subscription_end_date;
+
+				$duration = $plan->plan_duration;
+
+				$end_date = $end_date =  date('Y-m-d', strtotime($start_date. ' + '.$duration. 'days'));
+
+			$subscription_array = array(
+
+				'subscription_tenant_id'=> $tenant_id,
+				'subscription_plan_id' => $plan_id,
+				'subscription_start_date' => $start_date,
+				'subscription_end_date' => $end_date,
+				'subscription_reference_code' => $reference,
+				'subscription_status' => 2
+			);
+
+			$subscription_array = $this->security->xss_clean($subscription_array);
+
+			$query = $this->users->new_subscription($subscription_array);
+
+
+			else:
+				$plan = $this->backoffices->get_plan($plan_id);
+
+				$duration = $plan->plan_duration;
+				$Date = date('Y-m-d');
+				$end_date =  date('Y-m-d', strtotime($Date. ' + '.$duration. 'days'));
+
+
+
+				$subscription_array = array(
+
+					'subscription_tenant_id'=> $tenant_id,
+					'subscription_plan_id' => $plan_id,
+					'subscription_start_date' => date('Y-m-d'),
+					'subscription_end_date' => $end_date,
+					'subscription_reference_code' => $reference,
+					'subscription_status' => 1
+				);
+
+				$subscription_array = $this->security->xss_clean($subscription_array);
+
+				$query = $this->users->new_subscription($subscription_array);
+		endif;
+
+
+		else:
+			redirect('error_404');
+
+			endif;
+
+	}
+
 	public function check_user_username(){
 
 		$username = $this->input->post('username');

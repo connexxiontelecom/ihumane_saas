@@ -24,9 +24,19 @@ class Users extends CI_Model
 		$this->db->from('subscription');
 		$this->db->where('subscription_tenant_id', $tenant_id);
 		$this->db->where('subscription_status', 1);
+
 		$query = $this->db->get();
 		return $query->result();
 
+	}
+
+	public function get_sub_true_status($tenant_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_tenant_id', $tenant_id);
+		$this->db->where('subscription_status >', 0);
+
+		return $this->db->get()->result();
 	}
 
 	public function get_sub($tenant_id){
@@ -37,6 +47,23 @@ class Users extends CI_Model
 		$this->db->order_by('subscription_id', 'desc');
 		$query = $this->db->get();
 		return $query->result();
+	}
+
+	public function get_sub_details($sub_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_id', $sub_id);
+		return $this->db->get()->row();
+	}
+
+
+
+	public function get_tenant($tenant_id){
+		$this->db->select('*');
+		$this->db->from('tenant');
+		$this->db->where('tenant_id', $tenant_id);
+		$query = $this->db->get();
+		return $query->row();
 
 
 	}
