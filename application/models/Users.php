@@ -29,6 +29,18 @@ class Users extends CI_Model
 
 	}
 
+	public function get_sub($tenant_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_tenant_id', $tenant_id);
+		$this->db->join('plan', 'plan.plan_id = subscription.subscription_plan_id');
+		$this->db->order_by('subscription_id', 'desc');
+		$query = $this->db->get();
+		return $query->result();
+
+
+	}
+
 	public function add($user_data, $permission_data){
 
 		 $this->db->insert('user', $user_data);
@@ -77,17 +89,17 @@ class Users extends CI_Model
 	public function get_user($username){
 		$this->db->select('*');
 		$this->db->from('user');
-		//$this->db->where('user_status >', 0);
 		$this->db->where('user_username', $username);
 		$query = $this->db->get();
 		return $query->row();
 	}
 
-	public function get_user_id($user_id){
+	public function get_user_id($user_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('user');
 		$this->db->join('permission', 'permission.username = user.user_username');
 		$this->db->where('user_id', $user_id);
+		$this->db->where('user.tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 	}

@@ -48,14 +48,31 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         <label>Email</label><span style="color: red"> *</span>
-                        <input type="email" class="form-control"  name="email" required/>
+                        <input type="email" class="form-control"  name="email" id="email" required/>
+
+						  <div id="email_alert">
+							  <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+								  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+								  </button>
+								  <i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Email Already Taken. Enter Another
+							  </div>
+						  </div>
                         <div class="invalid-feedback">
                           please fill in a valid email
                         </div>
                       </div>
                       <div class="col-sm-6">
                         <label>Username</label><span style="color: red"> *</span>
-                        <input type="text" class="form-control"  name="username" required/>
+                        <input type="text" class="form-control"  name="username" id="username" required/>
+						  <div id="username_alert">
+							  <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert" >
+								  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									  <span aria-hidden="true">&times;</span>
+								  </button>
+								  <i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Username Already Taken. Enter Another
+							  </div>
+						  </div>
                         <div class="invalid-feedback">
                           please fill in a username
                         </div>
@@ -124,7 +141,7 @@
                     <input type="hidden" name="user_id" value="" />
                   </div>
                   <div class="card-footer text-right bg-whitesmoke">
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <button id="new_button" type="submit" class="btn btn-primary">Create User</button>
                   </div>
                 </div>
               </form>
@@ -149,7 +166,93 @@
       passStatus.className='fas fa-eye';
     }
   }
+
+
+
+	document.getElementById('email_alert').style.display = 'none';
+	document.getElementById('username_alert').style.display = 'none';
+  	document.getElementById('new_button').style.display = 'none';
+	function check_password() {
+		var password = document.getElementById('password').value;
+		var password_confirm = document.getElementById('password_confirm').value;
+
+		if(password === password_confirm){
+			document.getElementById('password_alert').style.display = 'none';
+			document.getElementById('password_success').style.display = 'block';
+
+		}else{
+			document.getElementById('password_alert').style.display = 'block';
+			document.getElementById('password_success').style.display = 'none';
+
+		}
+	}
+
+	function isNumber(evt) {
+		evt = (evt) ? evt : window.event;
+		var charCode = (evt.which) ? evt.which : evt.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;
+		}
+		else{
+			var year = document.getElementById('payroll_start_year').value;
+			var length = year.length;
+			if(length < 4){
+				return  true
+			}
+			return false;
+		}
+	}
+
+
+
+	$("#username").keyup(function () {
+		var username = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo site_url('check_user_username'); ?>',
+			data: {username: username},
+			cache: false,
+			success : function(data){
+				data = JSON.parse(data);
+				console.log(data);
+				if(data === 0){
+					document.getElementById("username_alert").style.display = 'none';
+					document.getElementById('new_button').style.display = 'block';
+				} else{
+					document.getElementById("username_alert").style.display = 'block';
+					document.getElementById('new_button').style.display = 'none';
+				}
+
+
+			}
+		});
+	});
+
+	$("#email").keyup(function () {
+		var email = $(this).val();
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo site_url('check_user_email'); ?>',
+			data: {email: email},
+			cache: false,
+			success : function(data){
+				data = JSON.parse(data);
+
+				console.log(data);
+				if(data === 0){
+					document.getElementById("email_alert").style.display = 'none';
+					document.getElementById('new_button').style.display = 'block';
+				} else{
+					document.getElementById("email_alert").style.display = 'block';
+					document.getElementById('new_button').style.display = 'none';
+				}
+
+
+			}
+		});
+	});
 </script>
+
 </body>
 </html>
 

@@ -67,7 +67,7 @@
                           <div class="input-group-prepend">
                             <a onClick="enablePassword()" class="btn btn-icon btn-light"><i style="padding-top: 70%" id="pass-active" class="fa fa-toggle-on"></i></a>
                           </div>
-                          <input class="form-control" name="password" type="password" disabled="disabled" required id="password-field" autocomplete="current-password">
+                          <input class="form-control" name="password" type="password" disabled="disabled"  id="password-field" autocomplete="current-password">
                           <div class="input-group-append">
                             <a class="btn btn-light" onClick="viewPassword()"><i style="padding-top: 70%" id="pass-status" class="fas fa-eye"></i></a>
                           </div>
@@ -84,7 +84,7 @@
                         </select>
                       </div>
                       <div class="col-sm-4">
-						          <?php  if ($check == 1):?>
+						          <?php  if ($check == 1 || $usertype < 4):?>
                         <label>User Type</label>
                         <select name="user_type" required class="form-control select2" style="width: 100%; height:42px !important;">
                           <option value="1" <?php if($user_datum->user_type == 1){ echo "selected"; } ?>> Administrator </option>
@@ -92,12 +92,19 @@
                           <option value="3" <?php if($user_datum->user_type == 3){ echo "selected"; } ?>>Moderator </option>
                         </select>
                       <?php endif; ?>
-                      <?php  if ($check == 0):?>
+                      <?php  if ($check == 0 && $usertype == 1):?>
                         <label>User Type</label>
                         <select name="user_type" required class="form-control select2" style="width: 100%; height:42px !important;">
                           <option value="1" <?php if($user_datum->user_type == 1){ echo "selected"; } ?>> Administrator </option>
                         </select>
                       <?php endif; ?>
+
+						  <?php  if ($usertype == 4):?>
+							  <label>User Type</label>
+							  <select name="user_type" required class="form-control select2" style="width: 100%; height:42px !important;">
+								  <option value="1" <?php if($user_datum->user_type == 4){ echo "selected"; } ?>> Super Admin </option>
+							  </select>
+						  <?php endif; ?>
                       </div>
                     </div>
                     <div class="form-group">

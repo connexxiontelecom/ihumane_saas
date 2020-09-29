@@ -37,9 +37,11 @@ class User extends CI_Controller
 
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+				if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$data['users'] = $this->users->view_users($tenant_id);
+				$data['user_type'] = $user_type;
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -66,9 +68,10 @@ class User extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -79,9 +82,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			if($permission->user_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
 
-				$data['users'] = $this->users->view_users();
+
+				if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
+				//$data['users'] = $this->users->view_users();
 				$data['user_data'] = $this->users->get_user($username);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -111,11 +116,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
-			$permission = $this->users->check_permission($username);
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -154,7 +160,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				elseif(($this->users->check_existing_user_email($user_email) > 0 ) || ($this->users->check_existing_user_username($user_username) > 0 ) ):
 
-					$errormsg = 'User Already Exist';
+					$errormsg = 'Username or Email Already Taken';
 					$error_msg = array(
 						'error' => $errormsg
 					);
@@ -179,7 +185,8 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 						'user_email'=> $user_email,
 						'user_password'=> password_hash($user_password, PASSWORD_BCRYPT),
 						'user_name'=> $user_name,
-						'user_status'=>$user_status
+						'user_status'=>$user_status,
+						'tenant_id' => $tenant_id
 					);
 
 					$permission_array = array(
@@ -190,7 +197,8 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 						'user_management'=> $user_management,
 						'configuration' => $configuration,
 						'hr_configuration' => $hr_configuration,
-						'payroll_configuration' => $payroll_configuration
+						'payroll_configuration' => $payroll_configuration,
+						'tenant_id' => $tenant_id
 					);
 
 					$user_array = $this->security->xss_clean($user_array);
@@ -202,7 +210,8 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 						$log_array = array(
 							'log_user_id' => $this->users->get_user($username)->user_id,
-							'log_description' => "Added New User"
+							'log_description' => "Added New User",
+							'tenant_id' => $tenant_id
 						);
 
 						$this->logs->add_log($log_array);
@@ -241,11 +250,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -259,15 +269,16 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			if($permission->user_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+			if($user_type == 1 || $user_type == 3 || $user_type == 4):
+
 				$data['user_data'] = $this->users->get_user($username);
-				$user_datum = $this->users->get_user_id($user_id);
+				$user_datum = $this->users->get_user_id($user_id, $tenant_id);
 
 				if(empty($user_datum)):
 
 					redirect('/access_denied');
 
-					else:
+				else:
 						$data['user_datum'] = $user_datum;
 						$errormsg = ' ';
 						$error_msg = array(
@@ -275,19 +286,19 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 						);
 						$data['error'] = $errormsg;
 
-						$check =  $this->employees->get_employee_by_unique($user_datum->user_username);
+						$check =  $this->employees->get_employee_by_unique($user_datum->user_username, $tenant_id);
 
 						if(empty($check)):
 
 							$check = 0;
+							$data['usertype'] = $user_datum->user_type;
 						else:
 							$check = 1;
-							endif;
+						endif;
 
 							$data['check'] = $check;
 
 						$this->load->view('user/manage_user', $data);
-
 					endif;
 
 					else:
@@ -312,11 +323,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
-			$permission = $this->users->check_permission($username);
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -331,7 +342,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			if($permission->user_management == 1):
 				$user_type = $this->users->get_user($username)->user_type;
 
-				if($user_type == 1 || $user_type == 3):
+				if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$user_username = $this->input->post('username');
 				$user_email = $this->input->post('email');
@@ -339,7 +350,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$user_password = $this->input->post('password');
 				$user_id = $this->input->post('user_user_id');
 
-				$user_datum = $this->users->get_user_id($user_id);
+				$user_datum = $this->users->get_user_id($user_id, $tenant_id);
 
 				$user_status = $this->input->post('status');
 				$user_type = $this->input->post('user_type');
@@ -529,6 +540,8 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 			endif;
 		else:
+
+			//echo "got here";
 			redirect('/access_denied');
 		endif;
 
