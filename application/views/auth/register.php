@@ -19,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<div id="ytWidget"></div><script src="https://translate.yandex.net/website-widget/v1/widget.js?widgetId=ytWidget&pageLang=en&widgetTheme=light&autoMode=false" type="text/javascript"></script>
 
 						<div class="card-body">
-							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation register-form" novalidate>
 								<div class="form-divider">
 									Your Business Details
 								</div>
