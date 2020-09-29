@@ -225,7 +225,20 @@
 				</ul>
 				<?php } ?>
 			</li>
+
+			<li class="menu-header">Subscription Management</li>
+			<li class="dropdown <?php echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : ''; ?>">
+
+				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-fingerprint"></i> <span>Subscription</span></a>
+				<ul class="dropdown-menu">
+					<li class="<?php echo $this->uri->segment(1) == 'subscription' ? 'active' : '' ?>"><a class="nav-link" href="<?php echo site_url('subscription') ?>"> Your Subscription </a></li>
+				</ul>
+
+			</li>
+
 		</ul>
+
+
 
 		<div class="mt-4 mb-4 p-3 hide-sidebar-mini">
 			<a href="<?php echo base_url('logout'); ?>" class="btn btn-primary btn-lg btn-block btn-icon-split">

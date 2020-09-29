@@ -19,6 +19,9 @@ $route['timestamp'] = 'home/timestamp';
 
 $route['check_email'] = 'home/check_email';
 $route['check_username'] = 'home/check_username';
+$route['check_user_email'] = 'home/check_user_email';
+$route['check_user_username'] = 'home/check_user_username';
+
 
 $route['income_stats'] = 'home/get_income_statistics';
 $route['deduction_stats'] = 'home/get_deduction_statistics';

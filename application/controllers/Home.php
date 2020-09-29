@@ -583,11 +583,27 @@ class Home extends CI_Controller
 
 	}
 
+	public function check_user_username(){
+
+		$username = $this->input->post('username');
+		echo json_encode($this->users->check_existing_user_username($username));
+	}
+
+
+
+	public function check_user_email(){
+		$email = $this->input->post('email');
+		echo json_encode($this->users->check_existing_user_email($email));
+
+	}
+
 	public function check_username(){
 
 		$username = $this->input->post('username');
 		echo json_encode($this->users->get_tenant_username($username));
 	}
+
+
 
 	public function check_email(){
 		$email = $this->input->post('email');
