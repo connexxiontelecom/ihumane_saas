@@ -54,10 +54,12 @@
                             <td><?php echo $subscription->subscription_reference_code; ?></td>
 							 <td><?php if ($subscription->subscription_status == 1): echo "Active"; endif;
 								 if ($subscription->subscription_status == 0): echo "Expired"; endif;
+								 if ($subscription->subscription_status == 2): echo "Pending"; endif;
 							 ?></td>
 
                           </tr>
                         <?php
+						$sn++;
                         endforeach;
                       endif; ?>
                       </tbody>

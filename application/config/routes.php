@@ -313,6 +313,9 @@ $route['change_password'] = 'employee_main/change_password';
 $route['change_password_'] = 'employee_main/change_password_';
 $route['get_notifications'] = 'employee_main/get_notifications';
 
+$route['new_subscription'] = 'subscription/new_subscription';
+$route['new_subscription_a'] = 'home/new_subscription_a';
+
 
 
 
