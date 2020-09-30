@@ -49,6 +49,12 @@ class Users extends CI_Model
 		return $query->result();
 	}
 
+	public function update_subscription($subscription_id, $subscription_data){
+		$this->db->where('subscription.subscription_id', $subscription_id);
+		$this->db->update('subscription', $subscription_data);
+		return true;
+	}
+
 	public function get_sub_details($sub_id){
 		$this->db->select('*');
 		$this->db->from('subscription');

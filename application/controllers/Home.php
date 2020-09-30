@@ -183,51 +183,206 @@ class Home extends CI_Controller
 							$user_token_data = $this->security->xss_clean($user_token_data);
 							$query = $this->users->update_token($username, $user_token_data);
 							if($query == true):
-								$log_array = array(
-									'log_user_id' => $this->users->get_user($username)->user_id,
-									'log_description' => "Logged In"
-								);
+								$tenant_id = $this->users->get_user($username)->tenant_id;
 
-								$this->logs->add_log($log_array);
-								if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
-
-								redirect('home');
-								elseif($this->users->get_user($username)->user_type == 2):
-
-
-									$tenant_id = $this->users->get_user($username)->tenant_id;
-
-									$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+								$active_plans = $this->users->get_sub_true_status($tenant_id);
 
 
 
-									$trainings =  $this->employees->get_employee_training($employee_id);
+								if(!empty($active_plans)):
+									$id = array();
+									$i = 0;
 
-									$count_training = 0;
+									foreach ($active_plans as $active_plan):
 
-									foreach ($trainings as $training):
-										if($training->employee_training_status == 0):
-											$count_training++;
+										$id[$i] = $active_plan->subscription_id;
 
-										endif;
+										$i++;
 
 									endforeach;
 
-									if($count_training > 0):
-										$notification_data = array(
-											'notification_employee_id'=> $employee_id,
-											'notification_link'=> 'my_trainings',
-											'notification_type' => 'You Have A Pending Training',
-											'notification_status'=> 0
+									$latest_id = min($id);
+
+									$sub = $this->users->get_sub_details($latest_id);
+
+									$sub_end_date = $sub->subscription_end_date;
+									$sub_status = $sub->subscription_status;
+
+									if($sub_end_date ==  date('Y-m-d') && $sub_status == 1 ):
+										$subscription_array = array(
+											'subscription_status' => 0
 										);
 
-										$this->employees->insert_notifications($notification_data);
+											$this->users->update_subscription($sub->subscription_id, $subscription_array);
+
+
+											$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+											if(!empty($active_plans)):
+													$id = array();
+													$i = 0;
+													foreach ($active_plans as $active_plan):
+
+														$id[$i] = $active_plan->subscription_id;
+
+														$i++;
+
+													endforeach;
+
+													$latest_id = min($id);
+
+													$sub = $this->users->get_sub_details($latest_id);
+
+
+													$sub_status = $sub->subscription_status;
+
+													if( $sub_status == 2 ):
+														$subscription_array = array(
+															'subscription_status' => 1
+														);
+
+														$this->users->update_subscription($sub->subscription_id, $subscription_array);
+													endif;
+
+													// sub is active
+
+												$log_array = array(
+													'log_user_id' => $this->users->get_user($username)->user_id,
+													'log_description' => "Logged In"
+												);
+
+												$this->logs->add_log($log_array);
+
+
+
+
+												if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
+
+													redirect('home');
+
+
+												elseif($this->users->get_user($username)->user_type == 2):
+
+
+
+
+													$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
+
+
+													$trainings =  $this->employees->get_employee_training($employee_id);
+
+													$count_training = 0;
+
+													foreach ($trainings as $training):
+														if($training->employee_training_status == 0):
+															$count_training++;
+
+														endif;
+
+													endforeach;
+
+													if($count_training > 0):
+														$notification_data = array(
+															'notification_employee_id'=> $employee_id,
+															'notification_link'=> 'my_trainings',
+															'notification_type' => 'You Have A Pending Training',
+															'notification_status'=> 0
+														);
+
+														$this->employees->insert_notifications($notification_data);
+													endif;
+
+
+													redirect('employee_main');
+												endif;
+
+
+
+
+											else:
+
+												// no sub
+
+												endif;
+
+
+									else:
+										//sub is active
+
+
+										$log_array = array(
+											'log_user_id' => $this->users->get_user($username)->user_id,
+											'log_description' => "Logged In"
+										);
+
+										$this->logs->add_log($log_array);
+
+
+
+
+										if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
+
+											redirect('home');
+
+
+										elseif($this->users->get_user($username)->user_type == 2):
+
+
+
+
+											$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
+
+
+											$trainings =  $this->employees->get_employee_training($employee_id);
+
+											$count_training = 0;
+
+											foreach ($trainings as $training):
+												if($training->employee_training_status == 0):
+													$count_training++;
+
+												endif;
+
+											endforeach;
+
+											if($count_training > 0):
+												$notification_data = array(
+													'notification_employee_id'=> $employee_id,
+													'notification_link'=> 'my_trainings',
+													'notification_type' => 'You Have A Pending Training',
+													'notification_status'=> 0
+												);
+
+												$this->employees->insert_notifications($notification_data);
+											endif;
+
+
+											redirect('employee_main');
+										endif;
+
+
+
+
 									endif;
 
 
-									redirect('employee_main');
+
+								else:
+
+									// no sub
+
 								endif;
-							endif;
+
+
+
+
+
+
+
+
+								endif;
 						else:
 							$diff = $time - $user_token;
 
@@ -252,51 +407,205 @@ class Home extends CI_Controller
 								$user_token_data = $this->security->xss_clean($user_token_data);
 								$query = $this->users->update_token($username, $user_token_data);
 								if($query == true):
+									$tenant_id = $this->users->get_user($username)->tenant_id;
+
+									$active_plans = $this->users->get_sub_true_status($tenant_id);
 
 
-									$log_array = array(
-										'log_user_id' => $this->users->get_user($username)->user_id,
-										'log_description' => "Logged In"
-									);
 
-									$this->logs->add_log($log_array);
-									if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
+									if(!empty($active_plans)):
+										$id = array();
+										$i = 0;
 
-										redirect('home');
+										foreach ($active_plans as $active_plan):
 
+											$id[$i] = $active_plan->subscription_id;
 
-									elseif($this->users->get_user($username)->user_type == 2):
-
-										$tenant_id = $this->users->get_user($username)->tenant_id;
-
-										$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-
-										$trainings =  $this->employees->get_employee_training($employee_id);
-
-										$count_training = 0;
-
-										foreach ($trainings as $training):
-											if($training->employee_training_status == 0):
-												$count_training++;
-
-											endif;
+											$i++;
 
 										endforeach;
 
-										if($count_training > 0):
-											$notification_data = array(
-												'notification_employee_id'=> $employee_id,
-												'notification_link'=> 'my_trainings',
-												'notification_type' => 'You Have A Pending Training',
-												'notification_status'=> 0
+										$latest_id = min($id);
+
+										$sub = $this->users->get_sub_details($latest_id);
+
+										$sub_end_date = $sub->subscription_end_date;
+										$sub_status = $sub->subscription_status;
+
+										if($sub_end_date ==  date('Y-m-d') && $sub_status == 1 ):
+											$subscription_array = array(
+												'subscription_status' => 0
 											);
 
-											$this->employees->insert_notifications($notification_data);
+											$this->users->update_subscription($sub->subscription_id, $subscription_array);
+
+
+											$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+											if(!empty($active_plans)):
+												$id = array();
+												$i = 0;
+												foreach ($active_plans as $active_plan):
+
+													$id[$i] = $active_plan->subscription_id;
+
+													$i++;
+
+												endforeach;
+
+												$latest_id = min($id);
+
+												$sub = $this->users->get_sub_details($latest_id);
+
+
+												$sub_status = $sub->subscription_status;
+
+												if( $sub_status == 2 ):
+													$subscription_array = array(
+														'subscription_status' => 1
+													);
+
+													$this->users->update_subscription($sub->subscription_id, $subscription_array);
+												endif;
+
+												// sub is active
+
+												$log_array = array(
+													'log_user_id' => $this->users->get_user($username)->user_id,
+													'log_description' => "Logged In"
+												);
+
+												$this->logs->add_log($log_array);
+
+
+
+
+												if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
+
+													redirect('home');
+
+
+												elseif($this->users->get_user($username)->user_type == 2):
+
+
+
+
+													$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
+
+
+													$trainings =  $this->employees->get_employee_training($employee_id);
+
+													$count_training = 0;
+
+													foreach ($trainings as $training):
+														if($training->employee_training_status == 0):
+															$count_training++;
+
+														endif;
+
+													endforeach;
+
+													if($count_training > 0):
+														$notification_data = array(
+															'notification_employee_id'=> $employee_id,
+															'notification_link'=> 'my_trainings',
+															'notification_type' => 'You Have A Pending Training',
+															'notification_status'=> 0
+														);
+
+														$this->employees->insert_notifications($notification_data);
+													endif;
+
+
+													redirect('employee_main');
+												endif;
+
+
+
+
+											else:
+
+												// no sub
+
+											endif;
+
+
+										else:
+											//sub is active
+
+
+											$log_array = array(
+												'log_user_id' => $this->users->get_user($username)->user_id,
+												'log_description' => "Logged In"
+											);
+
+											$this->logs->add_log($log_array);
+
+
+
+
+											if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
+
+												redirect('home');
+
+
+											elseif($this->users->get_user($username)->user_type == 2):
+
+
+
+
+												$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
+
+
+												$trainings =  $this->employees->get_employee_training($employee_id);
+
+												$count_training = 0;
+
+												foreach ($trainings as $training):
+													if($training->employee_training_status == 0):
+														$count_training++;
+
+													endif;
+
+												endforeach;
+
+												if($count_training > 0):
+													$notification_data = array(
+														'notification_employee_id'=> $employee_id,
+														'notification_link'=> 'my_trainings',
+														'notification_type' => 'You Have A Pending Training',
+														'notification_status'=> 0
+													);
+
+													$this->employees->insert_notifications($notification_data);
+												endif;
+
+
+												redirect('employee_main');
+											endif;
+
+
+
+
 										endif;
 
 
-										redirect('employee_main');
+
+									else:
+
+										// no sub
+
 									endif;
+
+
+
+
+
+
+
+
 								endif;
 							endif;
 
