@@ -420,7 +420,7 @@ class Employee_main extends CI_Controller
 				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 				$data['leaves'] = $this->hr_configurations->view_leaves($tenant_id);
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 				//$data['employees'] = $this->employees->view_employees();
 
 
@@ -1088,7 +1088,7 @@ class Employee_main extends CI_Controller
 
 					$data['employee_id'] = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 					$data['min_payroll_year'] = $this->salaries->view_min_payroll_year($tenant_id);
@@ -1812,7 +1812,7 @@ class Employee_main extends CI_Controller
 
 					$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
 
-					$data['notifications'] = $this->employees->get_notifications($employee_id);
+					$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
 
@@ -1860,7 +1860,7 @@ class Employee_main extends CI_Controller
 				$data['employee_id'] = $employee_id;
 
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$data['memos'] = $this->employees->get_memos();
 
@@ -1903,7 +1903,7 @@ class Employee_main extends CI_Controller
 				$data['employee_id'] = $employee_id;
 
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$data['memos'] = $this->employees->get_my_memo($employee_id);
 
@@ -1980,7 +1980,7 @@ class Employee_main extends CI_Controller
 
 
 				$data['employee_id'] = $employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$data['trainings'] = $this->employees->get_employee_training($employee_id);
 
@@ -2068,7 +2068,7 @@ class Employee_main extends CI_Controller
 
 
 						$data['employee_id'] = $employee_id;
-						$data['notifications'] = $this->employees->get_notifications($employee_id);
+						$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 
 
@@ -2173,7 +2173,7 @@ class Employee_main extends CI_Controller
 							$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 							$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 							$data['employee_id'] = $employee_id;
-							$data['notifications'] = $this->employees->get_notifications($employee_id);
+							$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 
 
@@ -2327,7 +2327,7 @@ class Employee_main extends CI_Controller
 							$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 							$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 							$data['employee_id'] = $employee_id;
-							$data['notifications'] = $this->employees->get_notifications($employee_id);
+							$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 								//print_r($check_existing_employee_training);
 
@@ -2383,7 +2383,7 @@ class Employee_main extends CI_Controller
 						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 						$data['employee_id'] = $employee_id;
 						$data['users'] = $this->users->view_users($tenant_id);
-						$data['notifications'] = $this->employees->get_notifications($employee_id);
+						$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 						//print_r($check_existing_employee_training);
 
@@ -2567,7 +2567,7 @@ class Employee_main extends CI_Controller
 				$data['employee_id'] = $employee_id;
 				$data['documents'] = $this->hr_configurations->view_hr_documents();
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				//print_r($check_existing_employee_training);
 
@@ -2628,7 +2628,7 @@ class Employee_main extends CI_Controller
 						$data['document'] = $check_existing_document;
 
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				//print_r($check_existing_employee_training);
 
@@ -2681,7 +2681,7 @@ class Employee_main extends CI_Controller
 						$data['employee_id'] = $employee_id;
 
 
-						$data['notifications'] = $this->employees->get_notifications($employee_id);
+						$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 						//print_r($check_existing_employee_training);
 
