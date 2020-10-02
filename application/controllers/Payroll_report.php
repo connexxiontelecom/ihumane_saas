@@ -78,7 +78,9 @@ class Payroll_report extends CI_Controller
 
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
 
 			if(!empty($active_plans)):
 
@@ -357,11 +359,13 @@ class Payroll_report extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+
 			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
 			if(!empty($active_plans)):
 
 				$data['active_plan'] = 1;
+
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -485,7 +489,9 @@ class Payroll_report extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+
 			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
 
 			if(!empty($active_plans)):
 

@@ -51,7 +51,7 @@
                                 <?php if($employee->employee_salary_structure_setup == 0 ):?>
                                   <div class="badge badge-danger">No Salary Structure</div>
                                 <?php elseif ($employee->employee_salary_structure_category == 0):?>
-                                  <div class="badge badge-success">Personalized Salary Structure</div>
+                                  <div class="badge badge-info">Personalized Salary Structure</div>
                                 <?php else:?>
                                   <div class="badge badge-primary">Categorised Salary Structure</div>
                                 <?php endif;?>
