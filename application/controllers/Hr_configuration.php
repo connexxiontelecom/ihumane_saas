@@ -29,9 +29,11 @@ class Hr_configuration extends CI_Controller
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$tenant_id = $this->users->get_user($username)->tenant_id;
-				$sub_status = $this->users->get_sub_status($tenant_id);
+				$active_plans = $this->users->get_sub_true_status($tenant_id);
 
-			if(!empty($sub_status)):
+				if(!empty($active_plans)):
+
+					$data['active_plan'] = 1;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -59,7 +61,7 @@ class Hr_configuration extends CI_Controller
 				endif;
 
 				else:
-					redirect('/subscription_status');
+					redirect('subscription_expired');
 				endif;
 
 			else:
@@ -78,6 +80,8 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+			
+		
 			$method = $this->input->server('REQUEST_METHOD');
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -217,12 +221,14 @@ class Hr_configuration extends CI_Controller
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 
 				$tenant_id = $this->users->get_user($username)->tenant_id;
-				$sub_status = $this->users->get_sub_status($tenant_id);
+				$active_plans = $this->users->get_sub_true_status($tenant_id);
 
-				if(!empty($sub_status)):
+				if(!empty($active_plans)):
+
+					$data['active_plan'] = 1;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			$data['payroll_management'] = $permission->payroll_management;
 			$data['biometrics'] = $permission->biometrics;
 			$data['user_management'] = $permission->user_management;
@@ -247,7 +253,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				 endif;
 
 				 else:
-					 redirect('subscription_status');
+					 redirect('subscription_expired');
 
 					 endif;
 
@@ -396,7 +402,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
-			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			$user_type = $this->users->get_user($username)->user_type;
 
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
@@ -430,6 +440,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+		else:
+
+				redirect('subscription_expired');
+
+		endif;
 		else:
 			redirect('/login');
 		endif;
@@ -575,7 +591,13 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -610,6 +632,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -757,6 +783,13 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -787,6 +820,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -929,9 +967,16 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
+
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -958,6 +1003,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			else:
 
 				redirect('/access_denied');
+
+			endif;
+
+			else:
+
+				redirect('subscription_expired');
 
 			endif;
 		else:
@@ -1099,9 +1150,16 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+		$active_plans = $this->users->get_sub_true_status($tenant_id);
 
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+		
+		
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+				
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -1129,6 +1187,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 				redirect('/access_denied');
 
+			endif;
+			
+			else:
+				
+				redirect('subscription_expired');
+			
 			endif;
 		else:
 			redirect('/login');
@@ -1272,6 +1336,13 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+			
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -1303,6 +1374,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+			
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1460,8 +1535,15 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -1494,6 +1576,13 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			else:
 
 				redirect('/access_denied');
+
+			endif;
+
+			else:
+
+
+				redirect('subscription_expired');
 
 			endif;
 		else:
@@ -1645,8 +1734,15 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -1680,6 +1776,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1831,6 +1933,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -1860,6 +1968,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1872,8 +1985,14 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -1904,6 +2023,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2056,6 +2179,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -2087,6 +2216,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2102,6 +2235,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -2151,6 +2290,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2303,8 +2446,15 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -2336,6 +2486,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2484,9 +2638,15 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -2517,6 +2677,12 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2667,9 +2833,14 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -2700,6 +2871,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -2712,6 +2887,13 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
@@ -2744,6 +2926,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -3046,10 +3232,16 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -3095,6 +3287,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -3296,9 +3493,15 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
 				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -3349,6 +3552,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -3363,10 +3571,16 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -3394,6 +3608,10 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -3414,7 +3632,7 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -3524,10 +3742,18 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
-$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -3573,6 +3799,11 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -3588,6 +3819,8 @@ $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 				$permission = $this->users->check_permission($username);

@@ -28,6 +28,12 @@ class Loan extends CI_Controller
 			$user_type = $this->users->get_user($username)->user_type;
 
 		$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -61,6 +67,11 @@ class Loan extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -75,6 +86,12 @@ class Loan extends CI_Controller
 			$user_type = $this->users->get_user($username)->user_type;
 
 		$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -107,6 +124,10 @@ class Loan extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -366,6 +387,11 @@ class Loan extends CI_Controller
 			$user_type = $this->users->get_user($username)->user_type;
 
 		$tenant_id = $this->users->get_user($username)->tenant_id;
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 		if($user_type == 1 || $user_type == 3 || $user_type == 4):
 			$permission = $this->users->check_permission($username);
 
@@ -418,6 +444,11 @@ class Loan extends CI_Controller
 				redirect('access_denied');
 
 				endif;
+
+				else:
+
+				redirect('subscription_expired');
+					endif;
 	else:
 			redirect('/login');
 		endif;
