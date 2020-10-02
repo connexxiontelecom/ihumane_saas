@@ -36,7 +36,13 @@ class Home extends CI_Controller
 
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
-			if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+				if($this->users->get_user($username)->user_type == 1 || $this->users->get_user($username)->user_type == 3 || $this->users->get_user($username)->user_type == 4):
 
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
@@ -95,6 +101,73 @@ class Home extends CI_Controller
 				redirect('employee_main');
 			endif;
 
+			else:
+
+						if( $this->users->get_user($username)->user_type == 4):
+				$data['active_plan'] = 0;
+
+				$permission = $this->users->check_permission($username);
+				$data['employee_management'] = $permission->employee_management;
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+				$data['payroll_management'] = $permission->payroll_management;
+				$data['biometrics'] = $permission->biometrics;
+				$data['user_management'] = $permission->user_management;
+				$data['configuration'] = $permission->configuration;
+				$data['payroll_configuration'] = $permission->payroll_configuration;
+				$data['hr_configuration'] = $permission->hr_configuration;
+				$data['configuration'] = $permission->configuration;
+				$data['user_data'] = $this->users->get_user($username);
+
+				$data['employees'] = $this->employees->view_employees($tenant_id);
+				$data['users'] = $this->users->view_users($tenant_id);
+				$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+				$data['leaves'] = $this->employees->get_employees_leaves($tenant_id);
+
+				$date = date('Y-m-d', time());
+				$data['present_employees'] = $this->biometric->check_today_attendance($date);
+
+				$data['online_users'] = $this->get_online_users();
+				$data['total_income_month'] = $this->get_total_income_month();
+
+				$data['total_deduction_month'] = $this->get_total_deduction_month();
+
+				$data['total_income_year'] = $this->get_total_income_year();
+				$data['total_deduction_year'] = $this->get_total_deduction_year();
+
+				$data['pending_loans'] = $this->loans->count_pending_loans($tenant_id);
+				//print_r($data['total_deduction_year']);
+
+				$data['running_loans'] = $this->loans->count_running_loans($tenant_id);
+
+				$data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
+				$data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
+				$data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
+				$data['is_payroll_routine_run'] = $this->is_payroll_routine_run($tenant_id);
+				$data['csrf_name'] = $this->security->get_csrf_token_name();
+				$data['csrf_hash'] = $this->security->get_csrf_hash();
+				$data['pending_leaves'] = $this->employees->count_pending_leaves();
+				$data['approved_leaves'] = $this->employees->count_approved_leaves();
+				$data['finished_leaves'] = $this->employees->count_finished_leaves();
+				$data['upcoming_leaves'] = $this->employees->get_upcoming_leaves();
+				$data['open_queries'] = $this->employees->count_open_queries();
+				$data['pending_trainings'] = $this->employees->count_pending_trainings();
+				$data['running_appraisals'] = $this->employees->count_running_appraisals();
+				$data['finished_appraisals'] = $this->employees->count_finished_appraisals();
+				$data['hr_documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
+//        print_r($this->hr_configurations->view_hr_documents());
+
+
+				$this->load->view('index', $data);
+			else:
+
+				redirect('subscription_expired');
+			endif;
+
+
+
+
+
+			endif;
 
 
 		else:
@@ -301,8 +374,18 @@ class Home extends CI_Controller
 
 
 											else:
+												//no sub
 
-												// no sub
+													if($this->users->get_user($username)->user_type == 4):
+
+														redirect('home');
+
+
+													else:
+
+														redirect('subscription_expired');
+
+													endif;
 
 												endif;
 
@@ -372,6 +455,17 @@ class Home extends CI_Controller
 								else:
 
 									// no sub
+
+									if($this->users->get_user($username)->user_type == 4):
+
+										redirect('home');
+
+
+									else:
+
+										redirect('subscription_expired');
+
+									endif;
 
 								endif;
 
@@ -525,8 +619,17 @@ class Home extends CI_Controller
 
 
 											else:
-
 												// no sub
+												if($this->users->get_user($username)->user_type == 4):
+
+													redirect('home');
+
+
+												else:
+
+													redirect('subscription_expired');
+
+												endif;
 
 											endif;
 
@@ -595,6 +698,16 @@ class Home extends CI_Controller
 
 									else:
 
+										if($this->users->get_user($username)->user_type == 4):
+
+											redirect('home');
+
+
+										else:
+
+											redirect('subscription_expired');
+
+										endif;
 										// no sub
 
 									endif;
@@ -1028,6 +1141,22 @@ class Home extends CI_Controller
 
 		endif;
 
+
+	}
+
+	public function subscription_expired(){
+		$this->load->view('auth/subscription_expired');
+		$user_username = $this->session->userdata('user_username');
+
+		if(isset($user_username)):
+
+
+
+
+		else:
+			redirect('/login');
+
+		endif;
 
 	}
 
