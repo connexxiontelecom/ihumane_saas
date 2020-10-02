@@ -4201,7 +4201,7 @@ class Employee extends CI_Controller
 
 				else:
 
-					$notifications = $this->employees->get_notifications($notification_id);
+					$notifications = $this->employees->get_notifications($notification_id, $tenant_id);
 				if(!empty($notifications)):
 					foreach ($notifications as $notification):
 

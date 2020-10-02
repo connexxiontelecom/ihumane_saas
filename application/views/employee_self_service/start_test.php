@@ -37,8 +37,7 @@
 										</div>
 									</div>
 									<div class="row">
-										<form action="<?php echo site_url('score_test'); ?>" data-persist="garlic" id="assessment_form" method="post">
-											<div class="col-12 col-sm-12 col-md-4">
+											<div class="col-4 col-sm-4 col-md-4">
 												<ul class="nav nav-pills flex-column" id="myTab4" role="tablist">
 													<?php $count = 1; foreach ($questions as $question): ?>
 													<li class="nav-item">
@@ -47,8 +46,10 @@
 													<?php $count++; endforeach; ?>
 												</ul>
 											</div>
-											<div class="col-12 col-sm-12 col-md-8">
+											<div class="col-8 col-sm-8 col-md-8">
 												<div class="tab-content no-padding" id="myTab2Content">
+													<form action="<?php echo site_url('score_test'); ?>" data-persist="garlic" id="assessment_form" method="post">
+
 													<?php $count = 1; $count_questions = count($questions); foreach ($questions as $question): ?>
 													<div class="tab-pane fade <?php if($count == 1){ echo "fade show active"; } ?>" id="question<?php echo $count; ?>" role="tabpanel" aria-labelledby="question-tab<?php echo $count; ?>">
 														<?php echo $question->training_question_question; ?>
