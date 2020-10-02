@@ -343,7 +343,7 @@ class Home extends CI_Controller
 
 
 
-													$trainings =  $this->employees->get_employee_training($employee_id);
+													$trainings =  $this->employees->get_employee_training($employee_id, $tenant_id);
 
 													$count_training = 0;
 
@@ -360,7 +360,8 @@ class Home extends CI_Controller
 															'notification_employee_id'=> $employee_id,
 															'notification_link'=> 'my_trainings',
 															'notification_type' => 'You Have A Pending Training',
-															'notification_status'=> 0
+															'notification_status'=> 0,
+															'tenant_id' => $tenant_id
 														);
 
 														$this->employees->insert_notifications($notification_data);
@@ -418,7 +419,7 @@ class Home extends CI_Controller
 
 
 
-											$trainings =  $this->employees->get_employee_training($employee_id);
+											$trainings =  $this->employees->get_employee_training($employee_id, $tenant_id);
 
 											$count_training = 0;
 
@@ -435,7 +436,8 @@ class Home extends CI_Controller
 													'notification_employee_id'=> $employee_id,
 													'notification_link'=> 'my_trainings',
 													'notification_type' => 'You Have A Pending Training',
-													'notification_status'=> 0
+													'notification_status'=> 0,
+													'tenant_id'=> $tenant_id
 												);
 
 												$this->employees->insert_notifications($notification_data);
@@ -588,7 +590,7 @@ class Home extends CI_Controller
 
 
 
-													$trainings =  $this->employees->get_employee_training($employee_id);
+													$trainings =  $this->employees->get_employee_training($employee_id, $tenant_id);
 
 													$count_training = 0;
 
@@ -605,7 +607,8 @@ class Home extends CI_Controller
 															'notification_employee_id'=> $employee_id,
 															'notification_link'=> 'my_trainings',
 															'notification_type' => 'You Have A Pending Training',
-															'notification_status'=> 0
+															'notification_status'=> 0,
+															'tenant_id' => $tenant_id
 														);
 
 														$this->employees->insert_notifications($notification_data);
@@ -662,7 +665,7 @@ class Home extends CI_Controller
 
 
 
-												$trainings =  $this->employees->get_employee_training($employee_id);
+												$trainings =  $this->employees->get_employee_training($employee_id, $tenant_id);
 
 												$count_training = 0;
 
@@ -679,7 +682,8 @@ class Home extends CI_Controller
 														'notification_employee_id'=> $employee_id,
 														'notification_link'=> 'my_trainings',
 														'notification_type' => 'You Have A Pending Training',
-														'notification_status'=> 0
+														'notification_status'=> 0,
+														'tenant_id' => $tenant_id
 													);
 
 													$this->employees->insert_notifications($notification_data);

@@ -30,9 +30,13 @@ class Employee_main extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
-//				//$data['employees'] = $this->employees->view_employees();
-			$user_type = $this->users->get_user($username)->user_type;
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+				$user_type = $this->users->get_user($username)->user_type;
 
 
 
@@ -41,7 +45,7 @@ class Employee_main extends CI_Controller
 
 					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-						$terminations = $this->employees->get_employee_terminations($employee_id);
+						$terminations = $this->employees->get_employee_terminations($employee_id, $tenant_id);
 
 						if(!empty($terminations)):
 
@@ -59,7 +63,7 @@ class Employee_main extends CI_Controller
 							endif;
 
 
-					$resignations = $this->employees->get_employee_resignations($employee_id);
+					$resignations = $this->employees->get_employee_resignations($employee_id, $tenant_id);
 
 					if(!empty($resignations)):
 
@@ -117,15 +121,15 @@ class Employee_main extends CI_Controller
 
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['queries'] = $this->employees->get_queries_employee($employee_id);
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['queries'] = $this->employees->get_queries_employee($employee_id, $tenant_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
-				$data['memos'] = $this->employees->get_memos();
-				$data['specific_memos'] = $this->employees->get_my_memo($employee_id);
-				$data['appraisals'] = $this->employees->get_employee_appraisal($employee_id);
-				$data['appraisees'] = $this->employees->get_appraise_employees($employee_id);
-				$data['trainings'] = $this->employees->get_employee_training($employee_id);
+				$data['memos'] = $this->employees->get_memos($tenant_id);
+				$data['specific_memos'] = $this->employees->get_my_memo($employee_id, $tenant_id);
+				$data['appraisals'] = $this->employees->get_employee_appraisal($employee_id, $tenant_id);
+				$data['appraisees'] = $this->employees->get_appraise_employees($employee_id, $tenant_id);
+				$data['trainings'] = $this->employees->get_employee_training($employee_id, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -142,7 +146,10 @@ class Employee_main extends CI_Controller
 
 					endif;
 
+			else:
 
+				redirect('subscription_expired');
+				endif;
 
 		else:
 			redirect('/login');
@@ -158,8 +165,13 @@ class Employee_main extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
-//				//$data['employees'] = $this->employees->view_employees();
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -169,7 +181,7 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$terminations = $this->employees->get_employee_terminations($employee_id);
+				$terminations = $this->employees->get_employee_terminations($employee_id, $tenant_id);
 
 				if(!empty($terminations)):
 
@@ -187,7 +199,7 @@ class Employee_main extends CI_Controller
 				endif;
 
 
-				$resignations = $this->employees->get_employee_resignations($employee_id);
+				$resignations = $this->employees->get_employee_resignations($employee_id, $tenant_id);
 
 				if(!empty($resignations)):
 
@@ -242,7 +254,7 @@ class Employee_main extends CI_Controller
 				else:
 
 					$data['user_data'] = $this->users->get_user($username);
-					$data['notifications'] = $this->employees->get_notifications($employee_id);
+					$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
@@ -259,6 +271,10 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
+
+				redirect('subscription_expired');
+				endif;
 
 
 		else:
@@ -273,6 +289,12 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -290,9 +312,9 @@ class Employee_main extends CI_Controller
 
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
-				$data['histories'] = $this->employees->view_employee_history($employee_id);
+				$data['histories'] = $this->employees->view_employee_history($employee_id, $tenant_id);
 
 
 				//$this->load->view('log/view_logs', $data);
@@ -304,6 +326,12 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+
+				endif;
 
 
 		else:
@@ -318,6 +346,12 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
@@ -334,9 +368,9 @@ class Employee_main extends CI_Controller
 				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
-				$data['leaves'] = $this->employees-> check_existing_employee_leaves($employee_id);
+				$data['leaves'] = $this->employees-> check_existing_employee_leaves($employee_id, $tenant_id);
 
 
 
@@ -347,6 +381,11 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 
 
 		else:
@@ -361,7 +400,12 @@ class Employee_main extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
-			//$data['employees'] = $this->employees->view_employees();
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -387,6 +431,11 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
+
+				redirect('subscription_expired');
+
+				endif;
 
 		else:
 			redirect('/login');
@@ -400,7 +449,14 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 
-			//$data['employees'] = $this->employees->view_employees();
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -412,7 +468,7 @@ class Employee_main extends CI_Controller
 				$end_date = $this->input->post('end_date');
 
 
-				$check_existing_leaves = $this->employees->check_existing_employee_leaves($employee_id);
+				$check_existing_leaves = $this->employees->check_existing_employee_leaves($employee_id, $tenant_id);
 
 
 
@@ -453,7 +509,8 @@ class Employee_main extends CI_Controller
 
 							$employee_history_array = array(
 									'employee_history_employee_id' => $employee_id,
-									'employee_history_details' =>'Leave Application'
+									'employee_history_details' =>'Leave Application',
+									'tenant_id' => $tenant_id
 
 							);
 
@@ -463,7 +520,8 @@ class Employee_main extends CI_Controller
 									'notification_employee_id'=> 0,
 									'notification_link'=> 'employee_leave',
 									'notification_type' => 'New Leave Application',
-									'notification_status'=> 0
+									'notification_status'=> 0,
+									'tenant_id' => $tenant_id
 							);
 
 							$this->employees->insert_notifications($notification_data);
@@ -487,7 +545,8 @@ class Employee_main extends CI_Controller
 						'leave_leave_type' => $leave_id,
 						'leave_start_date' => $start_date,
 						'leave_end_date' => $end_date,
-						'leave_status' => 0
+						'leave_status' => 0,
+						'tenant_id' => $tenant_id
 
 					);
 
@@ -498,14 +557,16 @@ class Employee_main extends CI_Controller
 
 						$log_array = array(
 							'log_user_id' => $this->users->get_user($username)->user_id,
-							'log_description' => "Initiated Employee Transfer"
+							'log_description' => "Applied for Leave",
+							'tenant_id' => $tenant_id
 						);
 
 						$this->logs->add_log($log_array);
 
 						$employee_history_array = array(
 							'employee_history_employee_id' => $employee_id,
-							'employee_history_details' =>'Leave Application'
+							'employee_history_details' =>'Leave Application',
+							'tenant_id' => $tenant_id
 
 						);
 
@@ -515,7 +576,8 @@ class Employee_main extends CI_Controller
 								'notification_employee_id'=> 0,
 								'notification_link'=> 'employee_leave',
 								'notification_type' => 'New Leave Application',
-								'notification_status'=> 0
+								'notification_status'=> 0,
+								'tenant_id' => $tenant_id
 						);
 
 						$this->employees->insert_notifications($notification_data);
@@ -539,7 +601,11 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
 
+				redirect('subscription_expired');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -553,7 +619,12 @@ class Employee_main extends CI_Controller
 
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
-			//$data['employees'] = $this->employees->view_employees();
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -569,10 +640,10 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
-				$data['histories'] = $this->employees->view_employee_history($employee_id);
-				$data['appraisals'] = $this->employees->get_employee_appraisal($employee_id);
+				$data['histories'] = $this->employees->view_employee_history($employee_id, $tenant_id);
+				$data['appraisals'] = $this->employees->get_employee_appraisal($employee_id, $tenant_id);
 
 
 				//$this->load->view('log/view_logs', $data);
@@ -584,6 +655,11 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 
 
 		else:
@@ -599,8 +675,11 @@ class Employee_main extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
-			//$data['employees'] = $this->employees->view_employees();
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -616,9 +695,9 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
-				$data['histories'] = $this->employees->view_employee_history($employee_id);
-				$data['appraisals'] = $this->employees->get_appraise_employees($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
+				$data['histories'] = $this->employees->view_employee_history($employee_id, $tenant_id);
+				$data['appraisals'] = $this->employees->get_appraise_employees($employee_id, $tenant_id);
 
 
 				//$this->load->view('log/view_logs', $data);
@@ -631,7 +710,11 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
 
+				redirect('subscription_expired');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -649,7 +732,11 @@ class Employee_main extends CI_Controller
 
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
-			//$data['employees'] = $this->employees->view_employees();
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -665,9 +752,9 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
-				$data['questions'] = $this->employees->get_appraisal_questions($appraisal_id);
+				$data['questions'] = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 				$data['appraisal_id'] = $appraisal_id;
 
 
@@ -680,7 +767,10 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+			else:
 
+				redirect('subscription_expired');
+				endif;
 
 		else:
 			redirect('/login');
@@ -691,6 +781,9 @@ class Employee_main extends CI_Controller
 	public function answer_questions_supervisor(){
 
 		$appraisal_id = $this->input->post('appraisal_id');
+		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+
 
 		if(empty($appraisal_id)):
 
@@ -698,7 +791,7 @@ class Employee_main extends CI_Controller
 
 		else:
 
-				$questions = $this->employees->get_appraisal_questions($appraisal_id);
+				$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 
 				$count = 0;
 				foreach($questions as $question):
@@ -742,7 +835,8 @@ class Employee_main extends CI_Controller
 							'notification_employee_id'=> 0,
 							'notification_link'=> 'employee_appraisal',
 							'notification_type' => 'Supervisor Completed Appraisal',
-							'notification_status'=> 0
+							'notification_status'=> 0,
+							'tenant_id' => $tenant_id
 					);
 
 					$this->employees->insert_notifications($notification_data);
@@ -769,8 +863,11 @@ class Employee_main extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
-			//$data['employees'] = $this->employees->view_employees();
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			$user_type = $this->users->get_user($username)->user_type;
 
 
@@ -787,8 +884,8 @@ class Employee_main extends CI_Controller
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
-				$data['questions'] = $this->employees->get_appraisal_questions($appraisal_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
+				$data['questions'] = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 				$data['appraisal_id'] = $appraisal_id;
 
 
@@ -802,6 +899,11 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
+
+				redirect('subscription_expired');
+				endif;
+
 
 		else:
 			redirect('/login');
@@ -810,6 +912,8 @@ class Employee_main extends CI_Controller
 	}
 
 	public function answer_questions_self(){
+		$username = $this->session->userdata('user_username');
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		$appraisal_id = $this->input->post('appraisal_id');
 
@@ -819,7 +923,7 @@ class Employee_main extends CI_Controller
 
 		else:
 
-			$questions = $this->employees->get_appraisal_questions($appraisal_id);
+			$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 
 			$count = 0;
 			foreach($questions as $question):
@@ -846,7 +950,7 @@ class Employee_main extends CI_Controller
 
 				$this->employees->update_appraisal($appraisal_id, $appraisal_data);
 
-				$check_appraisal= $this->employees->get_appraisal($appraisal_id);
+				$check_appraisal= $this->employees->get_appraisal($appraisal_id, $tenant_id);
 
 				if($check_appraisal->employee_appraisal_supervisor == 1 && $check_appraisal->employee_appraisal_qualitative == 1 && $check_appraisal->employee_appraisal_quantitative == 1 && $check_appraisal->employee_appraisal_self == 1 ):
 					$appraisal_data = array(
@@ -861,7 +965,8 @@ class Employee_main extends CI_Controller
 						'notification_employee_id'=> 0,
 						'notification_link'=> 'employee_appraisal',
 						'notification_type' => 'Employee Completed Appraisal',
-						'notification_status'=> 0
+						'notification_status'=> 0,
+						'tenant_id' => $tenant_id
 				);
 
 				$this->employees->insert_notifications($notification_data);
@@ -888,16 +993,22 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 
-
-			//$data['employees'] = $this->employees->view_employees();
-			$user_type = $this->users->get_user($username)->user_type;
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+			$user_type = $this->users->get_user($username)->user_type;
+
 
 
 			if($user_type == 2 || $user_type == 3):
 
 
-				$questions = $this->employees->get_appraisal_questions($appraisal_id);
+				$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 
 				if(empty($questions)):
 
@@ -914,7 +1025,7 @@ class Employee_main extends CI_Controller
 
 					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-					$data['notifications'] = $this->employees->get_notifications($employee_id);
+					$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 					$data['questions'] = $questions;
 
@@ -926,13 +1037,19 @@ class Employee_main extends CI_Controller
 
 				endif;
 
+
+
 			elseif($user_type == 1):
 
 				redirect('/access_denied');
 
 			endif;
 
+			else:
 
+				redirect('subscription_expired');
+
+			endif;
 		else:
 			redirect('/login');
 		endif;
@@ -945,6 +1062,12 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -980,6 +1103,10 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
+
+				redirect('subscription_expired');
+				endif;
 
 		else:
 			redirect('/login');
@@ -994,6 +1121,12 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 
 			//$data['employees'] = $this->employees->view_employees();
@@ -1018,7 +1151,7 @@ class Employee_main extends CI_Controller
 					$data['payroll_year'] = $year;
 					$data['user_data'] = $this->users->get_user($username);
 					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-					$data['notifications'] = $this->employees->get_notifications($employee_id);
+					$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 
@@ -1138,7 +1271,7 @@ class Employee_main extends CI_Controller
 						endforeach;
 
 						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-						$data['notifications'] = $this->employees->get_notifications($employee_id);
+						$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 						$data['emoluments'] = $this->salaries->view_emolument_sheet();
 
 						$this->load->view('employee_self_service/_pay_slip', $data);
@@ -1154,6 +1287,11 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
+				redirect('subscription_expired');
+
+				endif;
+
 
 		else:
 			redirect('/login');
@@ -1163,11 +1301,17 @@ class Employee_main extends CI_Controller
 	public function my_loan(){
 
 		$username = $this->session->userdata('user_username');
-		$tenant_id = $this->users->get_user($username)->tenant_id;
+
 
 		if(isset($username)):
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
 
@@ -1190,7 +1334,7 @@ class Employee_main extends CI_Controller
 				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 				$this->load->view('employee_self_service/my_loan', $data);
 
 
@@ -1199,6 +1343,12 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+
+				endif;
 
 
 		else:
@@ -1214,7 +1364,13 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
 
@@ -1236,7 +1392,7 @@ class Employee_main extends CI_Controller
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
 				$data['payroll'] = $this->payroll_configurations->get_payroll_month_year($tenant_id);
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$this->load->view('employee_self_service/my_new_loan', $data);
 
@@ -1244,6 +1400,13 @@ class Employee_main extends CI_Controller
 			elseif($user_type == 1):
 
 				redirect('/access_denied');
+
+			endif;
+
+			else:
+
+
+				redirect('subscription_expired');
 
 			endif;
 
@@ -1388,7 +1551,13 @@ class Employee_main extends CI_Controller
 		$tenant_id = $this->users->get_user($username)->tenant_id;
 
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
@@ -1402,7 +1571,7 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$check_resignation_attempts = $this->employees->get_employee_resignations($employee_id);
+				$check_resignation_attempts = $this->employees->get_employee_resignations($employee_id, $tenant_id);
 
 				$count = 0;
 
@@ -1431,9 +1600,9 @@ class Employee_main extends CI_Controller
 
 
 				$data['employee_id'] = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-					$data['resignations'] = $this->employees->get_resignations();
+					$data['resignations'] = $this->employees->get_resignations($tenant_id);
 						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
-						$data['notifications'] = $this->employees->get_notifications($employee_id);
+						$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -1450,6 +1619,10 @@ class Employee_main extends CI_Controller
 
 			endif;
 
+			else:
+				redirect('subscription_expired');
+				endif;
+
 
 		else:
 			redirect('/login');
@@ -1462,6 +1635,15 @@ class Employee_main extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if (isset($username)):
+
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
 			$user_type = $this->users->get_user($username)->user_type;
 
 			if ($user_type == 2 || $user_type == 3):
@@ -1488,7 +1670,8 @@ class Employee_main extends CI_Controller
 						$resignation_array = array(
 							'resignation_employee_id' => $resignation_employee_id,
 							'resignation_reason' => $resignation_reason,
-							'resignation_effective_date' => $resignation_effective_date
+							'resignation_effective_date' => $resignation_effective_date,
+							'tenant_id' => $tenant_id
 						);
 
 						$resignation_array = $this->security->xss_clean($resignation_array);
@@ -1501,7 +1684,8 @@ class Employee_main extends CI_Controller
 									'notification_employee_id'=> 0,
 									'notification_link'=> 'resignations',
 									'notification_type' => 'New Resignation Notice',
-									'notification_status'=> 0
+									'notification_status'=> 0,
+									'tenant_id' => $tenant_id
 							);
 
 							$this->employees->insert_notifications($notification_data);
@@ -1527,6 +1711,11 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 		else:
 			redirect('/login');
 		endif;
@@ -1541,7 +1730,13 @@ class Employee_main extends CI_Controller
 
 		if(isset($username)):
 
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			//$data['employees'] = $this->employees->view_employees();
 			$user_type = $this->users->get_user($username)->user_type;
 
@@ -1554,12 +1749,12 @@ class Employee_main extends CI_Controller
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 				$data['employee_id'] = $employee_id;
 
 
 
-				$data['queries'] = $this->employees->get_queries_employee($employee_id);
+				$data['queries'] = $this->employees->get_queries_employee($employee_id, $tenant_id);
 
 				$this->load->view('employee_self_service/my_queries', $data);
 
@@ -1569,6 +1764,11 @@ class Employee_main extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+				endif;
 
 
 		else:
