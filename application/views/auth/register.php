@@ -18,7 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 						<div class="card-header"><h4>Register</h4></div>
 
 						<div class="card-body">
-							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation" novalidate>
+							<form method="post" action="<?php echo site_url('register_a') ?>" id="register-form" enctype="multipart/form-data" class="needs-validation register-form" novalidate>
 								<div class="form-divider">
 									Your Business Details
 								</div>

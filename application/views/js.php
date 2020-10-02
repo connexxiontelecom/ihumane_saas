@@ -219,6 +219,6 @@
 		</script>
 		<script>
 			$(document).ready(function() {
-				$('form').parsley();
+				$('.register-form').parsley();
 			});
 		</script>

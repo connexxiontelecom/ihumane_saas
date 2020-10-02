@@ -62,9 +62,9 @@
                       <div class="tab-pane active p-3" id="personal-information" role="tabpanel">
                         <div class="modal-body">
                           <div class="chocolat-parent">
-                            <a href="<?php echo base_url()."/uploads/employee_passports/".$employee->employee_passport; ?>" class="chocolat-image" title="Click to view passport photo">
+                            <a href="<?php echo base_url()."/uploads/employee_passports/".$employee->employee_passport; ?>" class="chocolat-image" title="Passport Photo">
                               <figure class="figure">
-                                <img src="<?php echo base_url()."/uploads/employee_passports/".$employee->employee_passport; ?>" alt="" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+                                <img src="<?php echo base_url()."/uploads/employee_passports/".$employee->employee_passport; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
                                 <figcaption class="figure-caption">Most Recent Passport Photograph</figcaption>
                               </figure>
                             </a>
