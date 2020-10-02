@@ -7,6 +7,8 @@
 			<a href="<?php echo site_url() ?>"><img src="<?php echo base_url() ?>/assets/img/ihumane-logo-2.png" alt="logo" width="25" class="mb-5 mt-2"></a>
 		</div>
 		<ul class="sidebar-menu">
+
+	<?php if($active_plan == 1): ?>
 			<li class="menu-header">Dashboard</li>
 			<li class="dropdown <?php echo $this->uri->segment(1) == '' || $this->uri->segment(1) == 'home' ? 'active' : ''; ?>">
 				<a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Home</span></a>
@@ -226,6 +228,9 @@
 				<?php } ?>
 			</li>
 
+			<?php endif; ?>
+
+<?php if($user_data->user_type == 4): ?>
 			<li class="menu-header">Subscription Management</li>
 			<li class="dropdown <?php echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : ''; ?>">
 
@@ -235,7 +240,7 @@
 				</ul>
 
 			</li>
-
+<?php endif; ?>
 		</ul>
 
 

@@ -25,9 +25,15 @@ class Log extends CI_Controller
 
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
 			if($user_type == 1 || $user_type == 3 || $user_type == 4):
-				$tenant_id = $this->users->get_user($username)->tenant_id;
+
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
@@ -53,6 +59,12 @@ class Log extends CI_Controller
 				redirect('/access_denied');
 
 			endif;
+
+			else:
+
+				redirect('subscription_expired');
+
+				endif;
 		else:
 			redirect('/login');
 		endif;

@@ -34,6 +34,14 @@ class Subscription extends CI_Controller
 			$user_type = $this->users->get_user($username)->user_type;
 
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+			else:
+				$data['active_plan'] = 0;
+			endif;
 			if($user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
@@ -78,6 +86,17 @@ class Subscription extends CI_Controller
 			$user_type = $this->users->get_user($username)->user_type;
 
 			$tenant_id = $this->users->get_user($username)->tenant_id;
+
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+			else:
+				$data['active_plan'] = 0;
+				endif;
+
 			if($user_type == 4):
 				$permission = $this->users->check_permission($username);
 				$data['employee_management'] = $permission->employee_management;
