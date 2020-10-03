@@ -41,7 +41,7 @@ class Employee_main extends CI_Controller
 
 					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-						$terminations = $this->employees->get_employee_terminations($employee_id);
+						$terminations = $this->employees->get_employee_terminations($employee_id, $tenant_id);
 
 						if(!empty($terminations)):
 
@@ -59,7 +59,7 @@ class Employee_main extends CI_Controller
 							endif;
 
 
-					$resignations = $this->employees->get_employee_resignations($employee_id);
+					$resignations = $this->employees->get_employee_resignations($employee_id, $tenant_id);
 
 					if(!empty($resignations)):
 
@@ -117,15 +117,15 @@ class Employee_main extends CI_Controller
 
 
 				$data['user_data'] = $this->users->get_user($username);
-				$data['queries'] = $this->employees->get_queries_employee($employee_id);
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['queries'] = $this->employees->get_queries_employee($employee_id, $tenant_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
 				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
-				$data['memos'] = $this->employees->get_memos();
+				$data['memos'] = $this->employees->get_memos($tenant_id);
 				$data['specific_memos'] = $this->employees->get_my_memo($employee_id);
 				$data['appraisals'] = $this->employees->get_employee_appraisal($employee_id);
 				$data['appraisees'] = $this->employees->get_appraise_employees($employee_id);
-				$data['trainings'] = $this->employees->get_employee_training($employee_id);
+				$data['trainings'] = $this->employees->get_employee_training($employee_id, $tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -616,7 +616,7 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 				$data['histories'] = $this->employees->view_employee_history($employee_id);
 				$data['appraisals'] = $this->employees->get_appraise_employees($employee_id);
 
@@ -665,9 +665,9 @@ class Employee_main extends CI_Controller
 
 				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 
-				$data['notifications'] = $this->employees->get_notifications($employee_id);
+				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 
-				$data['questions'] = $this->employees->get_appraisal_questions($appraisal_id);
+				$data['questions'] = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 				$data['appraisal_id'] = $appraisal_id;
 
 
