@@ -90,11 +90,17 @@
                           <h4  class="media-title text-white"><?php echo $location?></h4>
                           <small class="text-job text-white"><?php echo $response->weather[0]->description?></small>
                           <h2><?php echo $response->main->temp?>&#176;</h2>
-                          <h6 class="text-white" id="timestamp"><?php echo date('F j, Y g:i:s a', now('Africa/Lagos'));?></h6>
+                          <h6 class="text-white" id="timestamp"><?php echo date('D j M, Y g:i:s a', now('Africa/Lagos'));?></h6>
                         </div>
                         <div class="media-right">
                           <a class="text-white" href="javascript:void(0)" data-toggle="modal" data-target="#details"><i class="text-white fa fa-ellipsis-h"></i></a>
                         </div>
+                      </div>
+                    <?php else:?>
+                      <div class="card-header" style="height: 195px; border-radius: 12px; !important;">
+                        <h1><?php echo date('D j')?></h1>
+                        <h4><?php echo date('F')?></h4>
+                        <h6 class="mt-2"><?php echo date('Y')?></h6>
                       </div>
 	                  <?php endif?>
                   </div>
@@ -133,67 +139,6 @@
                     </div>
                   </div>
                 </div>
-
-<!--                <div class="card">-->
-<!--                  <div class="card-header">-->
-<!--                    <h4>Employees On Leave</h4>-->
-<!--                  </div>-->
-<!--                  <div class="card-body">-->
-<!--                    --><?php //foreach ($leaves as $leave) :
-//                      if ($leave->leave_status == 2) :
-//                      endif;
-//
-//                      if ($leave->leave_status == 1) :
-//                    ?>
-<!--                        --><?php
-//                        $leave_end_date = new DateTime($leave->leave_end_date);
-//                        $leave_start_date = new DateTime($leave->leave_start_date);
-//                        $today = time();
-//                        $percentage_leave = ((($today - $leave_start_date->getTimestamp()) / ($leave_end_date->getTimestamp() - $leave_start_date->getTimestamp())) * 100);
-//                        ?>
-<!---->
-<!--                        <div class="mb-4">-->
-<!--                          <div class="text-small float-right font-weight-bold text-muted">--><?php //echo timespan($today, $leave_end_date->getTimestamp(), 2) . ' left' ?><!-- (--><?php //echo number_format($percentage_leave) . "%" ?><!-- completed)</div>-->
-<!--                                             <div class="text-small float-right font-weight-bold text-muted">--><?php ////echo number_format($percentage_leave, 1)."%"
-//                                                                                                                        ?>
-<!--                          </div>-->
-<!--                          <div class="font-weight-bold mb-1">--><?php //echo $leave->employee_first_name . " " . $leave->employee_last_name; ?><!--</div>-->
-<!--                          <div class="progress" data-height="3">-->
-<!--                            <div class="progress-bar" role="progressbar" data-width="--><?php //echo $percentage_leave . "%" ?><!--" aria-valuenow="--><?php //echo $percentage_leave; ?><!--" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--                          </div>-->
-<!--                          <div class="text-small text-muted">-->
-<!--                            --><?php //echo $leave->leave_name; ?>
-<!--                            <div class="bullet"></div>-->
-<!--                            <span class="text-primary">--><?php //echo $leave->leave_end_date; ?><!--</span>-->
-<!--                            <div class="bullet"></div>-->
-<!--                            <span class="text-warning">--><?php //echo "On Leave";  ?><!--</span>-->
-<!--                          </div>-->
-<!--                        </div>-->
-<!--                      --><?php
-//                      endif;
-//                      if ($leave->leave_status == 0) :
-//                      ?>
-<!--                        --><?php
-//                        $leave_end_date = new DateTime($leave->leave_end_date);
-//                        $leave_start_date = new DateTime($leave->leave_start_date);
-//                        $today = time();
-//                        $percentage_leave = ((($today - $leave_start_date->getTimestamp()) / ($leave_end_date->getTimestamp() - $leave_start_date->getTimestamp())) * 100);
-//                        ?>
-<!---->
-<!--                        <div class="mb-4">-->
-<!--                          <div class="badge badge-pill badge-danger mb-1 float-right">--><?php //echo "Leave Pending";  ?><!--</div>-->
-<!--                          <div class="font-weight-bold mb-1">--><?php //echo $leave->employee_first_name . " " . $leave->employee_last_name; ?><!--</div>-->
-<!--                          <div class="progress" data-height="3">-->
-<!---->
-<!--                            <div class="progress-bar" role="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--                          </div>-->
-<!--                          <div class="text-small text-muted">--><?php //echo $leave->leave_name; ?><!-- <div class="bullet"></div> <span class="text-primary">--><?php //echo $leave->leave_end_date; ?><!--</span></div>-->
-<!--                        </div>-->
-<!--                    --><?php
-//                      endif;
-//                    endforeach; ?>
-<!--                  </div>-->
-<!--                </div>-->
               </div>
               <div class="col-lg-4 col-md-12 col-12 col-sm-12">
                 <div class="list-group-item flex-column align-items-start p-4 mb-4" style="border-radius: 12px; border: none">
@@ -260,61 +205,6 @@
                     <?php endif?>
                   </div>
                 </div>
-
-
-
-
-<!--                <div class="list-group-item flex-column align-items-start p-4" style="border-radius: 12px; border: none">-->
-<!--                  <div class="d-flex w-100 justify-content-between">-->
-<!--                    <h5 class="mb-4">Loan Management</h5>-->
-<!--                    <div class="dropleft">-->
-<!--                      <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>-->
-<!--                      <div class="dropdown-menu">-->
-<!--                        <a class="dropdown-item has-icon" href="#"><i class="fas fa-eye"></i>View Employee</a>-->
-<!--                        <a class="dropdown-item has-icon" href="#"><i class="fas fa-edit"></i>Update Employee</a>-->
-<!--                        <a class="dropdown-item has-icon" href="#"><i class="fas fa-question"></i>Employee Queries</a>-->
-<!--                        <div class="dropdown-divider"></div>-->
-<!--                        <a class="dropdown-item has-icon text-danger" href="#"><i class="fas fa-times"></i>Terminate Employee</a>-->
-<!--                      </div>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                  <p class="mb-1 font-weight-600">0 Loans Are Running</p>-->
-<!--                  <small>0 Pending Loan Requests</small>-->
-<!--                </div>-->
-
-
-                <!--                <div class="card">-->
-<!--                  <div class="card-header">-->
-<!--                    <h4>Present Employees</h4>-->
-<!--                  </div>-->
-<!--                  <div class="card-body">-->
-<!--                    <ul class="list-unstyled list-unstyled-border">-->
-<!--                      --><?php //$count = 0;
-//                      foreach ($present_employees as $present_employee) :
-//                        if ($count <= 5) :
-//                      ?>
-<!--                          <li class="media">-->
-<!--                            <img class="mr-3 rounded-circle" width="50" src="--><?php //echo base_url(); ?><!--uploads/employee_passports/--><?php //echo $present_employee->employee_passport; ?><!--" alt="avatar">-->
-<!--                            <div class="media-body">-->
-<!--                                                 <div class="float-right text-primary">--><?php ////echo $present_employee->employee_first_name." ".$present_employee->employee_last_name;
-//                                                                                                      ?>
-<!--                              </div>-->
-<!--                              <div class="media-title">--><?php //echo $present_employee->employee_first_name . " " . $present_employee->employee_last_name; ?><!--</div>-->
-<!--                              <span class="text-small text-muted">--><?php //echo $present_employee->employee_biometrics_login_time; ?><!--</span>-->
-<!--                            </div>-->
-<!--                          </li>-->
-<!--                      --><?php
-//                          $count++;
-//                        endif;
-//                      endforeach; ?>
-<!--                    </ul>-->
-<!--                    <div class="text-center pt-1 pb-1">-->
-<!--                      <a href="--><?php //echo site_url('today_present') ?><!--" class="btn btn-primary btn-lg btn-round">-->
-<!--                        View All-->
-<!--                      </a>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
               </div>
             </div>
             <?php endif;?>
@@ -391,9 +281,6 @@
               </div>
               <div class="col-lg-4 col-md-12 col-12 col-sm-12">
                 <div class="card" style="border-radius: 12px">
-<!--                  <div class="card-header">-->
-<!--                    <h4>Employee Leaves</h4>-->
-<!--                  </div>-->
                   <div class="card-body">
                     <div class="summary">
                       <div class="summary-info">
@@ -404,7 +291,6 @@
                         </div>
                       </div>
                       <div class="summary-item">
-<!--                        --><?php //print_r($upcoming_leaves[0])?>
                         <h6>Upcoming Leaves</h6>
                         <ul class="list-unstyled list-unstyled-border">
                           <?php if (!empty($upcoming_leaves)):?>

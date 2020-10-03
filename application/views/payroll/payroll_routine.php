@@ -25,7 +25,8 @@
                   <h4>Payroll Routine</h4>
                 </div>
                 <div class="card-body">
-	                <?php if(!empty($payroll_year)): ?>
+	                <?php if(!empty($payroll_year)):
+                    if($payroll_year->payroll_month_year_month): ?>
                     <div class="empty-state" data-height="400">
                       <div class="empty-state-icon">
                         <i class="fas fa-coins"></i>
@@ -43,14 +44,15 @@
                       <div class="empty-state-icon">
                         <i class="fas fa-question"></i>
                       </div>
-                      <h2>We couldn't find any data</h2>
+                      <h2>No Payroll Month</h2>
                       <p class="lead">
                         Sorry we can't find any data, to get rid of this message, make at least 1 entry.
                       </p>
                       <a href="#" class="btn btn-primary mt-4">Create new One</a>
                       <a href="#" class="mt-4 bb">Need Help?</a>
                     </div>
-	                <?php endif;?>
+	                <?php endif;
+	                endif;?>
                 </div>
               </div>
             </div>
