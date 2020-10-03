@@ -1186,7 +1186,7 @@ class Home extends CI_Controller
 
 	public function timestamp(){
     date_default_timezone_set('Africa/Lagos');
-    echo $timestamp = date('F j, Y g:i:s a');
+    echo $timestamp = date('D j M, Y g:i:s a');
   }
 
   public function get_income_statistics() {

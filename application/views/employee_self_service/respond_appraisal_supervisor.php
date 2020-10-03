@@ -4,6 +4,8 @@ $CI =& get_instance();
 $CI->load->model('hr_configurations');
 $CI->load->model('payroll_configurations');
 $CI->load->model('employees');
+$username = $this->session->userdata('user_username');
+$tenant_id = $this->users->get_user($username)->tenant_id;
 
 ?>
 
@@ -20,7 +22,7 @@ $CI->load->model('employees');
 		<div class="main-content">
 			<section class="section">
 				<div class="section-header">
-					<h1>Appraise <?php echo $CI->employees->get_appraisal($appraisal_id)->employee_last_name." ". $CI->employees->get_appraisal($appraisal_id)->employee_first_name ?> </h1>
+					<h1>Appraise <?php echo $CI->employees->get_appraisal($appraisal_id, $tenant_id)->employee_last_name." ". $CI->employees->get_appraisal($appraisal_id, $tenant_id)->employee_first_name ?> </h1>
 					<div class="section-header-breadcrumb">
 						<div class="breadcrumb-item active"><a href="<?php echo base_url(); ?>">Dashboard</a></div>
 						<div class="breadcrumb-item">Appraise Employees</div>
