@@ -24,8 +24,53 @@ class Users extends CI_Model
 		$this->db->from('subscription');
 		$this->db->where('subscription_tenant_id', $tenant_id);
 		$this->db->where('subscription_status', 1);
+
 		$query = $this->db->get();
 		return $query->result();
+
+	}
+
+	public function get_sub_true_status($tenant_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_tenant_id', $tenant_id);
+		$this->db->where('subscription_status >', 0);
+
+		return $this->db->get()->result();
+	}
+
+	public function get_sub($tenant_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_tenant_id', $tenant_id);
+		$this->db->join('plan', 'plan.plan_id = subscription.subscription_plan_id');
+		$this->db->order_by('subscription_id', 'desc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function update_subscription($subscription_id, $subscription_data){
+		$this->db->where('subscription.subscription_id', $subscription_id);
+		$this->db->update('subscription', $subscription_data);
+		return true;
+	}
+
+	public function get_sub_details($sub_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_id', $sub_id);
+		return $this->db->get()->row();
+	}
+
+
+
+	public function get_tenant($tenant_id){
+		$this->db->select('*');
+		$this->db->from('tenant');
+		$this->db->where('tenant_id', $tenant_id);
+		$query = $this->db->get();
+		return $query->row();
+
 
 	}
 
@@ -77,17 +122,17 @@ class Users extends CI_Model
 	public function get_user($username){
 		$this->db->select('*');
 		$this->db->from('user');
-		//$this->db->where('user_status >', 0);
 		$this->db->where('user_username', $username);
 		$query = $this->db->get();
 		return $query->row();
 	}
 
-	public function get_user_id($user_id){
+	public function get_user_id($user_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('user');
 		$this->db->join('permission', 'permission.username = user.user_username');
 		$this->db->where('user_id', $user_id);
+		$this->db->where('user.tenant_id', $tenant_id);
 		$query = $this->db->get();
 		return $query->row();
 	}

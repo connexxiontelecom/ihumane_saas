@@ -16,6 +16,7 @@
 		<script src="<?php echo base_url(); ?>assets/modules/offline/js/offline.min.js"></script>
 
 		<script src="<?php echo base_url(); ?>assets/js/stis.js"></script>
+		<script src="<?php echo base_url(); ?>assets/js/sty.js"></script>
 		<script src="https://js.paystack.co/v1/inline.js"></script>
 		<!-- JS Libraies -->
 		<script src="<?php echo base_url(); ?>assets/modules/owlcarousel2/dist/owl.carousel.min.js"></script>

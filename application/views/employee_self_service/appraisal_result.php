@@ -26,7 +26,7 @@
 						<div class="breadcrumb-item">Appraisal Result</div>
 					</div>
 				</div>
-				<?php $appraisal = $CI->employees->_get_appraisal($appraisal_id); ?>
+				<?php $appraisal = $CI->employees->_get_appraisal($appraisal_id, $tenant_id); ?>
 				<div class="section-body">
 					<div class="section-title">All About Appraisal Results</div>
 					<p class="section-lead">You can view and print appraisal results here</p>

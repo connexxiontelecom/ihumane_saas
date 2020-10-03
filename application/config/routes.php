@@ -19,6 +19,9 @@ $route['timestamp'] = 'home/timestamp';
 
 $route['check_email'] = 'home/check_email';
 $route['check_username'] = 'home/check_username';
+$route['check_user_email'] = 'home/check_user_email';
+$route['check_user_username'] = 'home/check_user_username';
+
 
 $route['income_stats'] = 'home/get_income_statistics';
 $route['deduction_stats'] = 'home/get_deduction_statistics';
@@ -309,6 +312,10 @@ $route['get_deduction_payments'] = 'employee_main/get_deduction_payments';
 $route['change_password'] = 'employee_main/change_password';
 $route['change_password_'] = 'employee_main/change_password_';
 $route['get_notifications'] = 'employee_main/get_notifications';
+
+$route['new_subscription'] = 'subscription/new_subscription';
+$route['new_subscription_a'] = 'home/new_subscription_a';
+$route['subscription_expired'] = 'home/subscription_expired';
 
 
 

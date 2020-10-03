@@ -7,6 +7,8 @@
 			<a href="<?php echo site_url() ?>"><img src="<?php echo base_url() ?>/assets/img/ihumane-logo-2.png" alt="logo" width="25" class="mb-5 mt-2"></a>
 		</div>
 		<ul class="sidebar-menu">
+
+	<?php if($active_plan == 1): ?>
 			<li class="menu-header">Dashboard</li>
 			<li class="dropdown <?php echo $this->uri->segment(1) == '' || $this->uri->segment(1) == 'home' ? 'active' : ''; ?>">
 				<a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Home</span></a>
@@ -225,7 +227,23 @@
 				</ul>
 				<?php } ?>
 			</li>
+
+			<?php endif; ?>
+
+<?php if($user_data->user_type == 4): ?>
+			<li class="menu-header">Subscription Management</li>
+			<li class="dropdown <?php echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : ''; ?>">
+
+				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-fingerprint"></i> <span>Subscription</span></a>
+				<ul class="dropdown-menu">
+					<li class="<?php echo $this->uri->segment(1) == 'subscription' ? 'active' : '' ?>"><a class="nav-link" href="<?php echo site_url('subscription') ?>"> Your Subscription </a></li>
+				</ul>
+
+			</li>
+<?php endif; ?>
 		</ul>
+
+
 
 		<div class="mt-4 mb-4 p-3 hide-sidebar-mini">
 			<a href="<?php echo base_url('logout'); ?>" class="btn btn-primary btn-lg btn-block btn-icon-split">
