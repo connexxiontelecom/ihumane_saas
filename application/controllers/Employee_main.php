@@ -1830,7 +1830,7 @@ class Employee_main extends CI_Controller
 					$data['responses'] = $this->employees->get_query_response($query_id, $tenant_id);
 					$data['user_data'] = $this->users->get_user($username);
 
-					$data['employee'] = $this->employees->get_employee_by_unique($username);
+					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
 
 
@@ -2588,30 +2588,24 @@ endif;
 
 		foreach ($chats as $chat):
 		if($chat->chat_sender_id == $employee->employee_id && $chat->chat_reciever_id == $employee_details->employee_id): ?>
-		<div class="chat-item chat-right" style="">
-		<img src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee->employee_passport; ?>">
-			<div class="chat-details">
-			<div class="chat-text"><?php echo $chat->chat_body; ?></div>
-			<div class="chat-time"><?php echo date('F j, Y g:i a', strtotime($chat->chat_time)); ?></div>
-						</div>
-		</div>
+      <div class="chat-item chat-right" style="">
+        <img height="30" width="30" class="rounded" src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee->employee_passport; ?>">
+        <div class="chat-details">
+          <div class="chat-text"><?php echo $chat->chat_body; ?></div>
+          <div class="chat-time"><?php echo date('F j, Y g:i a', strtotime($chat->chat_time)); ?></div>
+        </div>
+      </div>
 	<?php
 		endif;
 		if($chat->chat_sender_id == $employee_details->employee_id && $chat->chat_reciever_id == $employee->employee_id):
 															?>
-			<div class="chat-item chat-left" style="">
-
-																<img src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee_details->employee_passport; ?>">
-
-																<div class="chat-details">
-																	<div class="chat-text"><?php echo $chat->chat_body; ?></div>
-																	<div class="chat-time"><?php echo date('F j, Y g:i a', strtotime($chat->chat_time)); ?></div>
-																</div>
-
-
-
-															</div>
-
+      <div class="chat-item chat-left" style="">
+        <img height="30" width="30" class="rounded" src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee_details->employee_passport; ?>">
+        <div class="chat-details">
+          <div class="chat-text"><?php echo $chat->chat_body; ?></div>
+          <div class="chat-time"><?php echo date('F j, Y g:i a', strtotime($chat->chat_time)); ?></div>
+        </div>
+      </div>
 		<?php
 		endif;
 
@@ -2706,10 +2700,10 @@ endif;
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['employee'] = $this->employees->get_employee_by_unique($username);
-				$employee_id = $this->employees->get_employee_by_unique($username)->employee_id;
+				$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+				$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 				$data['employee_id'] = $employee_id;
-				$data['documents'] = $this->hr_configurations->view_hr_documents();
+				$data['documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
 
 				$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
 

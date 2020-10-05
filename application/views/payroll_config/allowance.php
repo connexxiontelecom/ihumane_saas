@@ -50,7 +50,7 @@
                             <td><?php echo $allowance->payment_definition_payment_name; ?></td>
                             <td><?php echo $allowance->salary_structure_category_name; ?></td>
                             <td><?php echo $allowance->payment_definition_payment_code; ?></td>
-                            <td><?php echo $allowance->salary_structure_allowance_amount 	; ?></td>
+                            <td><?php echo number_format($allowance->salary_structure_allowance_amount); ?></td>
                             <td class="text-center" style="width: 9px">
                               <div class="dropdown">
                                 <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
