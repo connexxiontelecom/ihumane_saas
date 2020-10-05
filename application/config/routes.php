@@ -317,11 +317,11 @@ $route['new_subscription'] = 'subscription/new_subscription';
 $route['new_subscription_a'] = 'home/new_subscription_a';
 $route['subscription_expired'] = 'home/subscription_expired';
 
-
+$route['new_options'] = 'app_configuration/new_options';
+$route['update_options'] = 'app_configuration/update_options';
 
 
 // back office routes
-
 $route['backoffice'] = 'backoffice/index';
 $route['backoffice_login'] = 'backoffice/auth_login';
 $route['backoffice_logout'] = 'backoffice/logout';
