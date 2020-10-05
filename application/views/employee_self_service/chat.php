@@ -43,7 +43,6 @@
 									if($employee_details->employee_id !== $employee_id):
 									?>
 								<li class="media">
-
 									<a class="link" href="#" data-rel="<?php echo $employee_details->employee_id; ?>">
                     <div class="media">
                       <img alt="image" class="mr-3 rounded" width="30" height="30" src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee_details->employee_passport; ?>">
@@ -51,7 +50,6 @@
                         <div class="mt-0 mb-1 font-weight-bold"><?php echo $employee_details->employee_first_name." ". $employee_details->employee_last_name; ?></div>
                       </div>
                     </div>
-
 									</a>
 								</li>
 									<?php

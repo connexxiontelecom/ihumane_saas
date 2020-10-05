@@ -17,6 +17,7 @@ class User extends CI_Controller
 	}
 
 	public function user (){
+		$data['active_plan'] = 1;
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
