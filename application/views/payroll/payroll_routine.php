@@ -40,17 +40,16 @@
                       <a href="<?php echo site_url('payroll_month_year') ?>" class="mt-4 bb">Set Payroll Month/Year</a>
                     </div>
                   <?php else: ?>
-                    <div class="empty-state" data-height="400">
-                      <div class="empty-state-icon">
-                        <i class="fas fa-question"></i>
+                      <div class="empty-state" data-height="400">
+                        <div class="empty-state-icon">
+                          <i class="fas fa-question"></i>
+                        </div>
+                        <h2>No Payroll Data</h2>
+                        <p class="lead">
+                          Sorry we can't find any payroll month data, to get rid of this message, set payroll month/year below.
+                        </p>
+                        <a href="<?php echo site_url('payroll_month_year') ?>" class="btn btn-primary mt-4">Set Payroll Month/Year</a>
                       </div>
-                      <h2>No Payroll Month</h2>
-                      <p class="lead">
-                        Sorry we can't find any data, to get rid of this message, make at least 1 entry.
-                      </p>
-                      <a href="#" class="btn btn-primary mt-4">Create new One</a>
-                      <a href="#" class="mt-4 bb">Need Help?</a>
-                    </div>
 	                <?php endif;
 	                endif;?>
                 </div>
