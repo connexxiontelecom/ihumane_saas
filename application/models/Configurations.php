@@ -86,7 +86,6 @@ class Configurations extends CI_Model
 		$this->dbforge->create_table('tax_rate_'.$i, TRUE);
 	}
 
-
 	public function create_loans_table($i){
 
 		$this->dbutil->optimize_table('loans_'.$i);
@@ -323,6 +322,29 @@ class Configurations extends CI_Model
 		$this->db->insert('subscription', $subscription_data);
 		return true;
 	}
+
+	public function view_config($tenant_id){
+
+		$this->db->select('*');
+		$this->db->from('configuration');
+		$this->db->where('tenant_id', $tenant_id);
+		return $this->db->get()->row();
+	}
+
+	public function insert_config($config_data){
+
+		$this->db->insert('configuration', $config_data);
+		return true;
+	}
+
+	public function update_configuration($config_id, $config_data){
+		$this->db->where('configuration.configuration_id', $config_id);
+		$this->db->update('configuration', $config_data);
+		return true;
+
+	}
+
+
 
 
 }

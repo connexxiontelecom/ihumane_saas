@@ -141,9 +141,14 @@
 			</li>
 
       <li class="dropdown">
+		  <?php if($configuration == 1){  ?>
 				<a href="#" class="nav-link has-dropdown"><i class="fas fa-laptop"></i> <span>App Config</span></a>
 				<ul class="dropdown-menu">
+					<li class="<?php echo $this->uri->segment(1) == 'app_configuration' ? 'active' : '' ?>"><a class="nav-link" href="<?php echo site_url('app_configuration') ?>">Basic Configuration</a></li>
+
 				</ul>
+
+		  <?php } ?>
 			</li>
 
 			<li class="dropdown <?php echo
