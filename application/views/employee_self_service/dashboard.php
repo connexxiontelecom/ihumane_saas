@@ -385,23 +385,60 @@
 <?php if(!empty($memos)): foreach($memos as $memo): ?>
   <div class="modal fade" id="view_<?php echo $memo->memo_id ?>" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
       <div class="modal-content">
+
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle2">Announcement</h5>
-          <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+			<figure class="figure" style="float: right">
+				<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_logo; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+
+			</figure><br>
+
+
+			<a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="text-dark">&times;</span>
           </a>
         </div>
+
         <div class="modal-body">
-          <div class="form-group">
-            <label>Subject</label>
-            <input type="text" class="form-control-plaintext" readonly value="<?php echo $memo->memo_subject?>"/>
+			<h3 class="modal-title" id="exampleModalLongTitle2">Internal Memo</h3> <br>
+
+			<div class="form-group">
+				<h5><?php echo $memo->memo_subject; ?></h5>
+
           </div>
           <div class="form-group">
-            <label>Announcement Body</label>
-	          <p><?php echo $memo->memo_body?></p>
+
+	          <?php echo $memo->memo_body?>
+
+
           </div>
+
+			<div class="form-group row">
+
+				<div class="col-sm-6">
+					<figure class="figure">
+						<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_hr; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+						<figcaption class="figure-caption">HR Signature</figcaption>
+					</figure>
+				</div>
+
+				<div class="col-sm-4">
+
+				</div>
+
+				<div class="col-sm-2">
+					<figure class="figure">
+						<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_md; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+						<figcaption class="figure-caption">MD Signature</figcaption>
+					</figure>
+				</div>
+			</div>
         </div>
+
+
+
+
         <div class="modal-footer bg-whitesmoke">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
@@ -415,6 +452,10 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
+			<figure class="figure" style="float: right">
+				<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_logo; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+
+			</figure><br>
           <h5 class="modal-title" id="exampleModalLongTitle2">Directive</h5>
           <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="text-dark">&times;</span>
@@ -429,6 +470,27 @@
             <label>Directive Body</label>
             <p><?php echo $memo->specific_memo_body?></p>
           </div>
+
+			<div class="form-group row">
+
+				<div class="col-sm-6">
+					<figure class="figure">
+						<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_hr; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+						<figcaption class="figure-caption">HR Signature</figcaption>
+					</figure>
+				</div>
+
+				<div class="col-sm-4">
+
+				</div>
+
+				<div class="col-sm-2">
+					<figure class="figure">
+						<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_md; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+						<figcaption class="figure-caption">MD Signature</figcaption>
+					</figure>
+				</div>
+			</div>
         </div>
         <div class="modal-footer bg-whitesmoke">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
