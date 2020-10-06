@@ -20,6 +20,7 @@ class Employee_main extends CI_Controller
 		$this->load->model('loans');
 		$this->load->model('payroll_configurations');
 		$this->load->model('chats');
+		$this->load->model('configurations');
 	}
 
 	public function index(){
@@ -130,6 +131,8 @@ class Employee_main extends CI_Controller
 				$data['appraisals'] = $this->employees->get_employee_appraisal($employee_id, $tenant_id);
 				$data['appraisees'] = $this->employees->get_appraise_employees($employee_id, $tenant_id);
 				$data['trainings'] = $this->employees->get_employee_training($employee_id, $tenant_id);
+
+				$data['configurations'] = $this->configurations->view_config($tenant_id);
 
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -1832,7 +1835,7 @@ class Employee_main extends CI_Controller
 
 					$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
 
-
+					$data['configurations'] = $this->configurations->view_config($tenant_id);
 
 					$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
 

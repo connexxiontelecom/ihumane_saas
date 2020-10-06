@@ -54,8 +54,13 @@
 												<div class="ticket-sender-picture img-shadow">
 													<img src="<?php echo base_url(); ?>uploads/employee_passports/<?php echo $employee->employee_passport; ?>" alt="image">
 												</div>
+
+
+
 												<div class="ticket-detail">
+
 													<div class="ticket-title">
+
 														<h4><?php echo $query->query_subject; ?></h4>
 													</div>
 													<div class="ticket-info">
@@ -72,7 +77,32 @@
 												</div>
 											</div>
 											<div class="ticket-description">
+												<figure class="figure" style="float: left">
+													<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_logo; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+
+												</figure>
 												<?php echo $query->query_body; ?>
+
+												<div style="margin: 10%;" class="form-group row">
+
+													<div class="col-sm-6">
+														<figure class="figure">
+															<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_hr; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+															<figcaption class="figure-caption">HR Signature</figcaption>
+														</figure>
+													</div>
+
+													<div class="col-sm-4">
+
+													</div>
+
+													<div class="col-sm-2">
+														<figure class="figure">
+															<img src="<?php echo base_url()."/uploads/config/".$configurations->configuration_md; ?>" alt="" width="100" height="100" class="figure-img img-fluid rounded mx-auto d-block w-80 img-thumbnail">
+															<figcaption class="figure-caption">MD Signature</figcaption>
+														</figure>
+													</div>
+												</div>
 												<div class="ticket-divider"></div>
                         <div id="query">
 												<?php
