@@ -148,6 +148,7 @@ $route['terminations'] = 'employee/terminations';
 $route['resignations'] = 'employee/resignations';
 $route['approve_resignation/:num'] = 'employee/approve_resignation/$1';
 $route['discard_resignation/:num'] = 'employee/discard_resignation/$1';
+$route['employee_queries'] = 'employee/employee_queries';
 $route['query_employee/:num'] = 'employee/query_employee/$1';
 $route['new_query'] = 'employee/new_query';
 $route['view_query/:num'] = 'employee/view_query/$1';
@@ -332,6 +333,7 @@ $route['update_plan'] = 'backoffice/update_plan';
 $route['get_plan'] = 'backoffice/get_plan';
 $route['backoffice_404'] = 'backoffice/error_404';
 
+$route['sendemail'] = 'email/htmlmail';
 
 
 

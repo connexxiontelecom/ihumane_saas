@@ -4224,5 +4224,42 @@ class Employee extends CI_Controller
 		endif;
 	}
 
+  public function employee_queries() {
+    $username = $this->session->userdata('user_username');
+    if(isset($username)):
+      $tenant_id = $this->users->get_user($username)->tenant_id;
+	  $active_plans = $this->users->get_sub_true_status($tenant_id);
+	  if(!empty($active_plans)):
+	    $data['active_plan'] = 1;
+        $user_type = $this->users->get_user($username)->user_type;
+        if($user_type == 1 || $user_type == 3):
+        $permission = $this->users->check_permission($username);
+        $data['employee_management'] = $permission->employee_management;
+        $data['payroll_management'] = $permission->payroll_management;
+        $data['biometrics'] = $permission->biometrics;
+        $data['user_management'] = $permission->user_management;
+        $data['configuration'] = $permission->configuration;
+        $data['payroll_configuration'] = $permission->payroll_configuration;
+        $data['hr_configuration'] = $permission->hr_configuration;
+        $data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+        if($permission->employee_management == 1):
+          $data['user_data'] = $this->users->get_user($username);
+          $data['queries'] = $this->employees->get_queries($tenant_id);
+          $data['csrf_name'] = $this->security->get_csrf_token_name();
+          $data['csrf_hash'] = $this->security->get_csrf_hash();
+          $this->load->view('employee/employee_queries', $data);
+        else:
+          redirect('/access_denied');
+        endif;
+        else:
+          redirect('/access_denied');
+        endif;
+	  else:
+        redirect('subscription_expired');
+	  endif;
+    else:
+      redirect('/login');
+    endif;
+  }
 
 }
