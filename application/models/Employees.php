@@ -696,4 +696,13 @@ class Employees extends CI_Model
     return $this->db->count_all_results();
   }
 
+	public function get_queries($tenant_id) {
+		$this->db->select('*');
+		$this->db->from('query');
+		$this->db->join('employee', 'employee.employee_id = query.query_employee_id');
+		$this->db->order_by('query.query_id', 'DESC');
+		$this->db->where('query.tenant_id', $tenant_id);
+		return $this->db->get()->result();
+	}
+
 }
