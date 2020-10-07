@@ -30,7 +30,7 @@ class Backoffice extends CI_Controller
 
 				//$permission = $this->backoffices->check_permission($username);
 //				$data['employee_management'] = $permission->employee_management;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, 0);
 //				$data['payroll_management'] = $permission->payroll_management;
 //				$data['biometrics'] = $permission->biometrics;
 //				$data['user_management'] = $permission->user_management;
@@ -40,10 +40,10 @@ class Backoffice extends CI_Controller
 //				$data['configuration'] = $permission->configuration;
 				$data['user_data'] = $this->backoffices->get_user($username);
 
-				$data['employees'] = $this->employees->view_employees();
+				//$data['employees'] = $this->employees->view_employees();
 				//$data['backoffices'] = $this->backoffices->view_backoffices();
-				$data['departments'] = $this->hr_configurations->view_departments();
-				$data['leaves'] = $this->employees->get_employees_leaves();
+				//$data['departments'] = $this->hr_configurations->view_departments();
+				//$data['leaves'] = $this->employees->get_employees_leaves();
 
 				$date = date('Y-m-d', time());
 				//$data['present_employees'] = $this->biometric->check_today_attendance($date);
@@ -223,6 +223,7 @@ class Backoffice extends CI_Controller
 
 
 	public function error_404(){
+
 		$username = $this->session->userdata('username');
 
 		if(isset($username)):
@@ -245,7 +246,7 @@ class Backoffice extends CI_Controller
 		if(isset($username)):
 
 
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, 0);
 
 			$data['plans'] = $this->backoffices->get_plans();
 
@@ -274,7 +275,7 @@ class Backoffice extends CI_Controller
 		if(isset($username)):
 
 
-			$data['notifications'] = $this->employees->get_notifications(0);
+			$data['notifications'] = $this->employees->get_notifications(0, 0);
 
 			$data['user_data'] = $this->backoffices->get_user($username);
 			$data['csrf_name'] = $this->security->get_csrf_token_name();
@@ -427,4 +428,166 @@ class Backoffice extends CI_Controller
 		echo json_encode($this->backoffices->get_plan($plan_id));
 
 	}
+
+	public function active_subscriptions(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+
+			$data['notifications'] = $this->employees->get_notifications(0, 0);
+			$data['active_subscriptions'] = $this->backoffices->view_active_subscriptions();
+
+			$data['user_data'] = $this->backoffices->get_user($username);
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			//$date = date('Y-m-d', time());
+
+			$this->load->view('backoffice/active_subscriptions', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+	}
+
+	public function update_subscription(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+			$method = $this->input->server('REQUEST_METHOD');
+			if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+				extract($_POST);
+
+				$subscription_detail = $this->backoffices->get_subscription($subscription_id);
+
+				if($subscription_end_date < $subscription_detail->subscription_end_date || $subscription_end_date < $subscription_detail->subscription_start_date):
+
+					$msg = array(
+						'msg'=> 'Please enter a date greater than End Date and Start Date',
+						'location' => site_url('active_subscriptions'),
+						'type' => 'warning'
+
+					);
+					$this->load->view('swal', $msg);
+
+					else:
+
+					$subscription_array = array(
+
+					'subscription_end_date' => $subscription_end_date
+				);
+
+				$subscription_array = $this->security->xss_clean($subscription_array);
+
+				$query = $this->backoffices->update_subscription($subscription_array, $subscription_id);
+
+				if($query == true):
+
+					$msg = array(
+						'msg'=> 'Subscription Extended Successfully',
+						'location' => site_url('active_subscriptions'),
+						'type' => 'success'
+
+					);
+					$this->load->view('swal', $msg);
+
+				else:
+					$msg = array(
+						'msg'=> 'An Error Occurred',
+						'location' => site_url('active_subscriptions'),
+						'type' => 'error'
+
+					);
+					$this->load->view('swal', $msg);
+
+				endif;
+
+				endif;
+
+			else:
+
+				redirect('backoffice_404');
+
+
+			endif;
+
+
+
+		//$this->load->view('backoffice/new_plan', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+
+	}
+
+	public function expiring_subscriptions(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+
+			$data['notifications'] = $this->employees->get_notifications(0, 0);
+			$data['subscriptions'] = $this->backoffices->view_subscriptions();
+
+			$data['user_data'] = $this->backoffices->get_user($username);
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			//$date = date('Y-m-d', time());
+
+			$this->load->view('backoffice/expiring_subscriptions', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+	}
+
+	public function tenants(){
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+
+			$data['notifications'] = $this->employees->get_notifications(0, 0);
+			$data['tenants'] = $this->backoffices->get_tenants();
+
+			$data['user_data'] = $this->backoffices->get_user($username);
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			//$date = date('Y-m-d', time());
+
+			$this->load->view('backoffice/tenants', $data);
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+
+	}
+
+
 }
