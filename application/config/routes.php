@@ -331,6 +331,12 @@ $route['add_plan'] = 'backoffice/add_plan';
 $route['update_plan'] = 'backoffice/update_plan';
 $route['get_plan'] = 'backoffice/get_plan';
 $route['backoffice_404'] = 'backoffice/error_404';
+$route['active_subscriptions'] = 'backoffice/active_subscriptions';
+$route['expiring_subscriptions'] = 'backoffice/expiring_subscriptions';
+$route['update_subscription'] = 'backoffice/update_subscription';
+$route['tenants'] = 'backoffice/tenants';
+$route['tenant_subscriptions/:num'] = 'backoffice/tenant_subscriptions/$1';
+
 
 
 

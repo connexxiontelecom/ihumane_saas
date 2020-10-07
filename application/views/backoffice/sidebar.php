@@ -11,7 +11,7 @@
 			<li class="dropdown <?php echo $this->uri->segment(1) == '' || $this->uri->segment(1) == 'home' ? 'active' : ''; ?>">
 				<a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Home</span></a>
 				<ul class="dropdown-menu">
-					<li class="<?php echo $this->uri->segment(1) == '' || $this->uri->segment(1) == 'home' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo base_url(); ?>">Dashboard</a></li>
+					<li class="<?php echo $this->uri->segment(1) == '' || $this->uri->segment(1) == 'home' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo base_url('backoffice'); ?>">Dashboard</a></li>
 				</ul>
 			</li>
 			<li class="menu-header">Tenants Operations</li>
@@ -24,10 +24,8 @@
 				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>Tenants</span></a>
 				<ul class="dropdown-menu">
 
-          <li class="<?php echo $this->uri->segment(1) == 'employee' || $this->uri->segment(1) == 'view_employee' || $this->uri->segment(1) == 'update_employee' || $this->uri->segment(1) == 'query_employee' || $this->uri->segment(1) == 'view_query' || $this->uri->segment(1) == 'terminate_employee' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee') ?>"> All Tenants</a></li>
-          <li class="<?php echo $this->uri->segment(1) == 'employee_transfer' || $this->uri->segment(1) == 'new_employee_transfer' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_transfer') ?>"> Active Tenants</a></li>
-          <li class="<?php echo $this->uri->segment(1) == 'employee_leave' || $this->uri->segment(1) == 'new_employee_leave' || $this->uri->segment(1) == 'extend_leave' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_leave') ?>"> Inactive Tenants</a></li>
-				</ul>
+          <li class="<?php echo $this->uri->segment(1) == 'employee' || $this->uri->segment(1) == 'view_employee' || $this->uri->segment(1) == 'update_employee' || $this->uri->segment(1) == 'query_employee' || $this->uri->segment(1) == 'view_query' || $this->uri->segment(1) == 'terminate_employee' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('tenants') ?>"> All Tenants</a></li>
+          		</ul>
 
 			</li>
 
@@ -41,8 +39,8 @@
 				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i> <span>Subscriptions</span></a>
 				<ul class="dropdown-menu">
 
-					<li class="<?php echo $this->uri->segment(1) == 'employee' || $this->uri->segment(1) == 'view_employee' || $this->uri->segment(1) == 'update_employee' || $this->uri->segment(1) == 'query_employee' || $this->uri->segment(1) == 'view_query' || $this->uri->segment(1) == 'terminate_employee' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee') ?>"> Active Subscriptions</a></li>
-					<li class="<?php echo $this->uri->segment(1) == 'employee_transfer' || $this->uri->segment(1) == 'new_employee_transfer' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_transfer') ?>"> Expiring Subscriptions </a></li>
+					<li class="<?php echo $this->uri->segment(1) == 'active_subscriptions' || $this->uri->segment(1) == 'active_subscriptions' || $this->uri->segment(1) == 'active_subscriptions' || $this->uri->segment(1) == 'active_subscriptions' || $this->uri->segment(1) == 'active_subscriptions' || $this->uri->segment(1) == 'active_subscriptions' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('active_subscriptions') ?>"> Active Subscriptions</a></li>
+					<li class="<?php echo $this->uri->segment(1) == 'expiring_subscriptions' || $this->uri->segment(1) == 'expiring_subscriptions' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('expiring_subscriptions') ?>"> Expiring Subscriptions </a></li>
 					<li class="<?php echo $this->uri->segment(1) == 'employee_leave' || $this->uri->segment(1) == 'new_employee_leave' || $this->uri->segment(1) == 'extend_leave' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_leave') ?>"> Subscription Reports</a></li>
 				</ul>
 
