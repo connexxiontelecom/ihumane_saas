@@ -155,6 +155,70 @@ class Backoffices extends CI_Model
 
 	}
 
+	//subscription
+
+	public function view_active_subscriptions(){
+
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_status >', 0);
+		$this->db->join('plan', 'plan.plan_id = subscription.subscription_plan_id');
+		$this->db->join('tenant', 'tenant.tenant_id = subscription.subscription_tenant_id');
+		$this->db->order_by('subscription_id', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	public function get_subscription($subscription_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_id', $subscription_id);
+		return $this->db->get()->row();
+	}
+
+	public function update_subscription($subscription_array, $subscription_id){
+
+		$this->db->where('subscription.subscription_id', $subscription_id);
+		$this->db->update('subscription', $subscription_array);
+		return true;
+	}
+
+	public function view_subscriptions(){
+
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->join('plan', 'plan.plan_id = subscription.subscription_plan_id');
+		$this->db->join('tenant', 'tenant.tenant_id = subscription.subscription_tenant_id');
+		$this->db->order_by('subscription_id', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	public function get_tenants(){
+		$this->db->select('*');
+		$this->db->from('tenant');
+		$this->db->order_by('tenant_id', 'DESC');
+		return $this->db->get()->result();
+	}
+
+	public function get_tenant($tenant_id){
+		$this->db->select('*');
+		$this->db->from('tenant');
+		$this->db->where('tenant_id', $tenant_id);
+		return $this->db->get()->row();
+
+	}
+
+	public function view_subscriptions_tenant($tenant_id){
+
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->join('plan', 'plan.plan_id = subscription.subscription_plan_id');
+		$this->db->join('tenant', 'tenant.tenant_id = subscription.subscription_tenant_id');
+		$this->db->where('subscription.subscription_tenant_id', $tenant_id);
+		$this->db->order_by('subscription_id', 'DESC');
+		return $this->db->get()->result();
+	}
+
+
 
 
 
