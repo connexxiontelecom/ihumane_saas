@@ -589,5 +589,48 @@ class Backoffice extends CI_Controller
 
 	}
 
+	public function tenant_subscriptions(){
+
+
+		$username = $this->session->userdata('username');
+
+		if(isset($username)):
+
+			$tenant_id = $this->uri->segment(2);
+
+			$check_tenant = $this->backoffices->get_tenant($tenant_id);
+
+			if(empty($check_tenant)):
+
+				$this->load->view('backoffice/error_404');
+
+				else:
+
+			$data['notifications'] = $this->employees->get_notifications(0, 0);
+			$data['tenants'] = $this->backoffices->get_tenants();
+			$data['subscriptions'] = $this->backoffices->view_subscriptions_tenant($tenant_id);
+			$data['tenant_details'] = $check_tenant;
+			$data['user_data'] = $this->backoffices->get_user($username);
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+			//$date = date('Y-m-d', time());
+
+			$this->load->view('backoffice/tenant_subscriptions', $data);
+
+			endif;
+
+		//echo $username;
+
+
+
+
+		else:
+			redirect('backoffice_login');
+		endif;
+
+
+
+	}
+
 
 }
