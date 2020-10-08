@@ -126,7 +126,7 @@ class Home extends CI_Controller
 				$date = date('Y-m-d', time());
 				$data['present_employees'] = $this->biometric->check_today_attendance($date);
 
-				$data['online_users'] = $this->get_online_users();
+				$data['online_users'] = $this->get_online_users($tenant_id);
 				$data['total_income_month'] = $this->get_total_income_month();
 
 				$data['total_deduction_month'] = $this->get_total_deduction_month();
@@ -139,20 +139,20 @@ class Home extends CI_Controller
 
 				$data['running_loans'] = $this->loans->count_running_loans($tenant_id);
 
-				$data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees();
-				$data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees();
-				$data['variational_payments'] = $this->payroll_configurations->count_variational_payments();
+				$data['personalized_employees'] = $this->payroll_configurations->count_personalized_employees($tenant_id);
+				$data['categorized_employees'] = $this->payroll_configurations->count_categorized_employees($tenant_id);
+				$data['variational_payments'] = $this->payroll_configurations->count_variational_payments($tenant_id);
 				$data['is_payroll_routine_run'] = $this->is_payroll_routine_run($tenant_id);
 				$data['csrf_name'] = $this->security->get_csrf_token_name();
 				$data['csrf_hash'] = $this->security->get_csrf_hash();
-				$data['pending_leaves'] = $this->employees->count_pending_leaves();
-				$data['approved_leaves'] = $this->employees->count_approved_leaves();
-				$data['finished_leaves'] = $this->employees->count_finished_leaves();
-				$data['upcoming_leaves'] = $this->employees->get_upcoming_leaves();
-				$data['open_queries'] = $this->employees->count_open_queries();
-				$data['pending_trainings'] = $this->employees->count_pending_trainings();
-				$data['running_appraisals'] = $this->employees->count_running_appraisals();
-				$data['finished_appraisals'] = $this->employees->count_finished_appraisals();
+				$data['pending_leaves'] = $this->employees->count_pending_leaves($tenant_id);
+				$data['approved_leaves'] = $this->employees->count_approved_leaves($tenant_id);
+				$data['finished_leaves'] = $this->employees->count_finished_leaves($tenant_id);
+				$data['upcoming_leaves'] = $this->employees->get_upcoming_leaves($tenant_id);
+				$data['open_queries'] = $this->employees->count_open_queries($tenant_id);
+				$data['pending_trainings'] = $this->employees->count_pending_trainings($tenant_id);
+				$data['running_appraisals'] = $this->employees->count_running_appraisals($tenant_id);
+				$data['finished_appraisals'] = $this->employees->count_finished_appraisals($tenant_id);
 				$data['hr_documents'] = $this->hr_configurations->view_hr_documents($tenant_id);
 //        print_r($this->hr_configurations->view_hr_documents());
 
@@ -1174,8 +1174,8 @@ class Home extends CI_Controller
 
 	}
 
-	public function get_online_users() {
-		$online_users = $this->users->view_online_users();
+	public function get_online_users($tenant_id) {
+		$online_users = $this->users->view_online_users($tenant_id);
 		foreach ($online_users as $key => $user) {
 			if ($user->user_token == '' || ((time() - $user->user_token) / 60) > 120){
 				unset($online_users[$key]);
