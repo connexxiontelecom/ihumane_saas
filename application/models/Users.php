@@ -113,9 +113,10 @@ class Users extends CI_Model
 
 	}
 
-	public function view_online_users(){
+	public function view_online_users($tenant_id){
 	  $this->db->select('*');
     $this->db->from('user');
+    $this->db->where('tenant_id', $tenant_id);
 		return $this->db->get()->result();
   }
 
