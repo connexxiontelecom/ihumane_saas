@@ -636,31 +636,35 @@ class Employees extends CI_Model
 		return true;
 	}
 
-	public function count_pending_leaves() {
+	public function count_pending_leaves($tenant_id) {
 	  $this->db->select('*');
 	  $this->db->from('employee_leave');
 	  $this->db->where('employee_leave.leave_status', 0);
+	  $this->db->where('tenant_id', $tenant_id);
 	  return $this->db->count_all_results();
   }
 
-  public function count_approved_leaves() {
+  public function count_approved_leaves($tenant_id) {
     $this->db->select('*');
     $this->db->from('employee_leave');
     $this->db->where('employee_leave.leave_status', 1);
+    $this->db->where('tenant_id', $tenant_id);
     return $this->db->count_all_results();
   }
 
-  public function count_finished_leaves() {
+  public function count_finished_leaves($tenant_id) {
     $this->db->select('*');
     $this->db->from('employee_leave');
     $this->db->where('employee_leave.leave_status', 2);
+    $this->db->where('tenant_id', $tenant_id);
     return $this->db->count_all_results();
   }
 
-  public function get_upcoming_leaves() {
+  public function get_upcoming_leaves($tenant_id) {
     $this->db->select('*');
     $this->db->from('employee_leave');
     $this->db->where('employee_leave.leave_status', 1);
+    $this->db->where('employee_leave.tenant_id', $tenant_id);
     $this->db->join('employee', 'employee.employee_id = employee_leave.leave_employee_id');
     $this->db->join('leave_type', 'leave_type.leave_id = employee_leave.leave_leave_type');
     $this->db->order_by('employee_leave.leave_start_date', 'ASC');
@@ -668,31 +672,35 @@ class Employees extends CI_Model
     return $this->db->get()->result();
   }
 
-  public function count_open_queries() {
+  public function count_open_queries($tenant_id) {
 	  $this->db->select('*');
 	  $this->db->from('query');
 	  $this->db->where('query.query_status', 1);
+	  $this->db->where('tenant_id', $tenant_id);
     return $this->db->count_all_results();
   }
 
-  public function count_pending_trainings() {
+  public function count_pending_trainings($tenant_id) {
 	  $this->db->select('*');
 	  $this->db->from('employee_training');
 	  $this->db->where('employee_training.employee_training_status', 0);
+	  $this->db->where('tenant_id', $tenant_id);
     return $this->db->count_all_results();
   }
 
-  public function count_running_appraisals() {
+  public function count_running_appraisals($tenant_id) {
     $this->db->select('*');
     $this->db->from('employee_appraisal');
     $this->db->where('employee_appraisal.employee_appraisal_status', 0);
+    $this->db->where('tenant-id', $tenant_id);
     return $this->db->count_all_results();
   }
 
-  public function count_finished_appraisals() {
+  public function count_finished_appraisals($tenant_id) {
     $this->db->select('*');
     $this->db->from('employee_appraisal');
     $this->db->where('employee_appraisal.employee_appraisal_status', 1);
+    $this->db->where('tenant_id', $tenant_id);
     return $this->db->count_all_results();
   }
 
