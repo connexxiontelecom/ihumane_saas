@@ -169,6 +169,7 @@ class Employee extends CI_Controller
 
 		if (isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -640,6 +641,7 @@ class Employee extends CI_Controller
 		if (isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -1009,6 +1011,7 @@ class Employee extends CI_Controller
 		if (isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+		$data['active_plan'] = 1;
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -1356,6 +1359,7 @@ class Employee extends CI_Controller
 		if (isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -1583,6 +1587,7 @@ class Employee extends CI_Controller
 		if (isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -2023,6 +2028,7 @@ class Employee extends CI_Controller
 		if (isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -2403,6 +2409,7 @@ class Employee extends CI_Controller
 			$user_type = $this->users->get_user($username)->user_type;
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -2930,6 +2937,7 @@ class Employee extends CI_Controller
 				if ($permission->employee_management == 1):
 
 					$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 				if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 					extract($_POST);
@@ -3416,6 +3424,7 @@ class Employee extends CI_Controller
 				if ($permission->employee_management == 1):
 
 					$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 					if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 						extract($_POST);
@@ -3763,6 +3772,7 @@ class Employee extends CI_Controller
 				if ($permission->employee_management == 1):
 
 					$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 					if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 						extract($_POST);
@@ -4153,9 +4163,10 @@ class Employee extends CI_Controller
 	public function view_notifications(){
 		$username = $this->session->userdata('user_username');
 		if(isset($username)):
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$notification_id = $query_id = $this->uri->segment(2);
 
-			$notification = $this->employees->get_notification($notification_id);
+			$notification = $this->employees->get_notification($notification_id, $tenant_id);
 			if(empty($notification)):
 
 				redirect('error_404');
