@@ -135,6 +135,7 @@ class Payroll_report extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -419,6 +420,7 @@ class Payroll_report extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -549,6 +551,7 @@ class Payroll_report extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 

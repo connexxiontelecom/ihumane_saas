@@ -96,6 +96,7 @@ class App_configuration extends CI_Controller
 
 		if (isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -267,6 +268,7 @@ class App_configuration extends CI_Controller
 
 		if (isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 

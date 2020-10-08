@@ -86,6 +86,7 @@ class Payroll extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -472,6 +473,7 @@ class Payroll extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -778,6 +780,7 @@ class Payroll extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
@@ -1001,6 +1004,7 @@ class Payroll extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 

@@ -83,6 +83,7 @@ class Hr_configuration extends CI_Controller
 			
 		
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 			$permission = $this->users->check_permission($username);
@@ -149,6 +150,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 				$tenant_id = $this->users->get_user($username)->tenant_id;
@@ -273,6 +275,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -337,6 +340,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -458,6 +462,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -523,6 +528,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -647,6 +653,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -712,6 +719,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -836,6 +844,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -901,6 +910,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1023,6 +1033,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1085,6 +1096,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1206,6 +1218,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1269,6 +1282,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1390,6 +1404,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1461,6 +1476,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1596,6 +1612,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1661,6 +1678,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1793,6 +1811,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -1862,6 +1881,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2040,6 +2060,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2110,6 +2131,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -2306,6 +2328,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2375,6 +2398,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2502,6 +2526,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2569,6 +2594,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2695,6 +2721,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2762,6 +2789,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -2965,6 +2993,7 @@ class Hr_configuration extends CI_Controller
 
 		if (isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
@@ -3127,6 +3156,7 @@ class Hr_configuration extends CI_Controller
 		if (isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 				$tenant_id = $this->users->get_user($username)->tenant_id;
 
@@ -3308,6 +3338,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$user_type = $this->users->get_user($username)->user_type;
 				$tenant_id = $this->users->get_user($username)->tenant_id;
@@ -3401,6 +3432,7 @@ class Hr_configuration extends CI_Controller
 		if(isset($username)):
 
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 
 			$user_type = $this->users->get_user($username)->user_type;
@@ -3626,6 +3658,7 @@ class Hr_configuration extends CI_Controller
 
 		if(isset($username)):
 			$method = $this->input->server('REQUEST_METHOD');
+$data['active_plan'] = 1; 
 			if($method == 'POST' || $method == 'Post' || $method == 'post'):
 			$user_type = $this->users->get_user($username)->user_type;
 				$tenant_id = $this->users->get_user($username)->tenant_id;
