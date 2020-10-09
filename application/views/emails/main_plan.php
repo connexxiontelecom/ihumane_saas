@@ -444,7 +444,7 @@
 								<td class="content-cell">
 									<div class="f-fallback">
 										<h1>Welcome, <?php echo $name; ?>!</h1>
-										<p>Thanks for trying iHumane. We’re thrilled to have you on board.</p>
+										<p>Thank for Subscribing to iHumane. We’re thrilled to have you on board.</p>
 										<!-- Action -->
 										<table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 											<tr>
@@ -469,7 +469,7 @@
 														<tr>
 															<td class="attributes_item">
                                     <span class="f-fallback">
-              <strong>Login Page:</strong> <a href="<?php echo $login; ?>" class="f-fallback button" target="_blank"> <?php $login; ?></a>
+              <strong>Login Page:</strong> <a href="<?php echo $login; ?>" class="f-fallback button" target="_blank"> <?php echo $login; ?></a>
             </span>
 															</td>
 														</tr>
@@ -484,7 +484,7 @@
 												</td>
 											</tr>
 										</table>
-										<p>You've started a <?php echo $plan_duration; ?> days trial. You can upgrade to a paying account any time.</p>
+										<p>You've started a <?php echo $plan_name; ?> for <?php echo $plan_duration; ?> days.</p>
 										<table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 											<tr>
 												<td class="attributes_content">
@@ -492,14 +492,14 @@
 														<tr>
 															<td class="attributes_item">
                                     <span class="f-fallback">
-              <strong>Trial Start Date:</strong> <?php echo $start_date; ?>
+              <strong>Plan Start Date:</strong> <?php echo $start_date; ?>
             </span>
 															</td>
 														</tr>
 														<tr>
 															<td class="attributes_item">
                                     <span class="f-fallback">
-              <strong>Trial End Date:</strong> <?php echo $end_date; ?>
+              <strong>Plan End Date:</strong> <?php echo $end_date; ?>
             </span>
 															</td>
 														</tr>
