@@ -1139,6 +1139,7 @@ class Home extends CI_Controller
 					$this->email->subject($subject); // replace it with relevant subject
 
 					$data = array(
+						'username' => $tenant_details->tenant_username,
 						'name' => $tenant_details->tenant_contact_name,
 						'login' => 'https://app.ihumane.net/login',
 						'plan_name' => $plan->plan_name,
@@ -1197,6 +1198,7 @@ class Home extends CI_Controller
 				$this->email->subject($subject); // replace it with relevant subject
 
 				$data = array(
+					'username' => $tenant_details->tenant_username,
 					'name' => $tenant_details->tenant_contact_name,
 					'login' => 'https://app.ihumane.net/login',
 					'plan_name' => $plan->plan_name,
