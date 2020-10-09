@@ -454,7 +454,7 @@
 													<table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
 														<tr>
 															<td align="center">
-																<a href="<?php echo $login; ?>" class="f-fallback button" target="_blank">Login and Get Started</a>
+																<a href="<?php echo $login; ?>" class="f-fallback button" target="_blank">Login and To Continue</a>
 															</td>
 														</tr>
 													</table>
@@ -484,7 +484,7 @@
 												</td>
 											</tr>
 										</table>
-										<p>You've just subscribed to a <?php echo $plan_name; ?> for <?php echo $plan_duration; ?> days.</p>
+										<p>You've just subscribed to a <?php echo $plan_name; ?> Plan for <?php echo $plan_duration; ?> days.</p>
 										<table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 											<tr>
 												<td class="attributes_content">
