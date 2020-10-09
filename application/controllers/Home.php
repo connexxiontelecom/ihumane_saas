@@ -970,7 +970,7 @@ class Home extends CI_Controller
 
 						if($tenant_plan == 1):
 							$userEmail= $tenant_contact_email;
-							$subject='Welcome To Ihumane - Interactive Human Resource Management System';
+							$subject='Welcome To iHumane - Interactive Human Resource Management System';
 							$config = Array(
 								'mailtype' => 'html',
 								'charset' => 'utf-8',
@@ -1002,7 +1002,7 @@ class Home extends CI_Controller
 
 					if($tenant_plan > 1):
 						$userEmail= $tenant_contact_email;
-						$subject='Welcome To Ihumane - Interactive Human Resource Management System';
+						$subject='Welcome To iHumane - Interactive Human Resource Management System';
 						$config = Array(
 							'mailtype' => 'html',
 							'charset' => 'utf-8',
@@ -1096,6 +1096,7 @@ class Home extends CI_Controller
 				endforeach;
 
 				$latest_id = max($id);
+
 				$plan = $this->backoffices->get_plan($plan_id);
 
 				$old_sub = $this->users->get_sub_details($latest_id);
@@ -1120,6 +1121,39 @@ class Home extends CI_Controller
 
 			$query = $this->users->new_subscription($subscription_array);
 
+			$tenant_details = $this->backoffices->get_tenant($tenant_id);
+
+					$userEmail= $tenant_details->tenant_contact_email;
+					$subject='New Subscription On iHumane - Interactive Human Resource Management System';
+					$config = Array(
+						'mailtype' => 'html',
+						'charset' => 'utf-8',
+						'priority' => '1'
+					);
+					$this->load->library('email', $config);
+					$this->email->set_newline("\r\n");
+
+					$this->email->from('support@ihumane.net', 'iHumane');
+
+					$this->email->to($userEmail);  // replace it with receiver mail id
+					$this->email->subject($subject); // replace it with relevant subject
+
+					$data = array(
+						'name' => $tenant_details->tenant_contact_name,
+						'login' => 'https://app.ihumane.net/login',
+						'plan_name' => $plan->plan_name,
+						'plan_duration' => $plan->plan_duration,
+						'start_date' => $start_date,
+						'end_date' => $end_date
+					);
+
+					$body = $this->load->view('emails/new_subscription',$data,TRUE);
+					$this->email->message($body);
+					$this->email->send();
+
+
+
+
 
 			else:
 				$plan = $this->backoffices->get_plan($plan_id);
@@ -1143,6 +1177,37 @@ class Home extends CI_Controller
 				$subscription_array = $this->security->xss_clean($subscription_array);
 
 				$query = $this->users->new_subscription($subscription_array);
+
+
+				$tenant_details = $this->backoffices->get_tenant($tenant_id);
+
+				$userEmail= $tenant_details->tenant_contact_email;
+				$subject='New Subscription On iHumane - Interactive Human Resource Management System';
+				$config = Array(
+					'mailtype' => 'html',
+					'charset' => 'utf-8',
+					'priority' => '1'
+				);
+				$this->load->library('email', $config);
+				$this->email->set_newline("\r\n");
+
+				$this->email->from('support@ihumane.net', 'iHumane');
+
+				$this->email->to($userEmail);  // replace it with receiver mail id
+				$this->email->subject($subject); // replace it with relevant subject
+
+				$data = array(
+					'name' => $tenant_details->tenant_contact_name,
+					'login' => 'https://app.ihumane.net/login',
+					'plan_name' => $plan->plan_name,
+					'plan_duration' => $plan->plan_duration,
+					'start_date' => date('Y-m-d'),
+					'end_date' => $end_date
+				);
+
+				$body = $this->load->view('emails/new_subscription',$data,TRUE);
+				$this->email->message($body);
+				$this->email->send();
 		endif;
 
 
