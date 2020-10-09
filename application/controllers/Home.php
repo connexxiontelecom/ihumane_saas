@@ -64,7 +64,7 @@ class Home extends CI_Controller
 				$date = date('Y-m-d', time());
 				$data['present_employees'] = $this->biometric->check_today_attendance($date);
 
-        $data['online_users'] = $this->get_online_users();
+        $data['online_users'] = $this->get_online_users($tenant_id);
         $data['total_income_month'] = $this->get_total_income_month();
 
         $data['total_deduction_month'] = $this->get_total_deduction_month();
@@ -1310,4 +1310,29 @@ class Home extends CI_Controller
     endforeach;
     return false;
   }
+
+	public function test_email(){
+		$userEmail='peterejiro96@gmail.com';
+        $subject='Test';
+        $config = Array(
+			'mailtype' => 'html',
+			'charset' => 'utf-8',
+			'priority' => '1'
+		);
+        $this->load->library('email', $config);
+    $this->email->set_newline("\r\n");
+
+        $this->email->from('noreply@ihumane.net', 'iHumane');
+
+        $this->email->to($userEmail);  // replace it with receiver mail id
+    $this->email->subject($subject); // replace it with relevant subject
+
+		$data = array(
+		'lol' => 'lol'
+		);
+
+        $body = $this->load->view('emails/free_trial_plan',$data,TRUE);
+    $this->email->message($body);
+        $this->email->send();
+    }
 }
