@@ -692,7 +692,7 @@ class Employees extends CI_Model
     $this->db->select('*');
     $this->db->from('employee_appraisal');
     $this->db->where('employee_appraisal.employee_appraisal_status', 0);
-    $this->db->where('tenant-id', $tenant_id);
+    $this->db->where('tenant_id', $tenant_id);
     return $this->db->count_all_results();
   }
 
