@@ -988,7 +988,7 @@ class Home extends CI_Controller
 								'name' => $tenant_contact_name,
 								'login' => 'https://app.ihumane.net/login',
 								'username' => $tenant_username,
-								'plan_duration' => $plan->duration,
+								'plan_duration' => $plan->plan_duration,
 								'start_date' => date('Y-m-d'),
 								'end_date' => $end_date
 							);
@@ -1021,7 +1021,7 @@ class Home extends CI_Controller
 							'login' => 'https://app.ihumane.net/login',
 							'username' => $tenant_username,
 							'plan_name' => $plan->plan_name,
-							'plan_duration' => $plan->duration,
+							'plan_duration' => $plan->plan_duration,
 							'start_date' => date('Y-m-d'),
 							'end_date' => $end_date
 						);
