@@ -67,18 +67,30 @@
                                 <div class="badge badge-dark">Finished</div>
                               <?php endif;?>
                             </td>
-                            <td class="text-center" style="width: 9px">
-                              <?php if($appraisal->employee_appraisal_status == 0):
-                                echo "No Actions";
-                              else:?>
-                                <div class="dropdown">
-                                  <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
-                                  <div class="dropdown-menu">
-                                    <a class="dropdown-item has-icon" href="<?php echo site_url('check_appraisal_result').'/'.$appraisal->employee_appraisal_id; ?>"><i class="fa fa-eye"></i>View Appraisal Result</a>
-                                  </div>
-                                </div>
-                              <?php endif; ?>
-                            </td>
+							  <td class="text-center" style="width: 9px">
+								  <?php if($appraisal->employee_appraisal_status == 0):
+
+									  if($appraisal->employee_appraisal_supervisor == 0 || $appraisal->employee_appraisal_qualitative == 0 || $appraisal->employee_appraisal_quantitative == 0):
+										  ?>
+										  <div class="dropdown">
+											  <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+											  <div class="dropdown-menu">
+												  <a class="dropdown-item has-icon" href="<?php echo site_url('reassign_supervisor').'/'.$appraisal->employee_appraisal_id; ?>"><i class="fa fa-eye"></i>Reassign Supervisor</a>
+											  </div>
+										  </div>
+									  <?php else:
+										  echo "No Actions";
+
+									  endif;
+								  else:?>
+									  <div class="dropdown">
+										  <a href="#" data-toggle="dropdown"><i class="fas fa-ellipsis-h"></i></a>
+										  <div class="dropdown-menu">
+											  <a class="dropdown-item has-icon" href="<?php echo site_url('check_appraisal_result').'/'.$appraisal->employee_appraisal_id; ?>"><i class="fa fa-eye"></i>View Appraisal Result</a>
+										  </div>
+									  </div>
+								  <?php endif; ?>
+							  </td>
                           </tr>
                         <?php
                         endforeach;
