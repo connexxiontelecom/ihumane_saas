@@ -128,6 +128,30 @@ class Users extends CI_Model
 		return $query->row();
 	}
 
+	public function get_user_email($email){
+		$this->db->select('*');
+		$this->db->from('user');
+		//$this->db->where('user_status >', 0);
+		$this->db->where('user_email', $email);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function insert_token($data){
+
+		$this->db->insert('password_reset', $data);
+		return true;
+	}
+
+	public function get_token($username){
+		$this->db->select('*');
+		$this->db->from('password_reset');
+		$this->db->where('password_reset_user_name', $username);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+
 	public function get_user_id($user_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('user');

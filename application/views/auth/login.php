@@ -67,7 +67,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 							</div>
 							<div class="form-group text-right">
-								<a href="javascript:void(0)" class="float-left mt-3">
+								<a href="<?php echo site_url('forgot_password'); ?>" class="float-left mt-3">
 									Forgot Password?
 								</a>
 								<button type="submit" class="btn btn-primary btn-lg btn-icon icon-right" tabindex="4">

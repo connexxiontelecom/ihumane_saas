@@ -10,6 +10,9 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'home/auth_login';
 $route['register'] = 'home/register';
+$route['forgot_password'] = 'home/forgot_password';
+$route['forgot_password_action'] = 'home/forgot_password_action';
+$route['reset_password'] = 'home/reset_password';
 $route['register/:num'] = 'home/register/$1';
 $route['register_a'] = 'home/register_a';
 $route['logout'] = 'home/logout';
