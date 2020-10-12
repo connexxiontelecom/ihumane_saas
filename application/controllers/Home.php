@@ -22,6 +22,7 @@ class Home extends CI_Controller
 		$this->load->model('backoffices');
 		$this->load->model('salaries');
 		$this->load->model('loans');
+		$this->load->helper('string');
 
 
 	}
@@ -1442,6 +1443,246 @@ class Home extends CI_Controller
     endforeach;
     return false;
   }
+
+
+	public function forgot_password(){
+
+		$username = $this->session->userdata('user_username');
+
+		if(isset($username)):
+
+			redirect('home');
+		else:
+			$data['csrf_name'] = $this->security->get_csrf_token_name();
+			$data['csrf_hash'] = $this->security->get_csrf_hash();
+
+			$this->load->view('auth/forgot_password', $data);
+
+		endif;
+	}
+
+	public function forgot_password_action(){
+
+		$method = $this->input->server('REQUEST_METHOD');
+
+
+		if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+			extract($_POST);
+
+			$details = $this->users->get_user_email($official_email);
+
+			if(!empty($details)):
+
+				$token = random_string('alnum', 4);
+
+
+				$token_array = array(
+					'password_reset_user_name' => $details->user_username,
+					'password_reset_token' => $token,
+					'password_reset_time' => date("Y-m-d H:i:s"),
+				);
+
+				$query = $this->users->insert_token($token_array);
+				//$query = true;
+
+				if($query == true):
+
+					$dat = array(
+						'password_token'=>$token,
+
+					);
+					$this->session->set_userdata($dat);
+
+
+					$subject='Token For Password Reset On iHumane - Interactive Human Resource Management System';
+					$config = Array(
+						'mailtype' => 'html',
+						'charset' => 'utf-8',
+						'priority' => '1'
+					);
+					$this->load->library('email', $config);
+					$this->email->set_newline("\r\n");
+
+					$this->email->from('support@ihumane.net', 'iHumane');
+
+					$this->email->to($official_email);  // replace it with receiver mail id
+					$this->email->subject($subject); // replace it with relevant subject
+
+					$data = array(
+						'token' => $token,
+						'name' => $details->user_name,
+						'email' => $official_email
+
+					);
+
+					$body = $this->load->view('emails/password_reset',$data,TRUE);
+					$this->email->message($body);
+					$this->email->send();
+
+					$data['csrf_name'] = $this->security->get_csrf_token_name();
+					$data['csrf_hash'] = $this->security->get_csrf_hash();
+					$this->load->view('auth/token', $data);
+
+				else:
+
+					$msg = array(
+						'msg'=> 'Account Could Not be Found',
+						'location' => site_url('forgot_password'),
+						'type' => 'error'
+
+					);
+					$this->load->view('swal', $msg);
+
+				endif;
+
+
+			else:
+
+				$msg = array(
+					'msg'=> 'Account Could Not be Found',
+					'location' => site_url('forgot_password'),
+					'type' => 'error'
+
+				);
+				$this->load->view('swal', $msg);
+
+			endif;
+
+
+
+		else:
+
+			redirect('error_404');
+
+		endif;
+	}
+
+	public function reset_password(){
+
+		$method = $this->input->server('REQUEST_METHOD');
+
+
+		if($method == 'POST' || $method == 'Post' || $method == 'post'):
+
+			extract($_POST);
+
+			$details = $this->users->get_user_email($official_email);
+
+			$password_resets = $this->users->get_token($details->user_username);
+
+			$trials = count($password_resets);
+
+			$token = $password_resets[$trials - 1]->password_reset_token;
+			$date = $password_resets[$trials - 1]->password_reset_time;
+
+			$start_date = new DateTime($date);
+			$time_diff = $start_date->diff(new DateTime(date("Y-m-d H:i:s")));
+
+			if($time_diff->i > 10):
+
+
+				$msg = array(
+					'msg'=> 'Token Has Expired',
+					'location' => site_url('forgot_password'),
+					'type' => 'error'
+
+				);
+				$this->load->view('swal', $msg);
+
+			else:
+
+				if($token == $entered_token):
+
+					$new_password = random_string('alnum', 8);
+
+					$user_array = array(
+
+						'user_password'=> password_hash($new_password, PASSWORD_BCRYPT),
+
+					);
+
+					$query_user = $this->users->update_user($details->user_id, $user_array);
+
+					if($query_user == true):
+
+						$subject='New Password For iHumane - Interactive Human Resource Management System';
+						$config = Array(
+							'mailtype' => 'html',
+							'charset' => 'utf-8',
+							'priority' => '1'
+						);
+						$this->load->library('email', $config);
+						$this->email->set_newline("\r\n");
+
+						$this->email->from('support@ihumane.net', 'iHumane');
+
+						$this->email->to($official_email);  // replace it with receiver mail id
+						$this->email->subject($subject); // replace it with relevant subject
+
+						$data = array(
+
+							'name' => $details->user_name,
+							'password' => $new_password
+
+						);
+
+						$body = $this->load->view('emails/new_password',$data,TRUE);
+						$this->email->message($body);
+						$this->email->send();
+						$msg = array(
+							'msg'=> 'Password Reset Successfully, Check your Email.',
+							'location' => site_url('login'),
+							'type' => 'success'
+
+						);
+						$this->load->view('swal', $msg);
+
+					else:
+						$msg = array(
+							'msg'=> 'An Error Occurred',
+							'location' => site_url('login'),
+							'type' => 'error'
+
+						);
+						$this->load->view('swal', $msg);
+
+					endif;
+
+
+				else:
+					$msg = array(
+						'msg'=> 'Token Doesnt Match',
+						'location' => site_url('forgot_password'),
+						'type' => 'error'
+
+					);
+					$this->load->view('swal', $msg);
+
+
+				endif;
+
+
+
+			endif;
+
+
+
+
+
+
+
+
+		else:
+
+			redirect('error_404');
+
+		endif;
+
+
+	}
+
+
 
 	public function test_email(){
 		$userEmail='peterejiro96@gmail.com';
