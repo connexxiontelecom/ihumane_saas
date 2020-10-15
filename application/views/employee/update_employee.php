@@ -494,6 +494,17 @@
 
 													</div>
 												</div>
+
+												<div class="form-group row">
+													<div class="col-sm-12">
+														<div id="myId" class="dropzone">
+															<div class="dz-message needsclick">
+																<i class="hi text-muted dripicons-cloud-upload"></i>
+																<h3>Drop all other relevant documents here...</h3>
+															</div>
+														</div>
+													</div>
+												</div>
 												<div class="text-center">
 													<span class="text-primary prv" style="cursor: pointer" id="prv">previous</span>
 													<div class="bullet"></div>
@@ -567,9 +578,50 @@
 <?php include(APPPATH.'/views/js.php'); ?>
 <script>
 	$('title').html('Update Employee - IHUMANE');
-	$(".custom-file-input").on('change', function() {
-		let fileName = $(this).val().split('//').pop();
-		$(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+	$(document).ready(function() {
+
+		$(".custom-file-input").on('change', function() {
+			let fileName = $(this).val().split('//').pop();
+			$(this).siblings('.custom-file-label').addClass('selected').html(fileName);
+		});
+		// show file names on file upload for nysc documents...
+
+		// accept phone number in nigerian format i.e. 0909 600 0024
+
+
+		Dropzone.autoDiscover = false;
+		let name = new Date().getTime();
+		let myDropzone = this;
+		$("div#myId").dropzone({
+			renameFilename: function(file) {
+				return name + '_' + file.name;
+				//return newName;
+			},
+			url: '<?php echo site_url('employee_upload_others'); ?>',
+			method: 'post',
+			addRemoveLinks: 'true',
+			dictRemoveFile: 'Remove',
+
+			success: function(file, response) {
+				//file.upload.filename =  name + '_' + file.name;
+				$('form').append('<input type="hidden" name="employee_others[]" value="' + response + '">');
+				console.log(response);
+			},
+
+			error: function(file, response) {
+				console.log(response);
+			},
+			removedfile: function(file) {
+				file.previewElement.remove();
+				//                    var name = '';
+				//                    if (typeof file.file_name !== 'undefined') {
+				//                        name = file.file_name
+				//                    } else {
+				//                        name = uploadedDocumentMap[file.name]
+				//                    }
+				$('form').find('input[name="employee_others[]"][value="' + name + '_' + file.name + '"]').remove()
+			}
+		});
 	});
 	window.onload = function(){
 		let pensionable = document.getElementById('employee_pensionable').value
