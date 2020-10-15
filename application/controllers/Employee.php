@@ -370,7 +370,8 @@ $data['active_plan'] = 1;
 
 					$others_array = array(
 						'other_document_employee_id' => $employee_id,
-						'other_document_name' => $employee_other_document_name
+						'other_document_name' => $employee_other_document_name,
+						'tenant_id' => $tenant_id
 					);
 
 					$this->employees->insert_other_document($others_array);
@@ -736,6 +737,23 @@ $data['active_plan'] = 1;
 					$employee_passport_name = $file_data['file_name'];
 				endif;
 
+				if(!empty($employee_others)):
+
+					$k = 0;
+					while ($k < count($employee_others)):
+						$employee_other_document_name = $employee_others[$k];
+
+						$others_array = array(
+							'other_document_employee_id' => $employee_id,
+							'other_document_name' => $employee_other_document_name,
+							'tenant_id' => $tenant_id
+						);
+
+						$this->employees->insert_other_document($others_array);
+						$k++;
+					endwhile;
+
+				endif;
 
 				$employee_data = array(
 					'employee_unique_id' => $employee_unique_id,
