@@ -73,7 +73,7 @@
   function subWithPaystack(plan_id, plan_price, tenant_id){
   	var tenant_email = document.getElementById('tenant_email').value;
 	  var handler = PaystackPop.setup({
-		  key: 'pk_test_3867b2b50fe4f5d7c72a4ad9bcae7c06945c0440',
+		  key: 'pk_live_5f5e9ee6c8513b4800ef51f89d9fca898620c6fb',
 		  email: tenant_email,
 		  amount: parseFloat(plan_price),
 		  ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
