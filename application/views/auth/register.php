@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="form-group">
 									<label>Business Website</label>
 									<div>
-										<input parsley-type="url" type="url" value="https://" name="tenant_business_website" class="form-control"
+										<input parsley-type="url" type="url" value="https://" name="tenant_business_website" id="tenant_business_website" class="form-control"
 											   required placeholder="URL"/>
 									</div>
 								</div>
@@ -42,12 +42,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="row">
 									<div class="form-group col-6">
 										<label for="business_type">Business Type </label>
-										<input id="business_type" type="text" class="form-control" name="tenant_business_type" autofocus>
+										<input id="business_type" type="text" class="form-control" name="tenant_business_type"   autofocus>
 									</div>
 
 									<div class="form-group col-6">
 										<label>Use Case</label>
-										<select class="select2 form-control" name="tenant_usage">
+										<select class="select2 form-control" id="tenant_usage" name="tenant_usage">
 											<option value="0" selected></option>
 
 											<option value="academic">Academic</option>
@@ -60,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								<div class="row">
 									<div class="form-group col-6">
 										<label>Country</label>
-										<select class="select2 form-control" name="tenant_country">
+										<select class="select2 form-control" name="tenant_country" id="tenant_country">
 											<option value="0" selected></option>
 											<?php foreach ($countries as $country): ?>
 												<option value="<?php echo $country; ?>"><?php echo $country; ?></option>
@@ -69,8 +69,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 										</select>
 									</div>
 									<div class="form-group col-6">
-										<label for="city">City</label>
-										<input id="city" name="tenant_city" type="text" class="form-control">
+										<label for="tenant_city">City</label>
+										<input id="tenant_city" name="tenant_city" type="text" class="form-control">
 									</div>
 								</div>
 
