@@ -998,6 +998,31 @@ class Home extends CI_Controller
 							$this->email->message($body);
 							$this->email->send();
 
+
+							$this->email->set_newline("\r\n");
+
+							$this->email->from('support@ihumane.net', 'iHumane');
+
+							$this->email->to('support@ihumane.net');  // replace it with receiver mail id
+							$this->email->subject('New Customer on iHumane - Interactive Human Resource Management System'); // replace it with relevant subject
+
+							$data = array(
+								'username' => $tenant_username,
+								'name' => $tenant_contact_name,
+								'login' => 'https://app.ihumane.net/login',
+								'plan_duration' => $plan->plan_duration,
+								'start_date' => date('Y-m-d'),
+								'end_date' => $end_date,
+								'customer_email' => $userEmail,
+								'tenant_business_name' => $tenant_business_name,
+								'tenant_business_website' => $tenant_business_website,
+								'tenant_contact_phone' => $tenant_contact_phone
+							);
+
+							$body = $this->load->view('emails/new_customer-free',$data,TRUE);
+							$this->email->message($body);
+							$this->email->send();
+
 						endif;
 
 
@@ -1030,6 +1055,35 @@ class Home extends CI_Controller
 						$body = $this->load->view('emails/main_plan',$data,TRUE);
 						$this->email->message($body);
 						$this->email->send();
+
+
+
+						$this->email->set_newline("\r\n");
+
+						$this->email->from('support@ihumane.net', 'iHumane');
+
+						$this->email->to('support@ihumane.net');  // replace it with receiver mail id
+						$this->email->subject('New Customer on iHumane - Interactive Human Resource Management System'); // replace it with relevant subject
+
+						$data = array(
+							'username' => $tenant_username,
+							'name' => $tenant_contact_name,
+							'login' => 'https://app.ihumane.net/login',
+							'plan_name' => $plan->plan_name,
+							'plan_duration' => $plan->plan_duration,
+							'start_date' => date('Y-m-d'),
+							'end_date' => $end_date,
+							'customer_email' => $userEmail,
+							'tenant_business_name' => $tenant_business_name,
+							'tenant_business_website' => $tenant_business_website,
+							'tenant_contact_phone' => $tenant_contact_phone
+						);
+
+						$body = $this->load->view('emails/new_customer-plan',$data,TRUE);
+						$this->email->message($body);
+						$this->email->send();
+
+
 
 					endif;
 
@@ -1153,6 +1207,28 @@ class Home extends CI_Controller
 					$this->email->message($body);
 					$this->email->send();
 
+					$this->email->set_newline("\r\n");
+
+					$this->email->from('support@ihumane.net', 'iHumane');
+
+					$this->email->to('support@ihumane.net');  // replace it with receiver mail id
+					$this->email->subject($subject); // replace it with relevant subject
+
+					$data = array(
+						'username' => $tenant_details->tenant_username,
+						'name' => $tenant_details->tenant_contact_name,
+						'login' => 'https://app.ihumane.net/login',
+						'plan_name' => $plan->plan_name,
+						'plan_duration' => $plan->plan_duration,
+						'start_date' => date('Y-m-d'),
+						'end_date' => $end_date,
+						'customer_email' => $userEmail
+					);
+
+					$body = $this->load->view('emails/new_subscription-admin',$data,TRUE);
+					$this->email->message($body);
+					$this->email->send();
+
 
 
 
@@ -1209,6 +1285,30 @@ class Home extends CI_Controller
 				);
 
 				$body = $this->load->view('emails/new_subscription',$data,TRUE);
+				$this->email->message($body);
+				$this->email->send();
+
+
+
+				$this->email->set_newline("\r\n");
+
+				$this->email->from('support@ihumane.net', 'iHumane');
+
+				$this->email->to('support@ihumane.net');  // replace it with receiver mail id
+				$this->email->subject($subject); // replace it with relevant subject
+
+				$data = array(
+					'username' => $tenant_details->tenant_username,
+					'name' => $tenant_details->tenant_contact_name,
+					'login' => 'https://app.ihumane.net/login',
+					'plan_name' => $plan->plan_name,
+					'plan_duration' => $plan->plan_duration,
+					'start_date' => date('Y-m-d'),
+					'end_date' => $end_date,
+					'customer_email' => $userEmail
+				);
+
+				$body = $this->load->view('emails/new_subscription-admin',$data,TRUE);
 				$this->email->message($body);
 				$this->email->send();
 		endif;
