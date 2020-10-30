@@ -151,7 +151,7 @@
                       <h4><?php echo count($memos)?> Announcements</h4>
                       <div class="text-muted"><?php echo count($specific_memos)?> Directives</div>
                       <div class="d-block mt-2">
-                        <a href="<?php echo site_url('employee_leave') ?>">View Announcements</a>
+                        <a href="<?php echo site_url('my_memos') ?>">View Announcements</a>
                       </div>
                     </div>
                     <div class="summary-item">
