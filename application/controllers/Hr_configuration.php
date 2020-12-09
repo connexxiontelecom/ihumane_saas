@@ -404,7 +404,7 @@ $data['active_plan'] = 1;
 	public function subsidiary(){
 
 		$username = $this->session->userdata('user_username');
-
+		$tenant_id = $this->users->get_user($username)->tenant_id;
 		if(isset($username)):
 			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
