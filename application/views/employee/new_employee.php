@@ -404,7 +404,7 @@
 												</div>
 												<div class="form-group row">
 													<div class="col-sm-6">
-														<label for="paye-number">Tax Identification Number</label>
+														<label for="paye-number">Tax Identification Number (TIN)</label>
 														<input id="paye-number" name="employee_paye_number" type="text" class="form-control" />
 													</div>
 													<div class="col-sm-6">
