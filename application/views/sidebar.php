@@ -115,22 +115,22 @@
 			<?php } ?>
 			</li>
 
-      <li class="menu-header">Biometrics</li>
-      <li class="dropdown <?php echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : ''; ?>">
-			<?php if($biometrics == 1){  ?>
-				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-fingerprint"></i> <span>Biometrics</span></a>
-				<ul class="dropdown-menu">
-					<li class="<?php echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : '' ?>"><a class="nav-link" href="<?php echo site_url('enroll_employee') ?>"> Biometric Enrollment </a></li>
-				</ul>
-				<?php } ?>
-			</li>
-      <li class="dropdown <?php echo $this->uri->segment(1) == 'clockin' || $this->uri->segment(1) == 'biometrics_report' || $this->uri->segment(1) == 'today_present' || $this->uri->segment(1) == 'today_absent' || $this->uri->segment(1) == 'present_employee' || $this->uri->segment(1) == 'present_employeee' || $this->uri->segment(1) == 'absent_employee' || $this->uri->segment(1) == 'absent_employeee' ? 'active' : ''; ?>">
-        <a href="#" class="nav-link has-dropdown"><i class="fas fa-clock"></i> <span>Attendance</span></a>
-        <ul class="dropdown-menu">
-          <li class="<?php echo $this->uri->segment(1) == 'clockin' ? 'active' : '' ?>"><a class="nav-link" href="<?php echo site_url('clockin') ?>"> Clock In </a></li>
-          <li class="<?php echo $this->uri->segment(1) == 'biometrics_report' || $this->uri->segment(1) == 'today_present' || $this->uri->segment(1) == 'today_absent' || $this->uri->segment(1) == 'present_employee' || $this->uri->segment(1) == 'present_employeee' || $this->uri->segment(1) == 'absent_employee' || $this->uri->segment(1) == 'absent_employeee' ? 'active' : '' ?>"><a class="nav-link" href="<?php echo site_url('biometrics_report') ?>"> Attendance Reports </a></li>
-        </ul>
-      </li>
+<!--      <li class="menu-header">Biometrics</li>-->
+<!--      <li class="dropdown --><?php //echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : ''; ?><!--">-->
+<!--			--><?php //if($biometrics == 1){  ?>
+<!--				<a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-fingerprint"></i> <span>Biometrics</span></a>-->
+<!--				<ul class="dropdown-menu">-->
+<!--					<li class="--><?php //echo $this->uri->segment(1) == 'enroll_employee' ? 'active' : '' ?><!--"><a class="nav-link" href="--><?php //echo site_url('enroll_employee') ?><!--"> Biometric Enrollment </a></li>-->
+<!--				</ul>-->
+<!--				--><?php //} ?>
+<!--			</li>-->
+<!--      <li class="dropdown --><?php //echo $this->uri->segment(1) == 'clockin' || $this->uri->segment(1) == 'biometrics_report' || $this->uri->segment(1) == 'today_present' || $this->uri->segment(1) == 'today_absent' || $this->uri->segment(1) == 'present_employee' || $this->uri->segment(1) == 'present_employeee' || $this->uri->segment(1) == 'absent_employee' || $this->uri->segment(1) == 'absent_employeee' ? 'active' : ''; ?><!--">-->
+<!--        <a href="#" class="nav-link has-dropdown"><i class="fas fa-clock"></i> <span>Attendance</span></a>-->
+<!--        <ul class="dropdown-menu">-->
+<!--          <li class="--><?php //echo $this->uri->segment(1) == 'clockin' ? 'active' : '' ?><!--"><a class="nav-link" href="--><?php //echo site_url('clockin') ?><!--"> Clock In </a></li>-->
+<!--          <li class="--><?php //echo $this->uri->segment(1) == 'biometrics_report' || $this->uri->segment(1) == 'today_present' || $this->uri->segment(1) == 'today_absent' || $this->uri->segment(1) == 'present_employee' || $this->uri->segment(1) == 'present_employeee' || $this->uri->segment(1) == 'absent_employee' || $this->uri->segment(1) == 'absent_employeee' ? 'active' : '' ?><!--"><a class="nav-link" href="--><?php //echo site_url('biometrics_report') ?><!--"> Attendance Reports </a></li>-->
+<!--        </ul>-->
+<!--      </li>-->
 
 			<li class="menu-header">Admin Settings</li>
 			<li class="dropdown <?php echo $this->uri->segment(1) == 'user' || $this->uri->segment(1) == 'new_user' || $this->uri->segment(1) == 'manage_user' ? 'active' : ''; ?>">

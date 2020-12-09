@@ -86,14 +86,14 @@
 				<div class="modal-body">
 					<div class="form-group">
 						<label>Tax Band</label><span style="color: red"> *</span>
-						<input type="number" class="form-control"  name="tax_rate_band" required/>
+						<input type="number"  step="any" class="form-control"  name="tax_rate_band" required/>
             <div class="invalid-feedback">
               please fill in a tax band
             </div>
 					</div>
 					<div class="form-group">
 						<label>Tax Rate (%)</label><span style="color: red"> *</span>
-						<input type="number" class="form-control"  name="tax_rate_rate" required/>
+						<input type="number" step="any" class="form-control"  name="tax_rate_rate" required/>
             <div class="invalid-feedback">
               please fill in a tax rate
             </div>
@@ -124,14 +124,14 @@
 					<div class="modal-body">
 						<div class="form-group">
 							<label>Tax Band</label><span style="color: red"> *</span>
-							<input type="number" class="form-control"  name="tax_rate_band" value="<?php echo $tax_rate->tax_rate_band; ?>" required/>
+							<input type="number" step="any" class="form-control"  name="tax_rate_band" value="<?php echo $tax_rate->tax_rate_band; ?>" required/>
               <div class="invalid-feedback">
                 please fill in a tax band
               </div>
 						</div>
 						<div class="form-group">
 							<label>Tax Rate (%)</label><span style="color: red"> *</span>
-							<input type="number" class="form-control"  name="tax_rate_rate" value="<?php echo $tax_rate->tax_rate_rate; ?>" required/>
+							<input type="number" step="any" class="form-control"  name="tax_rate_rate" value="<?php echo $tax_rate->tax_rate_rate; ?>" required/>
               <div class="invalid-feedback">
                 please fill in a tax rate
               </div>
