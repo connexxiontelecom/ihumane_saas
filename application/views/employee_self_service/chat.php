@@ -180,6 +180,8 @@
 				{
 
 				$('#chat_contents<?php echo $employee_details->employee_id; ?>').html(data);
+					var chat_id = $('#chat_contents'+reciever_ids);
+					$(chat_id).scrollTop($(chat_id)[0].scrollHeight);
 
 				},
 				error:function()
