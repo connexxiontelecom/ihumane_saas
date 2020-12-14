@@ -235,6 +235,8 @@
 					{
 
 						document.getElementById('chat_contents'+reciever_id).innerHTML = data;
+						var chat_id = $('#chat_contents'+reciever_id);
+						$(chat_id).scrollTop($(chat_id)[0].scrollHeight);
 
 					},
 					error:function()
