@@ -73,9 +73,14 @@
 											<div class="card-header">
 												<h4>Chat with <?php echo $employee_details->employee_first_name." ". $employee_details->employee_last_name; ?></h4>
 												<?php if(!empty($user->user_token)): ?>
-													<div class="text-success text-small font-600-bold"><i class="fas fa-circle"></i> Online</div>
-												<?php endif; ?>
-												<?php if(empty($user->user_token)): ?>
+													<?php if(time() - @$user->user_token < 1800): ?>
+														<div class="text-success text-small font-600-bold"><i class="fas fa-circle"></i> Online</div>
+													<?php endif; ?>
+													<?php if(time() - @$user->user_token >= 1800): ?>
+														<div class="text-small font-weight-600 text-muted"><i class="fas fa-circle"></i> Offline</div>
+													<?php endif; ?>
+
+												<?php else: ?>
 													<div class="text-small font-weight-600 text-muted"><i class="fas fa-circle"></i> Offline</div>
 												<?php endif; ?>
 											</div>
@@ -83,10 +88,10 @@
 
 
 											<div class="card-footer chat-form">
-												<form onsubmit="send_message(<?php echo $employee_id; ?>, <?php echo $employee_details->employee_id; ?>)" id="<?php echo $employee_details->employee_id; ?>">
+												<form class="forme"  id="<?php echo $employee_details->employee_id; ?>">
 <!--													<textarea class="form-control" id="message--><?php //echo $employee_details->employee_id; ?><!--"  placeholder="Type a message ..."></textarea>-->
 
-												<input type="text" id="message<?php echo $employee_details->employee_id; ?>" class="form-control"  placeholder="Type a message">
+													<p class="lead emoji-picker-container"></p><input type="text" id="message<?php echo $employee_details->employee_id; ?>" class="form-control"  placeholder="Type a message">
 													<button type="button" onclick="send_message(<?php echo $employee_id; ?>, <?php echo $employee_details->employee_id; ?>)" class="btn btn-primary">
 														<i class="far fa-paper-plane"></i>
 													</button>
@@ -116,11 +121,47 @@
 
 	$(document).ready(function(){
 
-		$(window).keydown(function(event){
-			if(event.keyCode === 13) {
-				event.preventDefault();
-				return false;
-			}
+		$(function() {
+			// Initializes and creates emoji set from sprite sheet
+			window.emojiPicker = new EmojiPicker({
+				emojiable_selector: '[data-emojiable=true]',
+				assetsPath: 'http://onesignal.github.io/emoji-picker/lib/img/',
+				popupButtonClasses: 'fa fa-smile-o'
+			});
+			// Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+			// You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+			// It can be called as many times as necessary; previously converted input fields will not be converted again
+			window.emojiPicker.discover();
+		});
+
+		$(".link").click(function(e) {
+			e.preventDefault();
+			$('.content-container').fadeIn('slow');
+			$('#' + $(this).data('rel')).siblings().hide();
+			$('#' + $(this).data('rel')).fadeIn('slow');
+			$("html, body").animate({ scrollTop: $(document).height() }, 1000);
+			var chat_id = $('#chat_contents'+$(this).data('rel'));
+			$(chat_id).scrollTop($(chat_id)[0].scrollHeight);
+
+
+			//window.scrollTo(0,document.getElementById(chat_id).scrollHeight);
+		});
+
+		$('.forme').submit(function (e){
+			e.preventDefault();
+			//event.preventDefault();
+			var sender = <?php echo $employee_id; ?>;
+			var reciever_id = $(this).attr('id');
+			send_message(sender, reciever_id);
+
+			// $('.content-container').fadeIn('slow');
+			// $('#' + reciever_id).siblings().hide();
+			// $('#' + reciever_id).fadeIn('slow');
+			// var chat_id = $('#chat_contents'+reciever_id);
+			// $(chat_id).scrollTop($(chat_id)[0].scrollHeight);
+			//$("html, body").animate({ scrollTop: $(document).height() }, 1000);
+			//var chat_id = $('#chat_contents'+reciever_id);
+			//$(chat_id).scrollTop($(chat_id)[0].scrollHeight);
 		});
 
 
@@ -154,20 +195,14 @@
 
 		}
 
-		$(".link").click(function(e) {
-			e.preventDefault();
-			$('.content-container').fadeIn('slow');
-			$('#' + $(this).data('rel')).siblings().hide();
-			$('#' + $(this).data('rel')).fadeIn('slow');
 
-		});
 
 	});
 
 	function send_message(sender_id, reciever_id) {
 			$(document).ready(function () {
 				var message = document.getElementById('message'+reciever_id).value;
-
+				document.getElementById('message'+reciever_id).value = "";
 				$.ajax({
 					type: "GET",
 					url: '<?php echo site_url('send_chat'); ?>',
@@ -175,13 +210,15 @@
 					success:function(data)
 					{
 						document.getElementById('message'+reciever_id).value = "";
+						var chat_id = $('#chat_contents'+reciever_id);
+						$(chat_id).scrollTop($(chat_id)[0].scrollHeight);
 
 					},
 					error:function()
 					{
 						// alert(this.error);
 
-						console.log(this.error);
+						//console.log(this.error);
 					}
 				});
 
@@ -201,8 +238,10 @@
 					error:function()
 					{
 						// alert(this.error);
-
-						console.log(this.error);
+						document.getElementById('chat_contents'+reciever_id).innerHTML = data;
+						var chat_id = $('#chat_contents'+reciever_id);
+						$(chat_id).scrollTop($(chat_id)[0].scrollHeight);
+						//console.log(this.error);
 					}
 				});
 
