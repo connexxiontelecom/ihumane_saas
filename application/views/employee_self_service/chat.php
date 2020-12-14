@@ -86,7 +86,7 @@
 												<form onsubmit="send_message(<?php echo $employee_id; ?>, <?php echo $employee_details->employee_id; ?>)" id="<?php echo $employee_details->employee_id; ?>">
 <!--													<textarea class="form-control" id="message--><?php //echo $employee_details->employee_id; ?><!--"  placeholder="Type a message ..."></textarea>-->
 
-													<input type="text" id="message<?php echo $employee_details->employee_id; ?>" class="form-control" placeholder="Type a message">
+												<input type="text" id="message<?php echo $employee_details->employee_id; ?>" class="form-control"  placeholder="Type a message">
 													<button type="button" onclick="send_message(<?php echo $employee_id; ?>, <?php echo $employee_details->employee_id; ?>)" class="btn btn-primary">
 														<i class="far fa-paper-plane"></i>
 													</button>
