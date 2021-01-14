@@ -35,6 +35,7 @@ class Loans extends CI_Model
 		$this->db->join('employee', 'employee.employee_id = loans_'.$tenant_id.'.loan_employee_id');
 		$this->db->join('job_role', 'job_role.job_role_id = employee.employee_job_role_id');
 		$this->db->join('department', 'department.department_id = job_role.department_id');
+		$this->db->order_by("loan_id", "desc");
 		return $this->db->get()->result();
 	}
 

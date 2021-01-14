@@ -1,34 +1,63 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
-
-
+/*
+| -------------------------------------------------------------------------
+| URI ROUTING
+| -------------------------------------------------------------------------
+| This file lets you re-map URI requests to specific controller functions.
+|
+| Typically there is a one-to-one relationship between a URL string
+| and its corresponding controller class/method. The segments in a
+| URL normally follow this pattern:
+|
+|	example.com/class/method/id/
+|
+| In some instances, however, you may want to remap this relationship
+| so that a different class/function is called than the one
+| corresponding to the URL.
+|
+| Please see the user guide for complete details:
+|
+|	https://codeigniter.com/user_guide/general/routing.html
+|
+| -------------------------------------------------------------------------
+| RESERVED ROUTES
+| -------------------------------------------------------------------------
+|
+| There are three reserved routes:
+|
+|	$route['default_controller'] = 'welcome';
+|
+| This route indicates which controller class should be loaded if the
+| URI contains no data. In the above example, the "welcome" class
+| would be loaded.
+|
+|	$route['404_override'] = 'errors/page_missing';
+|
+| This route will tell the Router which controller/method to use if those
+| provided in the URL cannot be matched to a valid route.
+|
+|	$route['translate_uri_dashes'] = FALSE;
+|
+| This is not exactly a route, but allows you to automatically route
+| controller and method names that contain dashes. '-' isn't a valid
+| class or method name character, so it requires translation.
+| When you set this option to TRUE, it will replace ALL dashes in the
+| controller and method URI segments.
+|
+| Examples:	my-controller/index	-> my_controller/index
+|		my-controller/my-method	-> my_controller/my_method
+*/
 $route['default_controller'] = 'home';
 $route['404_override'] = 'home/error_404';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'home/auth_login';
-$route['register'] = 'home/register';
-$route['forgot_password'] = 'home/forgot_password';
-$route['forgot_password_action'] = 'home/forgot_password_action';
-$route['reset_password'] = 'home/reset_password';
-$route['register/:num'] = 'home/register/$1';
-$route['register_a'] = 'home/register_a';
 $route['logout'] = 'home/logout';
 $route['access_denied'] = 'home/access_denied';
 $route['error_404'] = 'home/error_404';
 $route['timestamp'] = 'home/timestamp';
-
-$route['check_email'] = 'home/check_email';
-$route['check_username'] = 'home/check_username';
-$route['check_user_email'] = 'home/check_user_email';
-$route['check_user_username'] = 'home/check_user_username';
-
-
-$route['income_stats'] = 'home/get_income_statistics';
-$route['deduction_stats'] = 'home/get_deduction_statistics';
-
 
 $route['bank'] = 'hr_configuration/bank';
 $route['add_bank'] = 'hr_configuration/add_bank';
@@ -113,7 +142,6 @@ $route['hr_documents'] = 'hr_configuration/hr_documents';
 $route['add_hr_document'] = 'hr_configuration/add_hr_document';
 $route['view_hr_document/:num'] = 'hr_configuration/view_hr_document/$1';
 $route['delete_hr_document/:num'] = 'hr_configuration/delete_hr_document/$1';
-$route['count_hr_documents'] = 'hr_configuration/count_hr_documents';
 
 
 $route['user'] = 'user/user';
@@ -125,7 +153,6 @@ $route['edit_user'] = 'user/edit_user';
 $route['employee'] = 'employee/employee';
 $route['new_employee'] = 'employee/new_employee';
 $route['add_employee'] = 'employee/add_employee';
-$route['get_employees'] = 'employee/get_employees';
 $route['employee_upload_others'] = 'employee/employee_upload_others';
 $route['view_employee/:num'] = 'employee/view_employee/$1';
 $route['update_employee/:num'] = 'employee/update_employee/$1';
@@ -144,8 +171,6 @@ $route['extend_employee_leave'] = 'employee/extend_employee_leave';
 $route['employee_appraisal'] = 'employee/employee_appraisal';
 $route['new_employee_appraisal'] = 'employee/new_employee_appraisal';
 $route['check_appraisal_result/:num'] = 'employee/check_appraisal_result/$1';
-$route['reassign_supervisor/:num'] = 'employee/reassign_supervisor/$1';
-$route['update_employee_appraisal'] = 'employee/update_employee_appraisal';
 $route['add_new_employee_appraisal'] = 'employee/add_new_employee_appraisal';
 $route['terminate_employee/:num'] = 'employee/terminate_employee/$1';
 $route['terminate'] = 'employee/terminate';
@@ -153,7 +178,6 @@ $route['terminations'] = 'employee/terminations';
 $route['resignations'] = 'employee/resignations';
 $route['approve_resignation/:num'] = 'employee/approve_resignation/$1';
 $route['discard_resignation/:num'] = 'employee/discard_resignation/$1';
-$route['employee_queries'] = 'employee/employee_queries';
 $route['query_employee/:num'] = 'employee/query_employee/$1';
 $route['new_query'] = 'employee/new_query';
 $route['view_query/:num'] = 'employee/view_query/$1';
@@ -312,39 +336,14 @@ $route['get_chats'] = 'employee_main/get_chats';
 $route['get_online'] = 'employee_main/get_online';
 $route['documents'] = 'employee_main/documents';
 $route['view_document/:num'] = 'employee_main/view_document/$1';
-$route['get_income_payments'] = 'employee_main/get_income_payments';
-$route['get_deduction_payments'] = 'employee_main/get_deduction_payments';
-
 $route['change_password'] = 'employee_main/change_password';
 $route['change_password_'] = 'employee_main/change_password_';
 $route['get_notifications'] = 'employee_main/get_notifications';
 
-$route['new_subscription'] = 'subscription/new_subscription';
-$route['new_subscription_a'] = 'home/new_subscription_a';
-$route['subscription_expired'] = 'home/subscription_expired';
-
-$route['new_options'] = 'app_configuration/new_options';
-$route['update_options'] = 'app_configuration/update_options';
 
 
-// back office routes
-$route['backoffice'] = 'backoffice/index';
-$route['backoffice_login'] = 'backoffice/auth_login';
-$route['backoffice_logout'] = 'backoffice/logout';
-$route['plans'] = 'backoffice/plans';
-$route['new_plan'] = 'backoffice/new_plan';
-$route['add_plan'] = 'backoffice/add_plan';
-$route['update_plan'] = 'backoffice/update_plan';
-$route['get_plan'] = 'backoffice/get_plan';
-$route['backoffice_404'] = 'backoffice/error_404';
-$route['active_subscriptions'] = 'backoffice/active_subscriptions';
-$route['expiring_subscriptions'] = 'backoffice/expiring_subscriptions';
-$route['update_subscription'] = 'backoffice/update_subscription';
-$route['tenants'] = 'backoffice/tenants';
-$route['tenant_subscriptions/:num'] = 'backoffice/tenant_subscriptions/$1';
+/* A P I    R O U T E S */
 
-
-$route['sendemail'] = 'email/htmlmail';
-
+$route['api/user/login']['POST'] = 'api/user/login';
 
 
