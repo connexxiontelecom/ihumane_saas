@@ -341,6 +341,8 @@ $route['change_password_'] = 'employee_main/change_password_';
 $route['get_notifications'] = 'employee_main/get_notifications';
 
 
+$route['api/user/login']['POST'] = 'api/user/login';
+
 
 /* A P I    R O U T E S */
 
