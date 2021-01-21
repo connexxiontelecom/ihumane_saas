@@ -342,6 +342,8 @@ $route['update_subscription'] = 'backoffice/update_subscription';
 $route['tenants'] = 'backoffice/tenants';
 $route['tenant_subscriptions/:num'] = 'backoffice/tenant_subscriptions/$1';
 
+$route['api/user/login']['POST'] = 'api/user/login';
+
 
 
 
