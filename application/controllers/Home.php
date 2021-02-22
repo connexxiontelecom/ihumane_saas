@@ -983,6 +983,7 @@ class Home extends CI_Controller
 							$this->email->from('support@ihumane.net', 'iHumane');
 
 							$this->email->to($userEmail);  // replace it with receiver mail id
+							$this->email->bcc('abimbola@connexxiongroup.com', 'pius@connexxiontelecom.com', 'lauretta@connexxiongroup.com');
 							$this->email->subject($subject); // replace it with relevant subject
 
 							$data = array(
@@ -1040,6 +1041,7 @@ class Home extends CI_Controller
 						$this->email->from('support@ihumane.net', 'iHumane');
 
 						$this->email->to($userEmail);  // replace it with receiver mail id
+						$this->email->bcc('abimbola@connexxiongroup.com', 'pius@connexxiontelecom.com', 'lauretta@connexxiongroup.com');
 						$this->email->subject($subject); // replace it with relevant subject
 
 						$data = array(
