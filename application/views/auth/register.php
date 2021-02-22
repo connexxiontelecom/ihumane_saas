@@ -271,11 +271,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		if(toggle === 1){
 			document.getElementById("free").style.display = 'block';
 			document.getElementById("paid").style.display = 'none';
-		}
-		if(toggle > 1 ){
+		} else if(toggle > 1 ){
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'block';
 			document.getElementById("paybutton").textContent = 'Pay the Sum of ' + sel.options[sel.selectedIndex].text + 'To Register';
+			
 			$.ajax({
 				type: "POST",
 				url: '<?php echo site_url('get_plan'); ?>',

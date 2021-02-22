@@ -768,7 +768,6 @@ class Home extends CI_Controller
 		$user_username = $this->session->userdata('user_username');
 
 
-
 		if(isset($user_username)):
 			redirect('home');
 		else:
