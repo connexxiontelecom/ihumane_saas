@@ -26,6 +26,20 @@ class Employees extends CI_Model
 		return $this->db->get()->result();
 
 	}
+	
+	public function view__employees($tenant_id){
+		$this->db->select('*');
+		$this->db->from('employee');
+//		$this->db->join('grade', 'grade.grade_id = employee.employee_grade_id');
+//		$this->db->join('job_role', 'job_role.job_role_id = employee.employee_job_role_id');
+//		$this->db->join('department', 'department.department_id = job_role.department_id');
+//		$this->db->join('bank', 'bank.bank_id = employee.employee_bank_id');
+		$this->db->where('employee.tenant_id', $tenant_id);
+		return $this->db->get()->result();
+		
+	}
+	
+	
 
 	public function get_employee($employee_id, $tenant_id){
 		$this->db->select('*');
