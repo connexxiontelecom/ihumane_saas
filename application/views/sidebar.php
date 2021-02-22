@@ -50,6 +50,7 @@
 			$this->uri->segment(1) == 'employee_trainings' ||
 			$this->uri->segment(1) == 'new_employee_training' ||
 			$this->uri->segment(1) == 'view_training_result' ||
+			$this->uri->segment(1) == 'employee_queries' ||
 			$this->uri->segment(1) == 'terminations' ? 'active' : '';
 			?>">
 				<?php if($employee_management == 1){  ?>
@@ -59,6 +60,7 @@
 						<li class="<?php echo $this->uri->segment(1) == 'terminations'  ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('terminations') ?>"> Employee Terminations</a></li>
 						<li class="<?php echo $this->uri->segment(1) == 'resignations'  ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('resignations') ?>"> Employee Resignations</a></li>
 						<li class="<?php echo $this->uri->segment(1) == 'employee_trainings' || $this->uri->segment(1) == 'new_employee_training' || $this->uri->segment(1) == 'view_training_result' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_trainings') ?>"> Employee Trainings</a></li>
+						<li class="<?php echo $this->uri->segment(1) == 'employee_queries' ? 'active' : ''; ?>"><a class="nav-link" href="<?php echo site_url('employee_queries') ?>"> Employee Queries</a></li>
 					</ul>
 				<?php } ?>
 			</li>
