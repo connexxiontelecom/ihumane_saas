@@ -532,42 +532,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5>Uploaded Documents</h5>
+				
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">x</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-					<div class="carousel-inner" role="listbox">
-						<div class="carousel-item active">
-							<iframe
-									src="<?php echo base_url()."/uploads/employee_passports/".$employee->employee_passport; ?>" scrolling="no" frameborder="no" height="700px" onload="resizeIframe(this)" width="100%">
-							</iframe>
-						</div>
-						<div class="carousel-item">
-							<iframe
-									src="<?php echo base_url()."/uploads/employee_nysc/".$employee->employee_nysc_document; ?>" scrolling="no" frameborder="no" height="700px" width="100%">
-							</iframe>
-						</div>
-						<?php if(empty($other_documents)){
-						} else{ foreach ($other_documents as $other_document){ ?>
-							<div class="carousel-item">
-								<iframe
-										src="<?php echo base_url()."/uploads/employee_others/".$other_document->other_document_name; ?>" height="700px" width="100%">
-								</iframe>
-							</div>
-						<?php	} } ?>
-					</div>
-					<a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					</a>
-					<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					</a>
-				</div>
-			</div>
+		
 			<div class="modal-footer bg-whitesmoke">
 				<button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
 			</div>
