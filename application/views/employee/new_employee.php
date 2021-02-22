@@ -158,14 +158,14 @@
 																<option value="Taraba State"> Taraba State </option>
 																<option value="Yobe State"> Yobe State </option>
 																<option value="Zamfara State"> Zamfara State </option>
-
+															
 															</select>
 														</div>
 														<div class="col-sm-6">
 															<label>LGA</label>
 															<input type="text" name="employee_lga" class="form-control">
 														</div>
-
+													
 													</div>
 													<div class="form-group row">
 														<div class="col-sm-4">
@@ -179,8 +179,8 @@
 														<div class="col-sm-4">
 															<label>Spouse Phone Number</label>
 															<input  type="text" name="employee_spouse_phone_number" class="form-control cleave-number">
-
-
+														
+														
 														</div>
 													</div>
 													<div class="form-group row">
@@ -195,10 +195,10 @@
 														<div class="col-sm-4">
 															<label>Genotype</label>
 															<input  type="text" name="employee_genotype" class="form-control ">
-
+														
 														</div>
 													</div>
-
+													
 													<div class="form-group row">
 														<div class="col-sm-4">
 															<label for="phone-number">Next of Kin's Name</label>
@@ -210,13 +210,13 @@
 														</div>
 														<div class="col-sm-4">
 															<label>Next of Kin'sResidential Address</label>
-															<textarea id="textarea" class="form-control" required name="employee_next_of_kin_address" maxlength="225" rows="3"></textarea>
+															<textarea id="textarea" class="form-control"  name="employee_next_of_kin_address" maxlength="225" rows="3"></textarea>
 															<div class="invalid-feedback">
 																please fill in the employee's residential address
 															</div>
 														</div>
 													</div>
-
+													
 													<div class="form-group row">
 														<div class="col-sm-6">
 															<label for="phone-number">Emergency Contact Name</label>
@@ -226,7 +226,7 @@
 															<label>Emergency Contact's Phone Number</label>
 															<input type="text" name="employee_emergency_phone" class="form-control cleave-number">
 														</div>
-
+													
 													</div>
 													<input type="hidden" name="<?php echo $csrf_name; ?>" value="<?php echo $csrf_hash; ?>" />
 												</div>
@@ -237,13 +237,13 @@
 													<p class="form-text text-muted">Please click next to ensure all required fields are complete to submit the form</p>
 												</div>
 											</div>
-
-
-
-
-
-
-
+											
+											
+											
+											
+											
+											
+											
 											<div class="tab-pane p-3" id="job-information" role="tabpanel">
 												<div class="form-group row">
 													<div class="col-sm-6">
@@ -427,7 +427,7 @@
 														</div>
 														<div class="col-sm-6">
 															<label for="pension-admin">Pension Administrator</label><span style="color: red"> *</span>
-															<select id="pension-admin" class="select2 form-control mb-3 custom-select" required name="employee_pension_id" style="width: 100%; height:42px !important;">
+															<select id="pension-admin" class="select2 form-control mb-3 custom-select" name="employee_pension_id" style="width: 100%; height:42px !important;">
 																<option disabled> N/A </option>
 																<?php foreach ($pensions as $pension) : ?>
 																	<option value="<?php echo $pension->pension_id; ?>"> <?php echo $pension->pension_provider; ?></option>
@@ -497,7 +497,7 @@
 															please upload a passport photograph image
 														</div>
 														<p class="form-text text-muted">Upload image as either gif, jpg, png or jpeg </p>
-
+													
 													</div>
 												</div>
 												<div class="form-group row">
@@ -538,7 +538,7 @@
 
 <script>
 	$('title').html('New Employee - IHUMANE');
-
+	
 	$(document).ready(function() {
 		// show file names on file upload for nysc documents...
 		$(".custom-file-input").on('change', function() {
@@ -550,7 +550,7 @@
 			phone: true,
 			phoneRegionCode: 'ng'
 		})
-
+		
 		Dropzone.autoDiscover = false;
 		let name = new Date().getTime();
 		let myDropzone = this;
@@ -563,13 +563,13 @@
 			method: 'post',
 			addRemoveLinks: 'true',
 			dictRemoveFile: 'Remove',
-
+			
 			success: function(file, response) {
 				//file.upload.filename =  name + '_' + file.name;
 				$('form').append('<input type="hidden" name="employee_others[]" value="' + response + '">');
 				console.log(response);
 			},
-
+			
 			error: function(file, response) {
 				console.log(response);
 			},
@@ -589,14 +589,14 @@
 		document.getElementById("work_experiences").style.display = 'none';
 		document.getElementById("pension_div").style.display = 'none';
 	};
-
+	
 	$('.nxt').on('click', function() {
 		moveTab('next');
 	});
 	$('.prv').on('click', function() {
 		moveTab('previous');
 	})
-
+	
 	function moveTab(nextOrPrev) {
 		var currentTab = "";
 		$('.nav-pills li a').each(function() {
@@ -614,32 +614,32 @@
 			}
 		}
 	}
-
+	
 	function pensionable() {
 		var pensionable = document.getElementById('employee_pensionable').value
-
+		
 		if (pensionable == 0) {
 			document.getElementById("pension_div").style.display = 'none';
 		}
-
+		
 		if (pensionable == 1) {
 			document.getElementById("pension_div").style.display = 'block';
 		}
-
+		
 	}
-
+	
 	function work_experience() {
 		let work_experience = document.getElementById("work_experiences");
 		let work_experience_value = document.getElementById("check_experience").value
-
+		
 		if (work_experience_value == 0) {
 			work_experience.style.display = 'none';
 		} else {
 			work_experience.style.display = 'block';
 		}
-
+		
 	}
-
+	
 	function clone_div() {
 		let elem = document.getElementById('work_experience1');
 		if (elem.style.display == 'none') {
@@ -651,7 +651,7 @@
 			clone.id = 'work_experience2';
 			// document.getElementById('work_experiences').appendChild(clone);
 			let work_experiences = document.getElementById('work_experiences');
-
+			
 			let work_experience_button = document.getElementById('work_experience_button');
 			//clone.insertBefore(work_experience_button);
 			work_experiences.insertBefore(clone, work_experience_button)
@@ -659,7 +659,7 @@
 			elem.after(clone);
 		}
 	}
-
+	
 	function delete_div(e) {
 		let id = e.parentElement.id;
 		if (id == 'work_experience1') {
@@ -675,7 +675,7 @@
 				if (inputs[index].type == 'date')
 					inputs[index].value = '';
 			}
-
+			
 			inputs = elem.getElementsByTagName('textarea');
 			for (index = 0; index < inputs.length; ++index) {
 				// if(inputs[index].type == 'textarea')
