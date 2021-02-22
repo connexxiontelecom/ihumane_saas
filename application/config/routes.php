@@ -124,6 +124,7 @@ $route['edit_user'] = 'user/edit_user';
 
 $route['employee'] = 'employee/employee';
 $route['new_employee'] = 'employee/new_employee';
+$route['employee_batch'] = 'employee/employee_batch';
 $route['add_employee'] = 'employee/add_employee';
 $route['get_employees'] = 'employee/get_employees';
 $route['employee_upload_others'] = 'employee/employee_upload_others';

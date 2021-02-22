@@ -47,8 +47,16 @@ class Employee extends CI_Controller
 
 				if ($permission->employee_management == 1):
 					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+				
+					$tempEmployees = $this->employees->view_employees($tenant_id);
+					
+					if(empty($tempEmployees)):
+						
+						$tempEmployees = $this->employees->view__employees($tenant_id);
+					
+					endif;
 
-					$data['employees'] = $this->employees->view_employees($tenant_id);
+					$data['employees'] = $tempEmployees;
 					$data['user_data'] = $this->users->get_user($username);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -126,6 +134,7 @@ class Employee extends CI_Controller
 
 					while (!empty($employee_check)):
 						$employee_check = $this->employees->get_uinque_employee($employee_unique_id);
+						$employee_unique_id = "ihumane_" . random_string('alnum', 3);
 					endwhile;
 
 					$errormsg = ' ';
@@ -161,6 +170,292 @@ class Employee extends CI_Controller
 
 
 	}
+	
+	public function employee_batch(){
+		$method = $this->input->server('REQUEST_METHOD');
+		
+		
+		if($method == 'POST' || $method == 'Post' || $method == 'post'):
+			$data['active_plan'] = 1;
+			$username = $this->session->userdata('user_username');
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			
+			$config['upload_path'] = 'uploads/employee_batch';
+			$config['allowed_types'] = 'xlsx|xls';
+			$config['max_size'] = '8000000';
+			$config['max_width'] = '102452';
+			$config['max_height'] = '768555';
+			//$config['overwrite'] = TRUE;
+			$config['encrypt_name'] = TRUE;
+			
+			$this->load->library('upload', $config);
+			$upload = $this->upload->do_upload('employee_batch');
+			
+			if (!$upload):
+				echo $this->upload->display_errors();
+				die();
+			else:
+				
+				
+				$this->load->library('Excel');
+				$file_data = $this->upload->data();
+//                        try {
+
+//                            $inputFileName = $path . $import_xls_file;
+//                            try {
+//                                $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+//                                $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+//                                $objPHPExcel = $objReader->load($inputFileName);
+//                            }
+//                            $objPHPExcel = PHPExcel_IOFactory::load('uploads/documents'.$file_data['file_name']);
+				
+				$inputFileType = PHPExcel_IOFactory::identify('uploads/employee_batch/'.$file_data['file_name']);
+				$objReader = PHPExcel_IOFactory::createReader($inputFileType);
+				$objPHPExcel = $objReader->load('uploads/employee_batch/'.$file_data['file_name']);
+
+//                        }
+//                        catch(Exception $e)
+//                        {
+//                            $this->resp->success = FALSE;
+//                            $this->resp->msg = 'Error Uploading file';
+//                            echo json_encode($this->resp);
+//                            exit;
+//                        }
+				
+			
+				$allDataInSheet = $objPHPExcel->getActiveSheet()->toArray();
+				
+				//print_r($allDataInSheet);
+				$arrayCount = count($allDataInSheet);
+				$flag = 0;
+				$createArray = array('employee_first_name', 'employee_other_name', 'employee_last_name', 'employee_personal_email', 'employee_official_email', 'employee_dob', 'employment_start_date');
+				
+				$makeArray = array('employee_first_name' => 'employee_first_name',
+									'employee_other_name' => 'employee_other_name',
+									'employee_last_name' => 'employee_last_name',
+									'employee_personal_email' => 'employee_personal_email',
+									'employee_official_email' => 'employee_official_email',
+									'employee_dob' => 'employee_dob',
+									'employment_start_date' => 'employment_start_date');
+			
+				$SheetDataKey = array();
+				
+				unset($allDataInSheet[0]);
+				
+				//print_r($allDataInSheet);
+				foreach ($allDataInSheet as $dataInSheet) {
+					//unset($dataInSheet[0]);
+					
+					//print_r($dataInSheet);
+					$employee_unique_id = "ihumane_" . random_string('alnum', 3);
+
+						$employee_check = $this->employees->get_unique_employee($employee_unique_id);
+
+						while (!empty($employee_check)):
+							$employee_check = $this->employees->get_uinque_employee($employee_unique_id);
+							$employee_unique_id = "ihumane_" . random_string('alnum', 3);
+						endwhile;
+
+							$e_array= array(
+							'employee_unique_id' => $employee_unique_id,
+							'employee_first_name' => $dataInSheet[0],
+							'employee_other_name' => $dataInSheet[1],
+							'employee_last_name' => $dataInSheet[2],
+							'employee_dob' => $dataInSheet[5],
+							'employee_personal_email' => $dataInSheet[3],
+							'employee_official_email' => $dataInSheet[4],
+							'employee_employment_date' => $dataInSheet[6],
+							'employee_status' => 2,
+							'tenant_id' => $tenant_id
+						);
+					$employee_name = $dataInSheet[0] . " " . $dataInSheet[2];
+
+					$u_array = array(
+							'user_username' => $employee_unique_id,
+							'user_email' => $dataInSheet[4],
+							'user_password' => password_hash('password1234', PASSWORD_BCRYPT),
+							'user_name' => $employee_name,
+							'user_type' => 2,
+							'user_status' => 1,
+							'tenant_id' => $tenant_id
+						);
+
+						$p_array =	array(
+									'username' => $employee_unique_id,
+									'employee_management' => 0,
+									'payroll_management' => 0,
+									'biometrics' => 0,
+									'user_management' => 0,
+									'configuration' => 0,
+									'hr_configuration' => 0,
+									'payroll_configuration' => 0,
+									'tenant_id' => $tenant_id
+								);
+
+//					print_r($e_array);
+					$query = $this->users->add($u_array, $p_array);
+
+					$employee_id = $this->employees->add_employee($e_array);
+					
+					$log_array = array( 'tenant_id' => $tenant_id,
+						'log_user_id' => $this->users->get_user($username)->user_id,
+						'log_description' => "Added New Employee"
+					);
+					
+					$this->logs->add_log($log_array);
+					
+					$employee_history_array = array(
+						'employee_history_employee_id' => $employee_id,
+						'employee_history_details' => "You were Hired",
+						'employee_history_date' => $dataInSheet[6],
+						'tenant_id' => $tenant_id
+					);
+					
+					$this->employees->insert_employee_history($employee_history_array);
+
+
+//					foreach ($dataInSheet as $key => $value) {
+//						//$SheetDataKey[$value] = $key;
+//						if (in_array(trim($value), $createArray)) {
+//							$value = preg_replace('/\s+/', '', $value);
+//							$SheetDataKey[trim($value)] = $key;
+//						} else {
+//
+//						}
+//					}
+				}
+				
+				
+				
+				if (isset($query)):
+					
+					
+					$msg = array(
+						'msg' => 'New Employee Added Successfully',
+						'location' => site_url('employee'),
+						'type' => 'success'
+					
+					);
+					$this->load->view('swal', $msg);
+				else:
+					$msg = array(
+						'msg' => 'An Error Occurred',
+						'location' => site_url('new_employee'),
+						'type' => 'success'
+					
+					);
+					$this->load->view('swal', $msg);
+				
+				endif;
+
+//				$data = array_diff_key($makeArray, $SheetDataKey);
+//				if (empty($data)) {
+//					$flag = 1;
+//				}
+//				if ($flag == 1) {
+//
+//					//print_r($SheetDataKey);
+////					for ($i = 2; $i <= $arrayCount; $i++):
+////
+////						$employee_unique_id = "ihumane_" . random_string('alnum', 3);
+////
+////						$employee_check = $this->employees->get_unique_employee($employee_unique_id);
+////
+////						while (!empty($employee_check)):
+////							$employee_check = $this->employees->get_uinque_employee($employee_unique_id);
+////							$employee_unique_id = "ihumane_" . random_string('alnum', 3);
+////						endwhile;
+////
+////
+////						$employee_first_name = $SheetDataKey['employee_first_name'];
+////						$employee_other_name = $SheetDataKey['employee_other_name'];
+////						$employee_last_name = $SheetDataKey['employee_last_name'];
+////						$employee_personal_email = $SheetDataKey['employee_personal_email'];
+////						$employee_official_email = $SheetDataKey['employee_official_email'];
+////						$employee_dob = $SheetDataKey['employee_dob'];
+////						$employment_start_date = $SheetDataKey['employment_start_date'];
+////
+////						$employee_name = $employee_last_name . " " . $employee_first_name;
+//////						$account_number = filter_var(trim($allDataInSheet[$i][$account_number]), FILTER_SANITIZE_STRING);
+//////						$name = filter_var(trim($allDataInSheet[$i][$name]), FILTER_SANITIZE_STRING);
+//////						$amount = filter_var(trim($allDataInSheet[$i][$amount]), FILTER_SANITIZE_EMAIL);
+////						$fetchData[$i] = array(
+////							//'employee_unique_id' => $employee_unique_id,
+////							'employee_first_name' => $employee_first_name,
+////							'employee_other_name' => $employee_other_name,
+////							'employee_last_name' => $employee_last_name,
+////							'employee_dob' => $employee_dob,
+////							'employee_personal_email' => $employee_personal_email,
+////							'employee_official_email' => $employee_official_email,
+////							'employee_employment_date' => $employment_start_date,
+////							//'tenant_id' => $tenant_id
+////						);
+////
+//////							array( array('employee_unique_id' => $employee_unique_id,
+//////							'employee_first_name' => $employee_first_name,
+//////							'employee_other_name' => $employee_other_name,
+//////							'employee_last_name' => $employee_last_name,
+//////							'employee_dob' => $employee_dob,
+//////							'employee_personal_email' => $employee_personal_email,
+//////							'employee_official_email' => $employee_official_email,
+//////							'employee_employment_date' => $employment_start_date,
+//////							'tenant_id' => $tenant_id),
+//////
+//////						 array(
+//////							'user_username' => $employee_unique_id,
+//////							'user_email' => $employee_official_email,
+//////							'user_password' => password_hash('password1234', PASSWORD_BCRYPT),
+//////							'user_name' => $employee_name,
+//////							'user_type' => 2,
+//////							'user_status' => 1,
+//////							'tenant_id' => $tenant_id
+//////						),
+//////
+//////						array(
+//////							'username' => $employee_unique_id,
+//////							'employee_management' => 0,
+//////							'payroll_management' => 0,
+//////							'biometrics' => 0,
+//////							'user_management' => 0,
+//////							'configuration' => 0,
+//////							'hr_configuration' => 0,
+//////							'payroll_configuration' => 0,
+//////							'tenant_id' => $tenant_id
+//////						),
+//////
+//////
+//////					);
+////					endfor;
+////
+////
+////					$i = 1;
+////
+////					foreach ($fetchData as $fetchDatum) :
+////
+//////						$permission_array = $this->security->xss_clean($permission_array);
+//////
+//////						$user_array = $this->security->xss_clean($user_array);
+//////
+//////						$employee_data = $this->security->xss_clean($employee_data);
+////
+////						//$query = $this->users->add($fetchDatum[1], $fetchDatum[2]);
+////
+////						//$employee_id = $this->employees->add_employee($fetchDatum[0]);
+////
+////						print_r($fetchDatum);
+////
+////						//$this->loan->insertBatchUpload($fetchDatum);
+////
+////					endforeach;
+//
+//				}
+////
+//
+			endif;
+			
+			endif;
+		
+	}
 
 	public function add_employee()
 	{
@@ -183,47 +478,48 @@ $data['active_plan'] = 1;
 			$data['payroll_configuration'] = $permission->payroll_configuration;
 			$data['hr_configuration'] = $permission->hr_configuration;
 			$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+			
 			if ($permission->employee_management == 1):
-				$config['upload_path'] = 'uploads/employee_passports';
-				$config['allowed_types'] = 'gif|jpg|png|jpeg';
-				$config['max_size'] = '8000000';
-				$config['max_width'] = '102452';
-				$config['max_height'] = '768555';
-				//$config['overwrite'] = TRUE;
-				$config['encrypt_name'] = TRUE;
-
-				$this->load->library('upload', $config);
-				$upload = $this->upload->do_upload('employee_passport');
-
-				if (!$upload):
-					echo $this->upload->display_errors();
-					die();
-				else:
-					$file_data = $this->upload->data();
-					$employee_passport_name = $file_data['file_name'];
-				endif;
-
-
-				$config2['upload_path'] = 'uploads/employee_nysc';
-				$config2['allowed_types'] = 'gif|jpg|png|pdf|jpeg';
-				$config2['max_size'] = '8000000';
-				$config2['max_width'] = '102452';
-				$config2['max_height'] = '768555';
-				//$config2['overwrite'] = TRUE;
-				$config2['encrypt_name'] = TRUE;
-
-				$this->upload->initialize($config2);
-				$upload = $this->upload->do_upload('employee_nysc');
-
-				if (!$upload):
-					$employee_nysc_name = 'n/a';
-
+//				$config['upload_path'] = 'uploads/employee_passports';
+//				$config['allowed_types'] = 'gif|jpg|png|jpeg';
+//				$config['max_size'] = '8000000';
+//				$config['max_width'] = '102452';
+//				$config['max_height'] = '768555';
+//				//$config['overwrite'] = TRUE;
+//				$config['encrypt_name'] = TRUE;
+//
+//				$this->load->library('upload', $config);
+//				$upload = $this->upload->do_upload('employee_passport');
+//
+//				if (!$upload):
 //					echo $this->upload->display_errors();
 //					die();
-				else:
-					$file_data = $this->upload->data();
-					$employee_nysc_name = $file_data['file_name'];
-				endif;
+//				else:
+//					$file_data = $this->upload->data();
+//					$employee_passport_name = $file_data['file_name'];
+//				endif;
+//
+//
+//				$config2['upload_path'] = 'uploads/employee_nysc';
+//				$config2['allowed_types'] = 'gif|jpg|png|pdf|jpeg';
+//				$config2['max_size'] = '8000000';
+//				$config2['max_width'] = '102452';
+//				$config2['max_height'] = '768555';
+//				//$config2['overwrite'] = TRUE;
+//				$config2['encrypt_name'] = TRUE;
+//
+//				$this->upload->initialize($config2);
+//				$upload = $this->upload->do_upload('employee_nysc');
+//
+//				if (!$upload):
+//					$employee_nysc_name = 'n/a';
+//
+////					echo $this->upload->display_errors();
+////					die();
+//				else:
+//					$file_data = $this->upload->data();
+//					$employee_nysc_name = $file_data['file_name'];
+//				endif;
 
 				$employee_unique_id = $this->input->post('employee_unique_id');
 				$employee_first_name = $this->input->post('employee_first_name');
@@ -232,55 +528,57 @@ $data['active_plan'] = 1;
 				$employee_personal_email = $this->input->post('employee_personal_email');
 				$employee_official_email = $this->input->post('employee_official_email');
 				$employee_dob = $this->input->post('employee_dob');
-				$employee_phone_number = $this->input->post('employee_phone_number');
-				$employee_address = $this->input->post('employee_address');
-				$employee_grade = $this->input->post('employee_grade');
-				$employee_job_role = $this->input->post('employee_job_role');
-				$employee_qualification = $this->input->post('employee_qualification');
-				$employee_location = $this->input->post('location');
-				$check_experience = $this->input->post('check_experience');
-				$company_name = $this->input->post('company_name');
-				$job_description = $this->input->post('job_description');
-				$experience_start_date = $this->input->post('experience_start_date');
-				$experience_end_date = $this->input->post('experience_end_date');
-				$employee_account_number = $this->input->post('employee_account_number');
-				$employee_bank = $this->input->post('employee_bank');
-				$nysc_pass_out = $this->input->post('nysc_pass_out');
 				$employment_start_date = $this->input->post('employment_start_date');
-				$employment_stop_date = $this->input->post('employment_stop_date');
-				$employment_status = $this->input->post('employment_status');
-				$employee_others = $this->input->post('employee_others');
-				$employee_subsidiary = $this->input->post('subsidiary');
-				$employee_pensionable = $this->input->post('employee_pensionable');
-				$employee_state_of_origin = $this->input->post('employee_state_of_origin');
-				$employee_lga = $this->input->post('employee_lga');
-				$employee_marital = $this->input->post('employee_marital');
-				$employee_spouse_name = $this->input->post('employee_spouse_name');
-				$employee_spouse_phone_number = $this->input->post('employee_spouse_phone_number');
-				$employee_ailments = $this->input->post('employee_ailments');
-				$employee_blood = $this->input->post('employee_blood');
-				$employee_genotype = $this->input->post('employee_genotype');
-				$employee_next_of_kin_name = $this->input->post('employee_next_of_kin_name');
-				$employee_next_of_kin_phone_number = $this->input->post('employee_next_of_kin_phone_number');
-				$employee_next_of_kin_address = $this->input->post('employee_next_of_kin_address');
-				$employee_emergency_name = $this->input->post('employee_emergency_name');
-				$employee_emergency_phone = $this->input->post('employee_emergency_phone');
-				$employee_username = $this->input->post('employee_username');
-				$employee_password = $this->input->post('employee_password');
-
-				if ($employee_pensionable == 1):
-					$employee_pension_number = $this->input->post('employee_pension_number');
-					$employee_pension_id = $this->input->post('employee_pension_id');
-				else:
-					$employee_pension_number = null;
-					$employee_pension_id = null;
-
-				endif;
-
-
-				$employee_hmo_number = $this->input->post('employee_hmo_number');
-				$employee_hmo_id = $this->input->post('employee_hmo_id');
-				$employee_paye_number = $this->input->post('employee_paye_number');
+				
+//				$employee_phone_number = $this->input->post('employee_phone_number');
+//				$employee_address = $this->input->post('employee_address');
+//				$employee_grade = $this->input->post('employee_grade');
+//				$employee_job_role = $this->input->post('employee_job_role');
+//				$employee_qualification = $this->input->post('employee_qualification');
+//				$employee_location = $this->input->post('location');
+//				$check_experience = $this->input->post('check_experience');
+//				$company_name = $this->input->post('company_name');
+//				$job_description = $this->input->post('job_description');
+//				$experience_start_date = $this->input->post('experience_start_date');
+//				$experience_end_date = $this->input->post('experience_end_date');
+//				$employee_account_number = $this->input->post('employee_account_number');
+//				$employee_bank = $this->input->post('employee_bank');
+//				$nysc_pass_out = $this->input->post('nysc_pass_out');
+//				$employment_start_date = $this->input->post('employment_start_date');
+//				$employment_stop_date = $this->input->post('employment_stop_date');
+//				$employment_status = $this->input->post('employment_status');
+//				$employee_others = $this->input->post('employee_others');
+//				$employee_subsidiary = $this->input->post('subsidiary');
+//				$employee_pensionable = $this->input->post('employee_pensionable');
+//				$employee_state_of_origin = $this->input->post('employee_state_of_origin');
+//				$employee_lga = $this->input->post('employee_lga');
+//				$employee_marital = $this->input->post('employee_marital');
+//				$employee_spouse_name = $this->input->post('employee_spouse_name');
+//				$employee_spouse_phone_number = $this->input->post('employee_spouse_phone_number');
+//				$employee_ailments = $this->input->post('employee_ailments');
+//				$employee_blood = $this->input->post('employee_blood');
+//				$employee_genotype = $this->input->post('employee_genotype');
+//				$employee_next_of_kin_name = $this->input->post('employee_next_of_kin_name');
+//				$employee_next_of_kin_phone_number = $this->input->post('employee_next_of_kin_phone_number');
+//				$employee_next_of_kin_address = $this->input->post('employee_next_of_kin_address');
+//				$employee_emergency_name = $this->input->post('employee_emergency_name');
+//				$employee_emergency_phone = $this->input->post('employee_emergency_phone');
+//				$employee_username = $this->input->post('employee_username');
+//				$employee_password = $this->input->post('employee_password');
+//
+//				if ($employee_pensionable == 1):
+//					$employee_pension_number = $this->input->post('employee_pension_number');
+//					$employee_pension_id = $this->input->post('employee_pension_id');
+//				else:
+//					$employee_pension_number = null;
+//					$employee_pension_id = null;
+//
+//				endif;
+//
+//
+//				$employee_hmo_number = $this->input->post('employee_hmo_number');
+//				$employee_hmo_id = $this->input->post('employee_hmo_id');
+//				$employee_paye_number = $this->input->post('employee_paye_number');
 
 
 				$employee_data = array(
@@ -291,40 +589,43 @@ $data['active_plan'] = 1;
 					'employee_dob' => $employee_dob,
 					'employee_personal_email' => $employee_personal_email,
 					'employee_official_email' => $employee_official_email,
-					'employee_phone_number' => $employee_phone_number,
-					'employee_qualification' => json_encode($employee_qualification),
-					'employee_address' => $employee_address,
-					'employee_location_id' => $employee_location,
-					'employee_job_role_id' => $employee_job_role,
-					'employee_grade_id' => $employee_grade,
-					'employee_account_number' => $employee_account_number,
-					'employee_bank_id' => $employee_bank,
-					'employee_nysc_details' => $nysc_pass_out,
 					'employee_employment_date' => $employment_start_date,
-					'employee_stop_date' => $employment_stop_date,
-					'employee_status' => $employment_status,
-					'employee_passport' => $employee_passport_name,
-					'employee_pension_number' => $employee_pension_number,
-					'employee_pensionable' => $employee_pensionable,
-					'employee_pension_id' => $employee_pension_id,
-					'employee_hmo_number' => $employee_hmo_number,
-					'employee_hmo_id' => $employee_hmo_id,
-					'employee_nysc_document' => $employee_nysc_name,
-					'employee_state' => $employee_state_of_origin,
-					'employee_lga' => $employee_lga,
-					'employee_marital_status' => $employee_marital,
-					'employee_spouse_name' => $employee_spouse_name,
-					'employee_spouse_phone_number' => $employee_spouse_phone_number,
-					'employee_next_of_kin_name' => $employee_next_of_kin_name,
-					'employee_next_of_kin_address' => $employee_next_of_kin_address,
-					'employee_next_of_kin_phone_number' => $employee_next_of_kin_phone_number,
-					'employee_ailments' => $employee_ailments,
-					'employee_blood' => $employee_blood,
-					'employee_genotype' => $employee_genotype,
-					'employee_emergency_name' => $employee_emergency_name,
-					'employee_emergency_contact' => $employee_emergency_phone,
-					'employee_paye_number' => $employee_paye_number,
-					'employee_subsidiary_id' => $employee_subsidiary,
+					
+//
+//					'employee_phone_number' => $employee_phone_number,
+//					'employee_qualification' => json_encode($employee_qualification),
+//					'employee_address' => $employee_address,
+//					'employee_location_id' => $employee_location,
+//					'employee_job_role_id' => $employee_job_role,
+//					'employee_grade_id' => $employee_grade,
+//					'employee_account_number' => $employee_account_number,
+//					'employee_bank_id' => $employee_bank,
+//					'employee_nysc_details' => $nysc_pass_out,
+
+//					'employee_stop_date' => $employment_stop_date,
+//					'employee_status' => $employment_status,
+//					'employee_passport' => $employee_passport_name,
+//					'employee_pension_number' => $employee_pension_number,
+//					'employee_pensionable' => $employee_pensionable,
+//					'employee_pension_id' => $employee_pension_id,
+//					'employee_hmo_number' => $employee_hmo_number,
+//					'employee_hmo_id' => $employee_hmo_id,
+//					'employee_nysc_document' => $employee_nysc_name,
+//					'employee_state' => $employee_state_of_origin,
+//					'employee_lga' => $employee_lga,
+//					'employee_marital_status' => $employee_marital,
+//					'employee_spouse_name' => $employee_spouse_name,
+//					'employee_spouse_phone_number' => $employee_spouse_phone_number,
+//					'employee_next_of_kin_name' => $employee_next_of_kin_name,
+//					'employee_next_of_kin_address' => $employee_next_of_kin_address,
+//					'employee_next_of_kin_phone_number' => $employee_next_of_kin_phone_number,
+//					'employee_ailments' => $employee_ailments,
+//					'employee_blood' => $employee_blood,
+//					'employee_genotype' => $employee_genotype,
+//					'employee_emergency_name' => $employee_emergency_name,
+//					'employee_emergency_contact' => $employee_emergency_phone,
+//					'employee_paye_number' => $employee_paye_number,
+//					'employee_subsidiary_id' => $employee_subsidiary,
 					'tenant_id' => $tenant_id
 
 				);
@@ -332,9 +633,9 @@ $data['active_plan'] = 1;
 				$employee_name = $employee_last_name . " " . $employee_first_name;
 
 				$user_array = array(
-					'user_username' => $employee_username,
+					'user_username' => $employee_unique_id,
 					'user_email' => $employee_official_email,
-					'user_password' => password_hash($employee_password, PASSWORD_BCRYPT),
+					'user_password' => password_hash('password1234', PASSWORD_BCRYPT),
 					'user_name' => $employee_name,
 					'user_type' => 2,
 					'user_status' => 1,
@@ -342,7 +643,7 @@ $data['active_plan'] = 1;
 				);
 
 				$permission_array = array(
-					'username' => $employee_username,
+					'username' => $employee_unique_id,
 					'employee_management' => 0,
 					'payroll_management' => 0,
 					'biometrics' => 0,
