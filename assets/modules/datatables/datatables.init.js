@@ -41,7 +41,8 @@ $(document).ready(function() {
                 exportOptions: { columns: ":not(:last-child)" }
             },
 
-        ]
+        ],
+        "order": []
     });
     table.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
@@ -73,7 +74,8 @@ $(document).ready(function() {
                 titleAttr: "Print Table",
             },
 
-        ]
+        ],
+        "order": []
     });
     table2.buttons().container().appendTo('#datatable-buttons-2_wrapper .col-md-6:eq(0)');
 

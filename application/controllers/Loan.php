@@ -864,3 +864,4 @@ $data['active_plan'] = 1;
 
 	}
 }
+$tenant_id = $request['tenant_id'];
