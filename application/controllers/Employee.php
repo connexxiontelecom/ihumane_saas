@@ -181,7 +181,7 @@ class Employee extends CI_Controller
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 			
 			$config['upload_path'] = 'uploads/employee_batch';
-			$config['allowed_types'] = 'xlsx|xls';
+			$config['allowed_types'] = 'xlsx|xls|csv';
 			$config['max_size'] = '8000000';
 			$config['max_width'] = '102452';
 			$config['max_height'] = '768555';
