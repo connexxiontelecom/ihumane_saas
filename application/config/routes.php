@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-	
-	
-	
+
 	$route['default_controller'] = 'home';
 	$route['404_override'] = 'home/error_404';
 	$route['translate_uri_dashes'] = FALSE;
@@ -343,10 +341,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	$route['api/user/login']['POST'] = 'api/user/login';
 	
-	
-	
-	
-	
-	
-	
 	$route['employee_batch'] = 'employee/employee_batch';
+
