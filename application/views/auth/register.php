@@ -193,18 +193,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</button>
 								</div>
 
-								<div class="form-group"   <?php if (@empty($plan_id) || @$plan_id > 1): ?>style="display: none" <?php endif; ?>  <?php if (!@empty($plan_id) || @$plan_id == 1): ?>style="display: block" <?php endif; ?>
+								<div class="form-group" id="free_nil"   <?php if (@empty($plan_id) || @$plan_id > 1): ?>style="display: none" <?php endif; ?>  <?php if (!@empty($plan_id) || @$plan_id == 1): ?>style="display: block" <?php endif; ?>>
 									<button  class="btn btn-primary btn-lg btn-block">
 										Register For Free Trial
 									</button>
 								</div>
 
-						<div class="form-group" id="free" style="display: none" >
-						<button  class="btn btn-primary btn-lg btn-block">
-							Register For Free Trial
-						</button>
-					</div>
-							</form>
+								<div class="form-group" id="free" style="display: none" >
+									<button  class="btn btn-primary btn-lg btn-block">
+										Register For Free Trial
+									</button>
+								</div>
+							
+						</form>
 						</div>
 					</div>
 					<div class="simple-footer">
@@ -267,13 +268,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		if(toggle === 0){
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'none';
+			document.getElementById("free_nil").style.display = 'none';
 		}
 		if(toggle === 1){
 			document.getElementById("free").style.display = 'block';
 			document.getElementById("paid").style.display = 'none';
+			document.getElementById("free_nil").style.display = 'none';
 		} else if(toggle > 1 ){
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'block';
+			document.getElementById("free_nil").style.display = 'none';
 			document.getElementById("paybutton").textContent = 'Pay the Sum of ' + sel.options[sel.selectedIndex].text + 'To Register';
 			
 			$.ajax({
