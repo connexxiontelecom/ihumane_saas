@@ -18,6 +18,17 @@ class Users extends CI_Model
 		return true;
 
 	}
+	
+	public function get_subscriptions($tenant_id){
+		$this->db->select('*');
+		$this->db->from('subscription');
+		$this->db->where('subscription_tenant_id', $tenant_id);
+//		$this->db->where('subscription_status', 1);
+		
+		$query = $this->db->get();
+		return $query->result();
+		
+	}
 
 	public function get_sub_status($tenant_id){
 		$this->db->select('*');
