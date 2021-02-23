@@ -601,8 +601,8 @@ class Home extends CI_Controller
 									
 									foreach ($subscriptions as $subscription):
 										
-										print_r($subscription);
-										echo '<br>';
+//										print_r($subscription);
+//										echo '<br>';
 										
 										
 										if($subscription->subscription_status == 1):

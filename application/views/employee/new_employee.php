@@ -569,9 +569,18 @@
 							<label for="employee-passport" class="custom-file-label">Choose File</label>
 						</div>
 						<div class="invalid-feedback">
-							please upload a passport photograph image
+							please upload document
 						</div>
-						<p class="form-text text-muted">Upload image as either gif, jpg, png or jpeg </p>
+						<p class="form-text text-muted">Upload image as either xls, xslx, csv </p>
+					
+					</div>
+					<div class="col-sm-6">
+						<label>Sample</label><span style="color: red"></span>
+						<div class="custom-file">
+							<a class="nav-link active" href="<?php echo site_url('uploads/employee_batch/sample.xlsx') ?>" role="tab"> <i class="fas fa-file-excel"></i> Download Sample</a>
+						</div>
+					
+						<p class="form-text text-muted">Download Sample excel sheet, please strictly adhere to the excel sheet for batch upload. </p>
 					
 					</div>
 				</div>
