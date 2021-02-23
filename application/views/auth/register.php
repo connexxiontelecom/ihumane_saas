@@ -194,13 +194,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 
 								<div class="form-group" id="free_nil"   <?php if (@empty($plan_id) || @$plan_id > 1): ?>style="display: none" <?php endif; ?>  <?php if (!@empty($plan_id) || @$plan_id == 1): ?>style="display: block" <?php endif; ?>>
-									<button  class="btn btn-primary btn-lg btn-block">
+									<button type="submit"  class="btn btn-primary btn-lg btn-block">
 										Register For Free Trial
 									</button>
 								</div>
 
 								<div class="form-group" id="free" style="display: none" >
-									<button  class="btn btn-primary btn-lg btn-block">
+									<button type="submit"  class="btn btn-primary btn-lg btn-block">
 										Register For Free Trial
 									</button>
 								</div>
