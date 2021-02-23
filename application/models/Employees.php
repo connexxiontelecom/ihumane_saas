@@ -77,7 +77,20 @@ class Employees extends CI_Model
 
 
 	}
-
+	
+	public function get__employee($employee_id, $tenant_id){
+		$this->db->select('*');
+		$this->db->from('employee');
+		
+		$this->db->where('employee_id', $employee_id);
+		$this->db->where('employee.tenant_id', $tenant_id);
+		return $this->db->get()->row();
+		
+		
+		
+	}
+	
+	
 	public function get_employee_by_unique($employee_unique_id, $tenant_id){
 		$this->db->select('*');
 		$this->db->from('employee');
