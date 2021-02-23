@@ -48,15 +48,15 @@ class Employee extends CI_Controller
 				if ($permission->employee_management == 1):
 					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				
-					$tempEmployees = $this->employees->view_employees($tenant_id);
-					
-					if(empty($tempEmployees)):
-						
-						$tempEmployees = $this->employees->view__employees($tenant_id);
-					
-					endif;
-
-					$data['employees'] = $tempEmployees;
+//					$tempEmployees = $this->employees->view_employees($tenant_id);
+//
+//					if(empty($tempEmployees)):
+//
+//						$tempEmployees = $this->employees->view__employees($tenant_id);
+//
+//					endif;
+					$data['tenant_id'] = $tenant_id;
+					$data['employees'] =  $this->employees->view__employees($tenant_id);;
 					$data['user_data'] = $this->users->get_user($username);
 					$data['csrf_name'] = $this->security->get_csrf_token_name();
 					$data['csrf_hash'] = $this->security->get_csrf_hash();
@@ -817,7 +817,7 @@ $data['active_plan'] = 1;
 
 					$data['work_experiences'] = $this->employees->get_work_experience($employee_id);
 
-					$data['employee'] = $this->employees->get_employee($employee_id, $tenant_id);
+					$data['employee'] = $this->employees->get__employee($employee_id, $tenant_id);
 
 					$data['other_documents'] = $this->employees->get_other_document($employee_id);
 
@@ -902,7 +902,7 @@ $data['active_plan'] = 1;
 
 					$data['work_experiences'] = $this->employees->get_work_experience($employee_id);
 
-					$data['employee'] = $this->employees->get_employee($employee_id, $tenant_id);
+					$data['employee'] = $this->employees->get__employee($employee_id, $tenant_id);
 
 					$data['other_documents'] = $this->employees->get_other_document($employee_id);
 

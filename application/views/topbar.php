@@ -138,12 +138,12 @@
 
 						console.log(seconds);
 
-						if (seconds < 10) {
+						if (seconds < 5000) {
 
 							var notification_id = data[0].notification_id;
 							Push.create("iHumane", {
 								body: data[i].notification_type,
-								icon: "https://app.ihumane.net//assets/img/ihumane-logo-1.png",
+								icon: "https://app.ihumane.net/assets/img/ihumane-logo-1.png",
 								timeout: 4000,
 								onClick: function () {
 									location.href = '<?php echo site_url()?>/view_notifications/' + notification_id;
