@@ -2,7 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
-
 <?php include(APPPATH.'/views/stylesheet.php'); ?>
 <body>
 <div id="app">
@@ -231,8 +230,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	document.getElementById('username_alert').style.display = 'none';
 
 	function check_password() {
-		var password = document.getElementById('password').value;
-		var password_confirm = document.getElementById('password_confirm').value;
+		let password = document.getElementById('password').value;
+		let password_confirm = document.getElementById('password_confirm').value;
 
 		if(password === password_confirm){
 			document.getElementById('password_alert').style.display = 'none';
@@ -336,8 +335,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					document.getElementById("email_alert").style.display = 'block';
 				}
 
-
-			}
+		}
 		});
 	});
 </script>
