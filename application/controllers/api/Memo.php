@@ -315,8 +315,8 @@ class Memo extends REST_Controller
 
             $this->db->select('*');
             $this->db->from('query');
-            $this->db->where('tenant_id', $tenant_id);
             $this->db->join('employee', 'query.query_employee_id = employee.employee_id');
+			$this->db->where('query.tenant_id', $tenant_id);
             $data = $this->db->get()->result();
             $data = $this->objectToArray($data);
             $data = $this->StripFormatting($data, "query_body");
