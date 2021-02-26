@@ -3,10 +3,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ihumane/app.ihumane.net/
-    - export DEPLOYPATH2=/home/ihumane/idnnigeria.ihumane.net/
-    - export DEPLOYPATH3=/home/ihumane/dreamcity.ihumane.net/
-    - export DEPLOYPATH4=/home/ihumane/asosavings.ihumane.net/
     - /bin/cp -R * $DEPLOYPATH
-    - /bin/cp -R * $DEPLOYPATH2
-    - /bin/cp -R * $DEPLOYPATH3
-    - /bin/cp -R * $DEPLOYPATH4

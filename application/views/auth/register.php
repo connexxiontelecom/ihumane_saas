@@ -2,7 +2,6 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 
-
 <?php include(APPPATH.'/views/stylesheet.php'); ?>
 <body>
 <div id="app">
@@ -193,18 +192,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									</button>
 								</div>
 
-								<div class="form-group"   <?php if (@empty($plan_id) || @$plan_id > 1): ?>style="display: none" <?php endif; ?>  <?php if (!@empty($plan_id) || @$plan_id == 1): ?>style="display: block" <?php endif; ?>
-									<button  class="btn btn-primary btn-lg btn-block">
+								<div class="form-group" id="free_nil"   <?php if (@empty($plan_id) || @$plan_id > 1): ?>style="display: none" <?php endif; ?>  <?php if (!@empty($plan_id) || @$plan_id == 1): ?>style="display: block" <?php endif; ?>>
+									<button type="submit"  class="btn btn-primary btn-lg btn-block">
 										Register For Free Trial
 									</button>
 								</div>
 
-						<div class="form-group" id="free" style="display: none" >
-						<button  class="btn btn-primary btn-lg btn-block">
-							Register For Free Trial
-						</button>
-					</div>
-							</form>
+								<div class="form-group" id="free" style="display: none" >
+									<button type="submit"  class="btn btn-primary btn-lg btn-block">
+										Register For Free Trial
+									</button>
+								</div>
+							
+						</form>
 						</div>
 					</div>
 					<div class="simple-footer">
@@ -230,8 +230,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	document.getElementById('username_alert').style.display = 'none';
 
 	function check_password() {
-		var password = document.getElementById('password').value;
-		var password_confirm = document.getElementById('password_confirm').value;
+		let password = document.getElementById('password').value;
+		let password_confirm = document.getElementById('password_confirm').value;
 
 		if(password === password_confirm){
 			document.getElementById('password_alert').style.display = 'none';
@@ -267,15 +267,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		if(toggle === 0){
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'none';
+			document.getElementById("free_nil").style.display = 'none';
 		}
 		if(toggle === 1){
 			document.getElementById("free").style.display = 'block';
 			document.getElementById("paid").style.display = 'none';
-		}
-		if(toggle > 1 ){
+			document.getElementById("free_nil").style.display = 'none';
+		} else if(toggle > 1 ){
 			document.getElementById("free").style.display = 'none';
 			document.getElementById("paid").style.display = 'block';
+			document.getElementById("free_nil").style.display = 'none';
 			document.getElementById("paybutton").textContent = 'Pay the Sum of ' + sel.options[sel.selectedIndex].text + 'To Register';
+			
 			$.ajax({
 				type: "POST",
 				url: '<?php echo site_url('get_plan'); ?>',
@@ -332,8 +335,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 					document.getElementById("email_alert").style.display = 'block';
 				}
 
-
-			}
+		}
 		});
 	});
 </script>
