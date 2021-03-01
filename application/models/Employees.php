@@ -22,6 +22,7 @@ class Employees extends CI_Model
 		$this->db->join('job_role', 'job_role.job_role_id = employee.employee_job_role_id');
 		$this->db->join('department', 'department.department_id = job_role.department_id');
 		$this->db->join('bank', 'bank.bank_id = employee.employee_bank_id');
+		$this->db->join('subsidiary', 'subsidiary.subsidiary_id = employee.employee_subsidiary_id');
 		$this->db->where('employee.tenant_id', $tenant_id);
 		return $this->db->get()->result();
 
