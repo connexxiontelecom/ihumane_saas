@@ -25,46 +25,50 @@
 			
 
 				if (isset($username)):
-//					$user_type = $this->users->get_user($username)->user_type;
-//
-//					$tenant_id = $this->users->get_user($username)->tenant_id;
-//
-//					$active_plans = $this->users->get_sub_true_status($tenant_id);
-//
-//					if(!empty($active_plans)):
-//
-//						$data['active_plan'] = 1;
-				
-				$permission = $this->users->check_permission($username);
-				$tenant_id = $this->users->get_user($username)->tenant_id;
-				$data['employee_management'] = $permission->employee_management;
-				$data['notifications'] = $this->employees->get_notifications(0);
-				$data['payroll_management'] = $permission->payroll_management;
-				$data['biometrics'] = $permission->biometrics;
-				$data['user_management'] = $permission->user_management;
-				$data['configuration'] = $permission->configuration;
-				$data['payroll_configuration'] = $permission->payroll_configuration;
-				$data['hr_configuration'] = $permission->hr_configuration;
-				
-				if($permission->employee_management == 1):
 					$user_type = $this->users->get_user($username)->user_type;
+
+					$tenant_id = $this->users->get_user($username)->tenant_id;
+
+					$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+					if(!empty($active_plans)):
+
+						$data['active_plan'] = 1;
+				
+					$permission = $this->users->check_permission($username, $tenant_id);
+					$tenant_id = $this->users->get_user($username)->tenant_id;
+					$data['employee_management'] = $permission->employee_management;
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
+					$data['payroll_management'] = $permission->payroll_management;
+					$data['biometrics'] = $permission->biometrics;
+					$data['user_management'] = $permission->user_management;
+					$data['configuration'] = $permission->configuration;
+					$data['payroll_configuration'] = $permission->payroll_configuration;
+					$data['hr_configuration'] = $permission->hr_configuration;
 					
-					if($user_type == 1 || $user_type == 3):
+					if($permission->employee_management == 1):
+						$user_type = $this->users->get_user($username)->user_type;
 						
-						$data['user_data'] = $this->users->get_user($username);
-						$data['employees'] = $this->employees->get_employee_by_salary_setup();
+						if($user_type == 1 || $user_type == 3 || $user_type == 4):
+							$data['tenant_id'] = $tenant_id;
+							$data['user_data'] = $this->users->get_user($username, $tenant_id);
+							$data['employees'] = $this->employees->get_employee_by_salary_setup($tenant_id);
+							
+							
+							$this->load->view('hr_report/base', $data);
 						
-						
-						$this->load->view('hr_report/base', $data);
-					
+						else:
+							redirect('/access_denied');
+						endif;
 					else:
+						
 						redirect('/access_denied');
+					
 					endif;
 				else:
-					
-					redirect('/access_denied');
+					redirect('subscription_expired');
+					endif;
 				
-				endif;
 			else:
 				redirect('/login');
 			endif;
@@ -75,14 +79,24 @@
 			$username = $this->session->userdata('user_username');
 			
 			if(isset($username)):
+				$user_type = $this->users->get_user($username)->user_type;
 				
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				
+				$active_plans = $this->users->get_sub_true_status($tenant_id);
+				
+				if(!empty($active_plans)):
+					
+					$data['active_plan'] = 1;
+				$tenant_id = $this->users->get_user($username)->tenant_id;
 				$method = $this->input->server('REQUEST_METHOD');
 				
 				if($method == 'GET' || $method == 'Get' || $method == 'get'):
 				
-				$permission = $this->users->check_permission($username);
+				$permission = $this->users->check_permission($username, $tenant_id);
+				$data['tenant_id'] = $tenant_id;
 				$data['employee_management'] = $permission->employee_management;
-				$data['notifications'] = $this->employees->get_notifications(0);
+				$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 				$data['payroll_management'] = $permission->payroll_management;
 				$data['biometrics'] = $permission->biometrics;
 				$data['user_management'] = $permission->user_management;
@@ -93,13 +107,13 @@
 				if($permission->employee_management == 1):
 					$user_type = $this->users->get_user($username)->user_type;
 					
-					if($user_type == 1 || $user_type == 3):
+					if($user_type == 1 || $user_type == 3 || $user_type == 4):
 						
 						
-						$data['user_data'] = $this->users->get_user($username);
-						$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
-						$data['departments'] = $this->hr_configurations->view_departments();
-						$data['roles'] = $this->hr_configurations->view_job_roles();
+						$data['user_data'] = $this->users->get_user($username, $tenant_id);
+						$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
+						$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+						$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 						$data['csrf_name'] = $this->security->get_csrf_token_name();
 						$data['csrf_hash'] = $this->security->get_csrf_hash();
 						
@@ -115,7 +129,7 @@
 				
 				endif;
 				
-			endif;
+				endif;
 				
 				
 				
@@ -143,7 +157,7 @@
 					if(($job_role == 'all') && ($subsidiary == 'all')):
 						// filter by only date
 						
-						$temps = $this->hr_reports->get_top_performer_all($from_date, $to_date);
+						$temps = $this->hr_reports->get_top_performer_all($from_date, $to_date, $tenant_id);
 						
 						
 					
@@ -154,7 +168,7 @@
 						
 						//filter by date and job role
 						
-						$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $job_role);
+						$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $job_role, $tenant_id);
 						
 						
 					
@@ -167,7 +181,7 @@
 						//filter by date and subsidiary
 						
 						
-						$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $subsidiary);
+						$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $subsidiary, $tenant_id);
 						
 						
 					
@@ -179,25 +193,25 @@
 						
 						//filter by date, job role and subsidiary
 						
-						$temps = $this->hr_reports->get_top_performer_al($from_date, $to_date, $job_role, $subsidiary);
+						$temps = $this->hr_reports->get_top_performer_al($from_date, $to_date, $job_role, $subsidiary, $tenant_id);
 					
 					
 					endif;
 				
 					$permission = $this->users->check_permission($username);
 					$data['employee_management'] = $permission->employee_management;
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['payroll_management'] = $permission->payroll_management;
 					$data['biometrics'] = $permission->biometrics;
 					$data['user_management'] = $permission->user_management;
 					$data['configuration'] = $permission->configuration;
 					$data['payroll_configuration'] = $permission->payroll_configuration;
 					$data['hr_configuration'] = $permission->hr_configuration;
-					
+					$data['tenant_id'] = $tenant_id;
 					$data['from_date'] = $from_date;
 					$data['to_date'] = $to_date;
 					$data['results'] = $temps;
-					$data['user_data'] = $this->users->get_user($username);
+					$data['user_data'] = $this->users->get_user($username, $tenant_id);
 					
 					
 					
@@ -206,7 +220,9 @@
 				
 				endif;
 			
-			
+			else:
+				redirect('subscription_expired');
+				endif;
 			
 			else:
 				redirect('/login');
@@ -220,29 +236,41 @@
 			
 			if(isset($username)):
 				
+				$user_type = $this->users->get_user($username)->user_type;
+				
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				
+				$active_plans = $this->users->get_sub_true_status($tenant_id);
+				
+				if(!empty($active_plans)):
+					
+					$data['active_plan'] = 1;
+					$tenant_id = $this->users->get_user($username)->tenant_id;
+				
 				$method = $this->input->server('REQUEST_METHOD');
 				
 				if($method == 'GET' || $method == 'Get' || $method == 'get'):
 				
 						$permission = $this->users->check_permission($username);
 						$data['employee_management'] = $permission->employee_management;
-						$data['notifications'] = $this->employees->get_notifications(0);
+						$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 						$data['payroll_management'] = $permission->payroll_management;
 						$data['biometrics'] = $permission->biometrics;
 						$data['user_management'] = $permission->user_management;
 						$data['configuration'] = $permission->configuration;
 						$data['payroll_configuration'] = $permission->payroll_configuration;
 						$data['hr_configuration'] = $permission->hr_configuration;
+						$data['tenant_id'] = $tenant_id;
 					
 					if($permission->employee_management == 1):
 							$user_type = $this->users->get_user($username)->user_type;
 							
-							if($user_type == 1 || $user_type == 3):
+							if($user_type == 1 || $user_type == 3 || $user_type == 4):
 								
-								$data['user_data'] = $this->users->get_user($username);
-								$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
-								$data['departments'] = $this->hr_configurations->view_departments();
-								$data['roles'] = $this->hr_configurations->view_job_roles();
+								$data['user_data'] = $this->users->get_user($username, $tenant_id);
+								$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
+								$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+								$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 								$data['csrf_name'] = $this->security->get_csrf_token_name();
 								$data['csrf_hash'] = $this->security->get_csrf_hash();
 								
@@ -262,7 +290,7 @@
 				
 				
 				
-				$method = $this->input->server('REQUEST_METHOD');
+			
 				
 				if($method == 'POST' || $method == 'Post' || $method == 'post'):
 					
@@ -288,12 +316,12 @@
 							if(($job_role == 'all') && ($subsidiary == 'all')):
 								// filter by only date
 								
-								$temps = $this->hr_reports->get_top_performer_all($from_date, $to_date);
+								$temps = $this->hr_reports->get_top_performer_all($from_date, $to_date, $tenant_id);
 							
 								$i = 0;
 								foreach ($temps as $temp):
 									$appraisal_id = $temp->employee_appraisal_id;
-									$questions = $this->employees->get_appraisal_questions($appraisal_id);
+									$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 									
 									$count_quantitative = 0;
 									$quantitative_score = 0;
@@ -339,12 +367,12 @@
 							
 								//filter by date and job role
 								
-								$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $job_role);
+								$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $job_role, $tenant_id);
 								
 								$i = 0;
 								foreach ($temps as $temp):
 									$appraisal_id = $temp->employee_appraisal_id;
-									$questions = $this->employees->get_appraisal_questions($appraisal_id);
+									$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 									
 									$count_quantitative = 0;
 									$quantitative_score = 0;
@@ -388,12 +416,12 @@
 								//filter by date and subsidiary
 								
 								
-								$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $subsidiary);
+								$temps = $this->hr_reports->get_top_performer_job_role($from_date, $to_date, $subsidiary, $tenant_id);
 								
 								$i = 0;
 								foreach ($temps as $temp):
 									$appraisal_id = $temp->employee_appraisal_id;
-									$questions = $this->employees->get_appraisal_questions($appraisal_id);
+									$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 									
 									$count_quantitative = 0;
 									$quantitative_score = 0;
@@ -436,12 +464,12 @@
 							
 								//filter by date, job role and subsidiary
 								
-								$temps = $this->hr_reports->get_top_performer_al($from_date, $to_date, $job_role, $subsidiary);
+								$temps = $this->hr_reports->get_top_performer_al($from_date, $to_date, $job_role, $subsidiary, $tenant_id);
 								
 								$i = 0;
 								foreach ($temps as $temp):
 									$appraisal_id = $temp->employee_appraisal_id;
-									$questions = $this->employees->get_appraisal_questions($appraisal_id);
+									$questions = $this->employees->get_appraisal_questions($appraisal_id, $tenant_id);
 									
 									$count_quantitative = 0;
 									$quantitative_score = 0;
@@ -478,7 +506,7 @@
 							
 							endif;
 							
-							$employees = $this->employees->view_employees();
+							$employees = $this->employees->view_employees($tenant_id);
 							
 							$f_results = array();
 							$r = 0;
@@ -514,27 +542,31 @@
 								$r++;
 								endforeach;
 					
-					$permission = $this->users->check_permission($username);
+					$permission = $this->users->check_permission($username, $tenant_id);
 					$data['employee_management'] = $permission->employee_management;
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['payroll_management'] = $permission->payroll_management;
 					$data['biometrics'] = $permission->biometrics;
 					$data['user_management'] = $permission->user_management;
 					$data['configuration'] = $permission->configuration;
 					$data['payroll_configuration'] = $permission->payroll_configuration;
 					$data['hr_configuration'] = $permission->hr_configuration;
-			
+					$data['tenant_id'] = $tenant_id;
 					$data['from_date'] = $from_date;
 					$data['to_date'] = $to_date;
 					$data['f_results'] = $f_results;
-					$data['user_data'] = $this->users->get_user($username);
+					$data['user_data'] = $this->users->get_user($username, $tenant_id);
 					
 					
-					
-					$this->load->view('hr_report/top_performer', $data);
+										$this->load->view('hr_report/top_performer', $data);
 				
 					
 					endif;
+					
+					else:
+						
+						redirect('subscription_expired');
+						endif;
 			else:
 				redirect('/login');
 			endif;
@@ -547,14 +579,24 @@
 			$username = $this->session->userdata('user_username');
 			
 			if(isset($username)):
+				$user_type = $this->users->get_user($username)->user_type;
+				
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				
+				$active_plans = $this->users->get_sub_true_status($tenant_id);
+				
+				if(!empty($active_plans)):
+					
+					$data['active_plan'] = 1;
+					$tenant_id = $this->users->get_user($username)->tenant_id;
 				
 				$method = $this->input->server('REQUEST_METHOD');
 				
 				if($method == 'GET' || $method == 'Get' || $method == 'get'):
 					
-					$permission = $this->users->check_permission($username);
+					$permission = $this->users->check_permission($username, $tenant_id);
 					$data['employee_management'] = $permission->employee_management;
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['payroll_management'] = $permission->payroll_management;
 					$data['biometrics'] = $permission->biometrics;
 					$data['user_management'] = $permission->user_management;
@@ -565,16 +607,17 @@
 					if($permission->employee_management == 1):
 						$user_type = $this->users->get_user($username)->user_type;
 						
-						if($user_type == 1 || $user_type == 3):
+						if($user_type == 1 || $user_type == 3 || $user_type == 4):
 							
 							$data['user_data'] = $this->users->get_user($username);
-							$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
-							$data['departments'] = $this->hr_configurations->view_departments();
-							$data['roles'] = $this->hr_configurations->view_job_roles();
+							$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
+							$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+							$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
+							$data['tenant_id'] = $tenant_id;
 							
-							$data['years'] = $this->hr_reports->get_employee_year();
+							$data['years'] = $this->hr_reports->get_employee_year($tenant_id);
 							
 							
 							$this->load->view('hr_report/_retention', $data);
@@ -598,29 +641,29 @@
 					
 					$year = $_POST['year'];
 				
-					$employee_before = $this->hr_reports->employee_before_year($year);
+					$employee_before = $this->hr_reports->employee_before_year($year, $tenant_id);
 					
-					$employee_after = $this->hr_reports->employee_after_year($year);
-					
-					
+					$employee_after = $this->hr_reports->employee_after_year($year, $tenant_id);
 					
 					
 					
 					
-					$permission = $this->users->check_permission($username);
+					
+					
+					$permission = $this->users->check_permission($username, $tenant_id);
 					$data['employee_management'] = $permission->employee_management;
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['payroll_management'] = $permission->payroll_management;
 					$data['biometrics'] = $permission->biometrics;
 					$data['user_management'] = $permission->user_management;
 					$data['configuration'] = $permission->configuration;
 					$data['payroll_configuration'] = $permission->payroll_configuration;
 					$data['hr_configuration'] = $permission->hr_configuration;
-					
+					$data['tenant_id'] = $tenant_id;
 					$data['year'] = $year;
 					$data['before'] = count($employee_before);
 					$data['after'] = count($employee_after);
-					$data['user_data'] = $this->users->get_user($username);
+					$data['user_data'] = $this->users->get_user($username, $tenant_id);
 					
 					
 					
@@ -628,6 +671,10 @@
 				
 				
 				endif;
+				else:
+					
+					redirect('subscription_expired');
+					endif;
 			else:
 				redirect('/login');
 			endif;
@@ -639,14 +686,26 @@
 			$username = $this->session->userdata('user_username');
 			
 			if(isset($username)):
+				$user_type = $this->users->get_user($username)->user_type;
+				
+				$tenant_id = $this->users->get_user($username)->tenant_id;
+				
+				$active_plans = $this->users->get_sub_true_status($tenant_id);
+				
+				if(!empty($active_plans)):
+					
+					$data['active_plan'] = 1;
+					$tenant_id = $this->users->get_user($username)->tenant_id;
 				
 				$method = $this->input->server('REQUEST_METHOD');
 				
+			
+			
 				if($method == 'GET' || $method == 'Get' || $method == 'get'):
 					
-					$permission = $this->users->check_permission($username);
+					$permission = $this->users->check_permission($username , $tenant_id);
 					$data['employee_management'] = $permission->employee_management;
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['payroll_management'] = $permission->payroll_management;
 					$data['biometrics'] = $permission->biometrics;
 					$data['user_management'] = $permission->user_management;
@@ -655,18 +714,18 @@
 					$data['hr_configuration'] = $permission->hr_configuration;
 					
 					if($permission->employee_management == 1):
-						$user_type = $this->users->get_user($username)->user_type;
+						$user_type = $this->users->get_user($username, $tenant_id)->user_type;
 						
-						if($user_type == 1 || $user_type == 3):
+						if($user_type == 1 || $user_type == 3 || $user_type == 4):
 							
-							$data['user_data'] = $this->users->get_user($username);
-							$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys();
-							$data['departments'] = $this->hr_configurations->view_departments();
-							$data['roles'] = $this->hr_configurations->view_job_roles();
+							$data['user_data'] = $this->users->get_user($username, $tenant_id);
+							$data['subsidiarys'] = $this->hr_configurations->view_subsidiarys($tenant_id);
+							$data['departments'] = $this->hr_configurations->view_departments($tenant_id);
+							$data['roles'] = $this->hr_configurations->view_job_roles($tenant_id);
 							$data['csrf_name'] = $this->security->get_csrf_token_name();
 							$data['csrf_hash'] = $this->security->get_csrf_hash();
 							
-							$data['years'] = $this->hr_reports->get_employee_year();
+							$data['years'] = $this->hr_reports->get_employee_year($tenant_id);
 							
 							
 							$this->load->view('hr_report/_turn_over', $data);
@@ -690,9 +749,9 @@
 					
 					$year = $_POST['year'];
 					
-					$employee_before = $this->hr_reports->employee_before_year($year);
+					$employee_before = $this->hr_reports->employee_before_year($year, $tenant_id);
 					
-					$employee_after = $this->hr_reports->employee_exit_year($year);
+					$employee_after = $this->hr_reports->employee_exit_year($year, $tenant_id);
 					
 					$x = count($employee_before);
 					$y = count($employee_after);
@@ -715,9 +774,9 @@
 					
 					
 					
-					$permission = $this->users->check_permission($username);
+					$permission = $this->users->check_permission($username, $tenant_id);
 					$data['employee_management'] = $permission->employee_management;
-					$data['notifications'] = $this->employees->get_notifications(0);
+					$data['notifications'] = $this->employees->get_notifications(0, $tenant_id);
 					$data['payroll_management'] = $permission->payroll_management;
 					$data['biometrics'] = $permission->biometrics;
 					$data['user_management'] = $permission->user_management;
@@ -730,7 +789,7 @@
 					
 					
 					$data['after'] = $y;
-					$data['user_data'] = $this->users->get_user($username);
+					$data['user_data'] = $this->users->get_user($username, $tenant_id);
 					
 					
 					
@@ -738,6 +797,10 @@
 				
 				
 				endif;
+				else:
+					
+					redirect('subscription_expired');
+					endif;
 			else:
 				redirect('/login');
 			endif;
