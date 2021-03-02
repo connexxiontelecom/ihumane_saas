@@ -321,6 +321,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	
 	$route['new_options'] = 'app_configuration/new_options';
 	$route['update_options'] = 'app_configuration/update_options';
+	
+	// hr reports
+	$route['hr_report'] = 'hr_report/index';
+	$route['top_performer'] = 'hr_report/top_performer';
+	$route['new_hire'] = 'hr_report/new_hire';
+	$route['retention'] = 'hr_report/retention';
+	$route['turn_over'] = 'hr_report/turn_over';
 
 
 // back office routes

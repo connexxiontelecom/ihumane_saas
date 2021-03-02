@@ -18,8 +18,8 @@ class Appraisals extends REST_Controller
         $this->load->helper('security');
         $this->load->model('users');
         $this->load->model('logs');
-
     }
+	
 
     public function allAppraisals_post()
     {
@@ -33,7 +33,7 @@ class Appraisals extends REST_Controller
             $data = $this->Employees->get_appraisals($tenant_id);
             $data = $this->objectToArray($data);
             for ($i = 0; $i < count($data); $i++) {
-                $supervisor = $this->Employees->get_employee($data[$i]['employee_appraisal_supervisor_id']);
+                $supervisor = $this->Employees->get_employee($data[$i]['employee_appraisal_supervisor_id'],$tenant_id);
                 $data[$i]['employee_appraisal_period_from'] = date("M Y", strtotime($data[$i]['employee_appraisal_period_from']));
                 $data[$i]['employee_appraisal_period_to'] = date("M Y", strtotime($data[$i]['employee_appraisal_period_to']));
                 if (!is_null($supervisor) && !empty($supervisor)) {

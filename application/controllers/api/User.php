@@ -48,6 +48,15 @@ class User extends REST_Controller
 
     }
 
+
+	public function header_post(){
+
+		 $data =  $this->input->user_agent();
+		 $headers =  $this->input->request_headers();
+		$this->response(["headers" => $headers], REST_Controller::HTTP_OK);
+	}
+
+
     public function users_get()
     {
         $this->db->select('*');
