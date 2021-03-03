@@ -85,7 +85,7 @@ class Loan extends CI_Controller
 		if(isset($username)):
 			$user_type = $this->users->get_user($username)->user_type;
 
-		$tenant_id = $this->users->get_user($username)->tenant_id;
+			$tenant_id = $this->users->get_user($username)->tenant_id;
 
 			$active_plans = $this->users->get_sub_true_status($tenant_id);
 
@@ -864,4 +864,4 @@ $data['active_plan'] = 1;
 
 	}
 }
-$tenant_id = $request['tenant_id'];
+

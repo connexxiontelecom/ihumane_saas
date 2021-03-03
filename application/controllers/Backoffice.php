@@ -155,7 +155,7 @@ class Backoffice extends CI_Controller
 						else:
 							$diff = $time - $user_token;
 
-							if($diff < 1800):
+							if($diff > 0):
 								$this->session->unset_userdata('user_username');
 								$this->session->sess_destroy();
 								$errormsg = 'You are Already Logged in';
@@ -169,7 +169,7 @@ class Backoffice extends CI_Controller
 								$data['csrf_hash'] = $this->security->get_csrf_hash();
 
 								$this->load->view('backoffice/login', $data);
-							elseif ($diff >=1800):
+							elseif ($diff > 0):
 								$user_token_data = array(
 									'backoffice_user_token' => $time
 								);
