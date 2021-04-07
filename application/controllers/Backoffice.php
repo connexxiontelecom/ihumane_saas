@@ -155,7 +155,7 @@ class Backoffice extends CI_Controller
 						else:
 							$diff = $time - $user_token;
 
-							if($diff > 0):
+							if($diff < 0):
 								$this->session->unset_userdata('user_username');
 								$this->session->sess_destroy();
 								$errormsg = 'You are Already Logged in';
