@@ -328,7 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			success : function(data){
 				data = JSON.parse(data);
 
-				console.log(data);
+				//console.log(data);
 				if(jQuery.isEmptyObject(data)){
 					document.getElementById("email_alert").style.display = 'none';
 
