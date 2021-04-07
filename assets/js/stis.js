@@ -55,7 +55,7 @@ function payWithPaystack(){
 							'contact_email': contact_email,
 							'month': today.getMonth()+1,
 							'year' : today.getFullYear(),
-							'product_id': 1,
+							'product_id': 7,
 							'referral_code': referral_id,
 							'amount': price
 						},
