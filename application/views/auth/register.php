@@ -158,6 +158,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 										<i class="mdi mdi-close-circle font-32"></i><strong class="pr-1">Error !</strong> Password Do Not Match.
 									</div>
 								</div>
+								<input type="hidden" name="referral_id" id="referral_id" value="<?php echo $referral_id; ?>">
 								<div class="form-divider">
 									Plan Details
 								</div>
@@ -175,7 +176,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 								</div>
 
-								<input type="hidden" id="price" value="<?php if(!empty($pla)): echo $pla->plan_price * 100; endif; ?>">
+								<input type="hidden" id="price" value="<?php if(!empty($pla)): echo $pla->plan_price * 100; endif; ?>" name="price">
 
 
 								<div class="form-group">
