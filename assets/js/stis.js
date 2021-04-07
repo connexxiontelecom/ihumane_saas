@@ -27,6 +27,7 @@ function payWithPaystack(){
 	} else{
 		var handler = PaystackPop.setup({
 			key: 'pk_live_5f5e9ee6c8513b4800ef51f89d9fca898620c6fb',
+			//key: 'pk_test_3867b2b50fe4f5d7c72a4ad9bcae7c06945c0440',
 			email: $('form').find('input[name="tenant_contact_email"]').val(),
 			amount: parseFloat(document.getElementById('price').value),
 			ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
@@ -42,11 +43,11 @@ function payWithPaystack(){
 			callback: function(response){
 				$('form').append('<input type="hidden" name="reference_code" value="' + response.reference + '">');
 
-				if(jQuery.isEmptyObject(referral_id) || referral_id == null){
+				if(jQuery.isEmptyObject(referral_id)){
 
-					$('form').submit();
+					console.log('i am empty');
+				}else{
 
-				} else{
 					$.ajax({
 						url: 'https://amp-api.connexxiontelecom.com/public/new_product_sale',
 						type: 'post',
@@ -61,13 +62,13 @@ function payWithPaystack(){
 						},
 						dataType: 'json',
 						success:function(response){
-
-							$('form').submit();
-
+							// $('form').submit();
 						}
 					});
+
 				}
 
+				$('form').submit();
 
 
 
