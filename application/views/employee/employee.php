@@ -106,11 +106,15 @@
                               if($status == 0):?>
                                 <div class="badge badge-danger">Employment Terminated</div>
 							  	              <div> <i>Since: <?php echo $emp->employee_stop_date; ?></i></div>
-                              <?php elseif($status == 1):?>
+                              <?php endif;
+                              
+                              if($status == 1):?>
                                 <div class="badge badge-info">Probationary</div>
-                              <?php elseif($status == 2):?>
+                              <?php endif;
+                              
+                              if($status == 2):?>
                                 <div class="badge badge-success">Confirmed</div>
-                              <?php else:?>
+                              <?php endif; if($status == 3):?>
                                 <div class="badge badge-dark">Retired</div>
                               <?php endif;?>
                             </td>

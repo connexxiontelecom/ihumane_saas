@@ -13,6 +13,10 @@ function payWithPaystack(){
 	var contact_username = $("#contact_username").val();
 	var password = $("#password").val();
 	var plan = $("#plan").val();
+	var referral_id = $("#referral_id").val();
+	var price = parseFloat($("#price").val())/100;
+	var today = new Date();
+
 
 	if (jQuery.isEmptyObject(business_name) || jQuery.isEmptyObject(tenant_business_website) || jQuery.isEmptyObject(business_type)
 		|| jQuery.isEmptyObject(tenant_usage) || jQuery.isEmptyObject(tenant_country) || jQuery.isEmptyObject(tenant_city) ||
@@ -38,7 +42,36 @@ function payWithPaystack(){
 			callback: function(response){
 				$('form').append('<input type="hidden" name="reference_code" value="' + response.reference + '">');
 
-				$('form').submit();
+				if(jQuery.isEmptyObject(referral_id) || referral_id == null){
+
+					$('form').submit();
+
+				} else{
+					$.ajax({
+						url: 'https://amp-api.connexxiontelecom.com/public/new_product_sale',
+						type: 'post',
+						data: {
+							'company_name': business_name,
+							'contact_email': contact_email,
+							'month': today.getMonth()+1,
+							'year' : today.getFullYear(),
+							'product_id': 1,
+							'referral_code': referral_id,
+							'amount': price
+						},
+						dataType: 'json',
+						success:function(response){
+
+							$('form').submit();
+
+						}
+					});
+				}
+
+
+
+
+
 				//alert('success. transaction ref is ' + response.reference);
 			},
 			onClose: function(){

@@ -771,6 +771,7 @@ class Home extends CI_Controller
 	public function register(){
 
 		$plan_id = $this->uri->segment(2);
+		$referral_id = $this->uri->segment(3);
 
 		$user_username = $this->session->userdata('user_username');
 
@@ -783,21 +784,24 @@ class Home extends CI_Controller
 
 			if(!empty($plan_id)):
 
-				$data['plan_id'] = $plan_id;
+				
 				$pla = $this->backoffices->get_plan($plan_id);
 
 				if(empty($pla)):
 
-					redirect('error_404');
+//					redirect('error_404');
+				$referral_id = $plan_id;
 
 					else:
-
+						$data['plan_id'] = $plan_id;
 				$data['pla'] = $pla;
 
 					endif;
 
-			endif;
+					
+				endif;
 			$data['plans'] = $this->backoffices->get_plans();
+			$data['referral_id'] = $referral_id;
 
 			$data['countries'] =   array(
 				"Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla",
@@ -1043,6 +1047,21 @@ class Home extends CI_Controller
 
 
 					if($tenant_plan > 1):
+						
+						$amp_array = array(
+							'tenant_contact_name' => $tenant_contact_name,
+							'tenant_contact_email' => $tenant_contact_email,
+							'tenant_contact_phone' => $tenant_contact_phone,
+							'tenant_business_name' => $tenant_business_name,
+							'tenant_business_website' => $tenant_business_website,
+							'tenant_country' => $tenant_country,
+							'tenant_city' => $tenant_city,
+							'tenant_business_type' => $tenant_business_type,
+							'amount' => $price/100,
+							'product_id' => 1
+						
+						);
+						
 						$userEmail= $tenant_contact_email;
 						$subject='Welcome To iHumane - Interactive Human Resource Management System';
 						$config = Array(
