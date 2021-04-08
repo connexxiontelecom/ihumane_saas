@@ -1,4 +1,5 @@
 
+
 function payWithPaystack(){
 	var business_name =  $("#business_name").val();
 	var tenant_business_website = $("#tenant_business_website").val();
@@ -42,11 +43,7 @@ function payWithPaystack(){
 			},
 			callback: function(response){
 				$('form').append('<input type="hidden" name="reference_code" value="' + response.reference + '">');
-
-				if(jQuery.isEmptyObject(referral_id)){
-
-					console.log('i am empty');
-				}else{
+				function send(){
 
 					$.ajax({
 						url: 'https://amp-api.connexxiontelecom.com/public/new_product_sale',
@@ -61,14 +58,35 @@ function payWithPaystack(){
 							'amount': price
 						},
 						dataType: 'json',
-						success:function(response){
-							// $('form').submit();
+						async: false,
+						success:function(){
+
+							$('form').submit();
+							//setTimeout($('form').submit(), 5000);
+
 						}
 					});
 
 				}
 
-				$('form').submit();
+				async function sendI() {
+					await send();
+				}
+
+				if(jQuery.isEmptyObject(referral_id)){
+
+					document.getElementById('register-form').submit();
+				}else{
+
+
+					sendI();
+					document.getElementById('register-form').submit();
+
+
+
+				}
+
+
 
 
 
