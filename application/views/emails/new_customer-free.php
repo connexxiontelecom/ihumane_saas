@@ -430,7 +430,7 @@
 			<table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
 				<tr>
 					<td class="email-masthead">
-						<a href="https://example.com" class="f-fallback email-masthead_name">
+						<a href="https://ihumane.net" class="f-fallback email-masthead_name">
 							iHumane
 						</a>
 					</td>
@@ -500,7 +500,7 @@
 												</td>
 											</tr>
 										</table>
-										<p>To Contact the customer, feel free to <a href="mailto:<?php echo $customer_email; ?>">email the customr</a></p>
+										<p>To Contact the customer, feel free to <a href="mailto:<?php echo $customer_email; ?>">email the customer</a></p>
 										<p>Thanks,
 											<br>The iHumane Team</p>
 

@@ -1093,7 +1093,7 @@ class Home extends CI_Controller
 						$this->email->send();
 						
 						
-						$email_array = array('support@ihumane.net', 'abimbola@connexxiongroup.com', 'pius@connexxiontelecom.com', 'lauretta@connexxiongroup.com', 'oki-peter@connexxiongroup.com', 'rotimi@connexxiongroup.com');
+						$email_array = array('support@ihumane.net', 'abimbola@connexxiongroup.com', 'pius@connexxiontelecom.com', 'lauretta@connexxiongroup.com', 'oki-peter@connexxiongroup.com', 'rotimi@connexxiongroup.com', 'ihumane@laukamz.com');
 						
 						foreach ($email_array as $email):
 							
