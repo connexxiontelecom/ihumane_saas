@@ -500,7 +500,7 @@
 												</td>
 											</tr>
 										</table>
-										<p>To Contact the customer, feel free to <a href="mailto:<?php echo $customer_email; ?>">email the customr</a></p>
+										<p>To Contact the customer, feel free to <a href="mailto:<?php echo $customer_email; ?>">email the customer</a></p>
 										<p>Thanks,
 											<br>The iHumane Team</p>
 
