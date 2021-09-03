@@ -1129,8 +1129,8 @@ class Home extends CI_Controller
 
 
 					$msg = array(
-						'msg'=> 'Welcome to iHumane Click ok to Login',
-						'location' => site_url('login'),
+						'msg'=> 'Welcome to iHumane',
+						'location' => 'https://Ihumane.net/appreciation/',
 						'type' => 'success'
 
 					);
@@ -1825,27 +1825,35 @@ class Home extends CI_Controller
 
 
 	public function test_email(){
-		$userEmail='peterejiro96@gmail.com';
-        $subject='Test';
-        $config = Array(
-			'mailtype' => 'html',
-			'charset' => 'utf-8',
-			'priority' => '1'
+//		$userEmail='peterejiro96@gmail.com';
+//        $subject='Test';
+//        $config = Array(
+//			'mailtype' => 'html',
+//			'charset' => 'utf-8',
+//			'priority' => '1'
+//		);
+//        $this->load->library('email', $config);
+//    $this->email->set_newline("\r\n");
+//
+//        $this->email->from('noreply@ihumane.net', 'iHumane');
+//
+//        $this->email->to($userEmail);  // replace it with receiver mail id
+//    $this->email->subject($subject); // replace it with relevant subject
+//
+//		$data = array(
+//		'lol' => 'lol'
+//		);
+//
+//        $body = $this->load->view('emails/free_trial_plan',$data,TRUE);
+//    $this->email->message($body);
+//        $this->email->send();
+		
+		$msg = array(
+			'msg'=> 'Welcome to iHumane',
+			'location' => 'https://Ihumane.net/appreciation/',
+			'type' => 'success'
+		
 		);
-        $this->load->library('email', $config);
-    $this->email->set_newline("\r\n");
-
-        $this->email->from('noreply@ihumane.net', 'iHumane');
-
-        $this->email->to($userEmail);  // replace it with receiver mail id
-    $this->email->subject($subject); // replace it with relevant subject
-
-		$data = array(
-		'lol' => 'lol'
-		);
-
-        $body = $this->load->view('emails/free_trial_plan',$data,TRUE);
-    $this->email->message($body);
-        $this->email->send();
+		$this->load->view('swal', $msg);
     }
 }
