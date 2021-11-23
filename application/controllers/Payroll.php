@@ -2026,6 +2026,65 @@ $data['active_plan'] = 1;
 						$query = $this->salaries->approve_payroll($payroll_month, $payroll_year, $payroll_data, $tenant_id);
 
 						if($query == true):
+							
+							$employees = $this->employees->view_employees($tenant_id);
+							
+							foreach ($employees as $employee):
+								
+								if($employee->employee_status == 3 || $employee->employee_status == 0):
+								
+								
+								else:
+									
+									
+									
+									
+									
+									$userEmail= $employee->employee_official_email;
+									
+									$user = $this->users->get_user($employee->employee_unique_id);
+									$user_id = $user->user_id;
+									
+									
+									$subject='Your PaySlip is Ready';
+									$config = Array(
+										'mailtype' => 'html',
+										'charset' => 'utf-8',
+										'priority' => '1'
+									);
+									$this->load->library('email', $config);
+									
+									$this->email->set_newline("\r\n");
+									
+									$this->email->from('support@ihumane.net', 'iHumane');
+									
+									$this->email->to($userEmail);  // replace it with receiver mail id
+									$this->email->subject($subject); // replace it with relevant subject
+									$monthName = date('F', mktime(0, 0, 0, $payroll_month, 10));
+									
+									$data = array(
+										'name' => $employee->employee_first_name." ".$employee->employee_last_name,
+										'url' => 'https://app.ihumane.net/view_pay_slips/'.$user_id.'/'.$tenant_id.'/'.$payroll_month.'/'.$payroll_year,
+										'month' => $payroll_month,
+										'monthname' => $monthName,
+										'year' => $payroll_year
+									);
+									
+									
+									
+									$body = $this->load->view('emails/payslip',$data,TRUE);
+									$this->email->message($body);
+									$this->email->send();
+								
+								
+								endif;
+								
+								
+								endforeach;
+							
+							
+							
+							
 
 							$log_array = array( 'tenant_id' => $tenant_id,
 								'log_user_id' => $this->users->get_user($username)->user_id,

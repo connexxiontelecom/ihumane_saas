@@ -1303,6 +1303,215 @@ class Employee_main extends CI_Controller
 		endif;
 
 	}
+	
+	public function view_pay_slips($user_id, $tenant_id, $month, $year){
+
+
+		$user = $this->users->get_user_id($user_id, $tenant_id);
+		
+		
+		$username = $user->user_username;
+		$data['username'] = $username;
+
+		$tenant_id = $this->users->get_user($username)->tenant_id;
+		
+		
+
+		$active_plans = $this->users->get_sub_true_status($tenant_id);
+
+			if(!empty($active_plans)):
+
+				$data['active_plan'] = 1;
+
+
+				//$data['employees'] = $this->employees->view_employees();
+				$user_type = $this->users->get_user($username)->user_type;
+
+
+				if($user_type):
+
+//					$month = $this->input->post('month');
+//					$year = $this->input->post('year');
+
+
+					if(empty($month) || empty($year)):
+
+
+						redirect('error_404');
+
+					else:
+
+						$check = $this->salaries->view_emolument_sheet();
+						$data['payroll_month'] = $month;
+						$data['payroll_year'] = $year;
+						$data['user_data'] = $this->users->get_user($username);
+						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+						$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
+						$data['employee'] = $this->employees->get_employee_by_unique($username, $tenant_id);
+
+
+						$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+
+						if(empty($check)):
+
+							$this->salaries->optimize_emolument_report();
+
+
+							$payment_definitions = $this->payroll_configurations->view_payment_definitions_order($tenant_id);
+
+							foreach ($payment_definitions as $payment_definition):
+
+								$fields = array(
+										'payment_definition_'.$payment_definition->payment_definition_id => array('type' => 'TEXT')
+								);
+
+
+								$this->salaries->new_column($fields);
+							endforeach;
+
+
+
+							$employees = $this->employees->view_employees($tenant_id);
+
+							foreach ($employees as $employee):
+								if($employee->employee_id == $employee_id):
+
+									$emolument_data = array(
+
+											'emolument_report_employee_id' => $employee->employee_id
+
+									);
+
+									$this->salaries->insert_emolument($emolument_data);
+
+									$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year, $tenant_id);
+
+									foreach ($salaries as $salary):
+
+										$emoluments_data = array(
+												'payment_definition_'.$salary->salary_payment_definition_id => $salary->salary_amount
+
+										);
+										//print_r($emoluments_data);
+
+										$this->salaries->update_emolument($employee->employee_id, $emoluments_data);
+
+									endforeach;
+								endif;
+							endforeach;
+
+
+							$data['emoluments'] = $this->salaries->view_emolument_sheet();
+
+							$this->load->view('employee_self_service/_pay_slip', $data);
+
+						else:
+
+							$this->salaries->clear_emolument();
+							$this->salaries->optimize_emolument_report();
+							$emolument_fields = $this->salaries->view_emolument_fields();
+
+							foreach($emolument_fields as $emolument_field):
+
+								$payment_definition_field = stristr($emolument_field,"payment_definition_");
+
+								if(!empty($payment_definition_field)):
+
+									$this->salaries->remove_field($payment_definition_field);
+
+
+								endif;
+
+							endforeach;
+
+
+							$payment_definitions = $this->payroll_configurations->view_payment_definitions_order($tenant_id);
+
+							foreach ($payment_definitions as $payment_definition):
+
+								$fields = array(
+										'payment_definition_'.$payment_definition->payment_definition_id => array('type' => 'TEXT')
+								);
+
+								$this->salaries->new_column($fields);
+							endforeach;
+
+
+							$employees = $this->employees->view_employees($tenant_id);
+
+							foreach ($employees as $employee):
+								if($employee->employee_id == $employee_id):
+									$emolument_data = array(
+
+											'emolument_report_employee_id' => $employee->employee_id
+
+									);
+
+									$this->salaries->insert_emolument($emolument_data);
+
+									$salaries = $this->salaries->view_salaries_emolument($employee->employee_id, $month, $year, $tenant_id);
+
+									foreach ($salaries as $salary):
+
+										$emoluments_data = array(
+												'payment_definition_'.$salary->salary_payment_definition_id => $salary->salary_amount
+
+										);
+										//print_r($emoluments_data);
+
+										$this->salaries->update_emolument($employee->employee_id, $emoluments_data);
+
+									endforeach;
+								endif;
+							endforeach;
+
+							$employee_id = $this->employees->get_employee_by_unique($username, $tenant_id)->employee_id;
+							$data['notifications'] = $this->employees->get_notifications($employee_id, $tenant_id);
+							$data['emoluments'] = $this->salaries->view_emolument_sheet();
+
+							$this->load->view('employee_self_service/_pay_slip', $data);
+
+						endif;
+
+					endif;
+
+
+				elseif($user_type == 1):
+
+					redirect('/access_denied');
+
+				endif;
+
+			else:
+				redirect('subscription_expired');
+
+			endif;
+
+
+
+
+	}
+	
+	public function view_pays_slips($user_id, $tenant_id, $month, $year){
+		
+		
+		echo $user_id;
+		
+		echo '<br>';
+		
+		echo $tenant_id;
+		
+		echo '<br>';
+		
+		echo $month;
+		
+		echo '<br>';
+		
+		echo $year;
+		
+		
+	}
+	
 	public function my_loan(){
 
 		$username = $this->session->userdata('user_username');
