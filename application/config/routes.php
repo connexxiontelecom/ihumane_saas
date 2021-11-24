@@ -284,6 +284,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	$route['appraisal_result/:num'] = 'employee_main/check_appraisal_results/$1';
 	$route['pay_slip'] = 'employee_main/pay_slip';
 	$route['pay_slips'] = 'employee_main/pay_slips';
+	$route['view_pay_slips/(:any)/(:any)/(:any)/(:any)'] = 'employee_main/view_pay_slips/$1/$2/$3/$4';
+	
+	//$route['view_pay_slips'] = 'employee_main/view_payslips';
 	$route['my_loan'] = 'employee_main/my_loan';
 	$route['my_new_loan'] = 'employee_main/my_new_loan';
 	$route['apply_loan'] = 'employee_main/apply_loan';

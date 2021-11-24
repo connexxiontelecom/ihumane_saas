@@ -11,18 +11,17 @@
 <div id="app">
 	<div class="main-wrapper container">
 		<div class="navbar-bg"></div>
-		<?php include('header.php'); ?>
-		<?php include('menu.php'); ?>
+<!--		--><?php //include('header.php'); ?>
+<!--		--><?php //include('menu.php'); ?>
 		<div class="main-content">
 			<section class="section">
 				<div class="section-header">
 					<div class="section-header-back">
-						<a href="<?php echo site_url('pay_slip')?>" class="btn btn-icon"><i class="fas fa-arrow-left"></i></a>
+					
 					</div>
 					<h1>Your Pay Slip</h1>
 					<div class="section-header-breadcrumb">
-						<div class="breadcrumb-item active"><a href="<?php echo base_url('employee_main'); ?>">Dashboard</a></div>
-						<div class="breadcrumb-item active"><a href="<?php echo site_url('pay_slip')?>">Pay Slip</a></div>
+						
 						<div class="breadcrumb-item">Your Pay Slip</div>
 					</div>
 				</div>
@@ -53,7 +52,7 @@
 											</thead>
 											<tbody>
 											<?php $emolument_fields = $CI->salaries->view_emolument_fields();
-											$username = $this->session->userdata('user_username');
+											
 											$tenant_id = $this->users->get_user($username)->tenant_id;
 											foreach($emolument_fields as $emolument_field):
 												$payment_definition_field = stristr($emolument_field,"payment_definition_");
