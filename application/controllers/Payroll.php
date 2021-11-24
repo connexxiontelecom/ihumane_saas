@@ -2027,6 +2027,9 @@ $data['active_plan'] = 1;
 
 						if($query == true):
 							
+							$tenant_details = $this->users->get_tenant($tenant_id);
+							$coy = $tenant_details->tenant_business_name;
+							
 							$employees = $this->employees->view_employees($tenant_id);
 							
 							foreach ($employees as $employee):
@@ -2044,9 +2047,9 @@ $data['active_plan'] = 1;
 									
 									$user = $this->users->get_user($employee->employee_unique_id);
 									$user_id = $user->user_id;
+									$monthName = date('F', mktime(0, 0, 0, $payroll_month, 10));
 									
-									
-									$subject='Your PaySlip is Ready';
+									$subject= $coy.'PaySlip for '.$monthName.' '.$payroll_year;
 									$config = Array(
 										'mailtype' => 'html',
 										'charset' => 'utf-8',
@@ -2060,10 +2063,10 @@ $data['active_plan'] = 1;
 									
 									$this->email->to($userEmail);  // replace it with receiver mail id
 									$this->email->subject($subject); // replace it with relevant subject
-									$monthName = date('F', mktime(0, 0, 0, $payroll_month, 10));
+									
 									
 									$data = array(
-										'name' => $employee->employee_first_name." ".$employee->employee_last_name,
+										'name' => $employee->employee_first_name,
 										'url' => 'https://app.ihumane.net/view_pay_slips/'.$user_id.'/'.$tenant_id.'/'.$payroll_month.'/'.$payroll_year,
 										'month' => $payroll_month,
 										'monthname' => $monthName,
