@@ -461,12 +461,7 @@
 												</td>
 											</tr>
 										</table>
-										
-										<p>If you have any questions, feel free to <a href="mailto:support@ihumane.net">email our customer success team</a>. (We're lightning quick at replying.)</p>
-										<p>Thanks,
-											<br>The iHumane Team</p>
-										<p><strong>P.S.</strong> Need immediate help getting started? Check out our <a href="https://docs.ihumane.net/">help documentation</a>. Or, just reply to this email, the iHumane support team is always ready to help!</p>
-										<!-- Sub copy -->
+							
 										<table class="body-sub" role="presentation">
 											<tr>
 												<td>
