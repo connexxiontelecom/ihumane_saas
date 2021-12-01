@@ -4750,7 +4750,7 @@ $data['active_plan'] = 1;
 	  if(!empty($active_plans)):
 	    $data['active_plan'] = 1;
         $user_type = $this->users->get_user($username)->user_type;
-        if($user_type == 1 || $user_type == 3):
+        if($user_type == 1 || $user_type == 3 || $user_type == 4):
         $permission = $this->users->check_permission($username);
         $data['employee_management'] = $permission->employee_management;
         $data['payroll_management'] = $permission->payroll_management;
