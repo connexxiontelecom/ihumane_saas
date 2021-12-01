@@ -170,6 +170,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	$route['add_new_employee_training'] = 'employee/add_new_employee_training';
 	$route['view_training_result/:num'] = 'employee/view_training_result/$1';
 	$route['clear_notifications/(:any)'] = 'employee/clear_notifications/$1';
+	$route['employee_queries'] = 'employee/employee_queries';
 	
 	
 	$route['tax_rates'] = 'payroll_configuration/tax_rate';
