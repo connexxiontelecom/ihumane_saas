@@ -69,6 +69,16 @@ class User extends CI_Controller
 		$username = $this->session->userdata('user_username');
 
 		if(isset($username)):
+			
+			
+			$tenant_id = $this->users->get_user($username)->tenant_id;
+			
+			$active_plans = $this->users->get_sub_true_status($tenant_id);
+			
+			if(!empty($active_plans)):
+				
+				$data['active_plan'] = 1;
+			
 			$tenant_id = $this->users->get_user($username)->tenant_id;
 			$permission = $this->users->check_permission($username);
 			$data['employee_management'] = $permission->employee_management;
@@ -106,9 +116,15 @@ class User extends CI_Controller
 			else:
 				redirect('/access_denied');
 			endif;
+			else:
+				
+				redirect('subscription_expired');
+			endif;
 		else:
 			redirect('/login');
 		endif;
+		
+		
 
 	}
 
@@ -186,6 +202,7 @@ class User extends CI_Controller
 						'user_email'=> $user_email,
 						'user_password'=> password_hash($user_password, PASSWORD_BCRYPT),
 						'user_name'=> $user_name,
+						'user_type' => 1,
 						'user_status'=>$user_status,
 						'tenant_id' => $tenant_id
 					);
