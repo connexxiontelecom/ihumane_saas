@@ -590,6 +590,7 @@ $data['active_plan'] = 1;
 					'employee_personal_email' => $employee_personal_email,
 					'employee_official_email' => $employee_official_email,
 					'employee_employment_date' => $employment_start_date,
+					'employee_status' => 2,
 					
 //
 //					'employee_phone_number' => $employee_phone_number,
